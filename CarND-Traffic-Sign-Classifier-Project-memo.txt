@@ -1,9 +1,23 @@
 
-Notebookを提出する際に、HTML版のファイル名を report.html にすること
-
+- Notebookを提出する際に、HTML版のファイル名を report.html にすること
+- Traffic_Sign_Classifier.ipynb
+- writeup.md
+- Datasetのサマリと探索の図示
+- Model Architectureの設計とテスト
+  - 前処理の説明と、その理由
+  - Model Architecture
+    - アーキの特徴量とその品質
+      - モデルのタイプ
+      - 階層数
+      - 各層の大きさ
+    - 図示することを推奨する
+  - Model Training
+    - 学習方法: Optimizer batch size, epoch数, hyperparametersの値
+  - Solution Approach
+    - アプローチの内容
+    - Accuracy on the validation set is 0.93 or greater.
 
 * Submission & Rubric
-
 
 - The Traffic_Sign_Classifier.ipynb notebook file with all questions answered and all code cells executed and displaying output.
   - An HTML or PDF export of the project notebook with the name report.html or report.pdf.

@@ -2,6 +2,7 @@
 - Notebookを提出する際に、HTML版のファイル名を report.html にすること
 - Traffic_Sign_Classifier.ipynb
 - writeup.md
+
 - Datasetのサマリと探索の図示
 - Model Architectureの設計とテスト
   - 前処理の説明と、その理由
@@ -16,6 +17,10 @@
   - Solution Approach
     - アプローチの内容
     - Accuracy on the validation set is 0.93 or greater.
+- Test a Model on New Images
+  - Acquiring New Images: German Traffic signsから5つの画像を加え、図示し、分類が難しいかどうか論じる
+  - Performance on New Images: ？
+  - Model Certainty - Softmax Probabilities:
 
 * Submission & Rubric
 

@@ -4,3 +4,10 @@ data
 models
 *.swp
 *.p
+MNIST_data/
+GTSRB_data/
+checkpoint
+lenet.data*
+lenet.index
+lenet.meta*
+*.sw*

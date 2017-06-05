@@ -12,3 +12,4 @@ lenet.index
 lenet.meta*
 *.sw*
 traffic-signs-data/
+*memo.txt

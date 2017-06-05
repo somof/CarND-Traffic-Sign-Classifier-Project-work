@@ -116,13 +116,13 @@ X_train, y_train = shuffle(X_train, y_train)
 ### Define your architecture here.
 ### Feel free to use as many code cells as needed.
 
-EPOCHS = 10
-BATCH_SIZE = 128
-FILTER1_NUM = 24  # 6
-FILTER2_NUM = 128  # 16
-FRC3_NUM = 400  # 120
-FRC4_NUM = 200  # 84
-
+EPOCHS      = 10
+BATCH_SIZE  = 128
+FILTER1_NUM = 32  # 6
+FILTER2_NUM = 64  # 16
+FRC3_NUM    = 400  # 120
+FRC4_NUM    = 200  # 84
+CLASS_NUM   = 43
 
 def LeNet(x):
     # Arguments used for tf.truncated_normal, randomly defines variables for
@@ -134,32 +134,28 @@ def LeNet(x):
     conv1_W = tf.Variable(tf.truncated_normal(shape=(5, 5, 3, FILTER1_NUM), mean=mu, stddev=sigma))
     conv1_b = tf.Variable(tf.zeros(FILTER1_NUM))
     conv1   = tf.nn.conv2d(x, conv1_W, strides=[1, 1, 1, 1], padding='VALID') + conv1_b
-
     # Activation.
     conv1 = tf.nn.relu(conv1)
 
-    # Pooling. Input = 28x28x6. Output = 14x14xFILTER1_NUM.
+    # Pooling. Input = 28x28xFILTER1_NUM. Output = 14x14xFILTER1_NUM.
     conv1 = tf.nn.max_pool(conv1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
 
-    # Layer 2: Convolutional. Output = 10x10xFILTER2_NUM.
+    # Layer 2: Convolutional. put = 14x14xFILTER1_NUM. Output = 10x10xFILTER2_NUM.
     conv2_W = tf.Variable(tf.truncated_normal(shape=(5, 5, FILTER1_NUM, FILTER2_NUM), mean=mu, stddev=sigma))
     conv2_b = tf.Variable(tf.zeros(FILTER2_NUM))
     conv2   = tf.nn.conv2d(conv1, conv2_W, strides=[1, 1, 1, 1], padding='VALID') + conv2_b
-
     # Activation.
     conv2 = tf.nn.relu(conv2)
 
-    # Pooling. Input = 10x10x16. Output = 5x5x16.
+    # Pooling. Input = 10x10xFILTER2_NUM. Output = 5x5xFILTER2_NUM.
     conv2 = tf.nn.max_pool(conv2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
-
-    # Flatten. Input = 5x5x16. Output = 400.
+    # Flatten. Input = 5x5xFILTER2_NUM. Output = 5x5xFILTER2_NUM.
     fc0   = flatten(conv2)
 
-    # Layer 3: Fully Connected. Input = 400. Output = FRC3_NUM.
-    fc1_W = tf.Variable(tf.truncated_normal(shape=(25 * FILTER2_NUM, FRC3_NUM), mean=mu, stddev=sigma))
+    # Layer 3: Fully Connected. Input = 5x5xFILTER2_NUM. Output = FRC3_NUM.
+    fc1_W = tf.Variable(tf.truncated_normal(shape=(5 * 5 * FILTER2_NUM, FRC3_NUM), mean=mu, stddev=sigma))
     fc1_b = tf.Variable(tf.zeros(FRC3_NUM))
     fc1   = tf.matmul(fc0, fc1_W) + fc1_b
-
     # Activation.
     fc1    = tf.nn.relu(fc1)
 
@@ -167,13 +163,12 @@ def LeNet(x):
     fc2_W  = tf.Variable(tf.truncated_normal(shape=(FRC3_NUM, FRC4_NUM), mean=mu, stddev=sigma))
     fc2_b  = tf.Variable(tf.zeros(FRC4_NUM))
     fc2    = tf.matmul(fc1, fc2_W) + fc2_b
-
     # Activation.
     fc2    = tf.nn.relu(fc2)
 
-    # Layer 5: Fully Connected. Input = FRC4_NUM. Output = 43.
-    fc3_W  = tf.Variable(tf.truncated_normal(shape=(FRC4_NUM, 43), mean=mu, stddev=sigma))
-    fc3_b  = tf.Variable(tf.zeros(43))
+    # Layer 5: Fully Connected. Input = FRC4_NUM. Output = CLASS_NUM.
+    fc3_W  = tf.Variable(tf.truncated_normal(shape=(FRC4_NUM, CLASS_NUM), mean=mu, stddev=sigma))
+    fc3_b  = tf.Variable(tf.zeros(CLASS_NUM))
     logits = tf.matmul(fc2, fc3_W) + fc3_b
 
     return logits
@@ -181,7 +176,7 @@ def LeNet(x):
 
 x = tf.placeholder(tf.float32, (None, 32, 32, 3))
 y = tf.placeholder(tf.int32, (None))
-one_hot_y = tf.one_hot(y, 43)
+one_hot_y = tf.one_hot(y, CLASS_NUM)
 
 
 

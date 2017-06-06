@@ -118,11 +118,9 @@ Here is an exploratory visualization of the data set. It is a bar chart showing 
 ![alt text][image1]
 
 
-43種類の標識が
-34799枚
-
-数量はまちまち
-トレーニング画像の分布と、テスト用画像の分布が、そろっていない
+- 43種類の標識が 34799枚
+- 数量はまちまち
+- トレーニング画像の分布と、テスト用画像の分布が、そろっていない
 
 <img width=640 alt="histgram" src="./fig/HistgramOfDataset.png"/>
 
@@ -130,6 +128,12 @@ Here is an exploratory visualization of the data set. It is a bar chart showing 
 <img width=640 alt="valiation sample" src="./fig/TrainingImageValiationSample.png"/>
 
 <img width=640 alt="training images" src="./fig/AllTrainingImage_skip28.png"/>
+
+
+
+- ダメな画像を見付ける
+- 新たな画像５枚を選んで教師画像に加える
+
 
 
 ###Design and Test a Model Architecture

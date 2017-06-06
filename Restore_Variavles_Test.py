@@ -213,7 +213,7 @@ def evaluate(X_data, y_data):
 
 
 # ## Train the Model
-last_validation_accuracy = 0.95
+last_validation_accuracy = 0.9505
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     num_examples = len(X_train)
@@ -237,7 +237,7 @@ with tf.Session() as sess:
 
             validation_accuracy = evaluate(X_valid, y_valid)
             print("EPOCH {} ...".format(i + 1))
-            print("Validation Accuracy = {:.3f}".format(validation_accuracy))
+            print("Validation Accuracy = {:.5f}".format(validation_accuracy))
             print()
             saver.save(sess, './lenet')
             print("Model saved")

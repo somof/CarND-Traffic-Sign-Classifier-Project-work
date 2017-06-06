@@ -10,8 +10,13 @@ PYTHON = ../../../src/miniconda3/envs/IntroToTensorFlow/bin/python
 endif
 
 all:
-	$(PYTHON) Visualize_dataset.py
-#	$(PYTHON) Traffic_Sign_Classifier.py
+	$(PYTHON) Restore_Variavles_Test.py
+
+vis:
+	$(PYTHON) Visualize_Weights.py
 
 train:
 	$(PYTHON) Traffic_Sign_Classifier.py
+
+data:
+	$(PYTHON) Visualize_Dataset.py

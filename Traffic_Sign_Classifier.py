@@ -124,6 +124,7 @@ FRC3_NUM    = 100 # 120
 FRC4_NUM    =  60 #  84
 CLASS_NUM   = 43
 
+
 def LeNet(x):
     # Arguments used for tf.truncated_normal, randomly defines variables for
     # the weights and biases for each layer
@@ -184,12 +185,13 @@ one_hot_y = tf.one_hot(y, CLASS_NUM)
 
 ### Train your model here.
 ### Calculate and report the accuracy on the training and validation set.
-### Once a final model architecture is selected, 
+### Once a final model architecture is selected,
 ### the accuracy on the test set should be calculated and reported as well.
 ### Feel free to use as many code cells as needed.
 
 
-rate = 0.001
+rate = 0.001  # @ pre learning
+rate = 0.00001
 
 logits = LeNet(x)
 cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=one_hot_y, logits=logits)
@@ -226,10 +228,10 @@ with tf.Session() as sess:
 
     # test code
     ckpt = tf.train.get_checkpoint_state('./')
-    if ckpt: # checkpointがある場合
-        last_model = ckpt.model_checkpoint_path # 最後に保存したmodelへのパス
+    if ckpt:  # checkpointがある場合
+        last_model = ckpt.model_checkpoint_path  # 最後に保存したmodelへのパス
         print("load " + last_model)
-        saver.restore(sess, last_model) # 変数データの読み込み
+        saver.restore(sess, last_model)  # 変数データの読み込み
         # test code
     else:
         print("Training...")
@@ -240,7 +242,7 @@ with tf.Session() as sess:
                 end = offset + BATCH_SIZE
                 batch_x, batch_y = X_train[offset:end], y_train[offset:end]
                 sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
-    
+
             validation_accuracy = evaluate(X_valid, y_valid)
             print("EPOCH {} ...".format(i + 1))
             print("Validation Accuracy = {:.3f}".format(validation_accuracy))
@@ -251,7 +253,7 @@ with tf.Session() as sess:
 
     # print("Additional Training...")
     # print()
-    # for i in range(10):
+    # for i in range(EPOCHS):
     #     X_train, y_train = shuffle(X_train, y_train)
     #     for offset in range(0, num_examples, BATCH_SIZE):
     #         end = offset + BATCH_SIZE

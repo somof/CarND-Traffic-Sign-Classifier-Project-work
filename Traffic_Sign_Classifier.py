@@ -116,12 +116,12 @@ X_train, y_train = shuffle(X_train, y_train)
 ### Define your architecture here.
 ### Feel free to use as many code cells as needed.
 
-EPOCHS      = 2
+EPOCHS      = 200
 BATCH_SIZE  = 128
-FILTER1_NUM = 32  # 6
-FILTER2_NUM = 64  # 16
-FRC3_NUM    = 400  # 120
-FRC4_NUM    = 200  # 84
+FILTER1_NUM =  20 #   6
+FILTER2_NUM =  20 #  16
+FRC3_NUM    = 100 # 120
+FRC4_NUM    = 100 #  84
 CLASS_NUM   = 43
 
 def LeNet(x):
@@ -225,38 +225,55 @@ with tf.Session() as sess:
     num_examples = len(X_train)
 
     # test code
-    ckpt = tf.train.get_checkpoint_state('./')
-    if ckpt: # checkpointがある場合
-        last_model = ckpt.model_checkpoint_path # 最後に保存したmodelへのパス
-        print("load " + last_model)
-        saver.restore(sess, last_model) # 変数データの読み込み
-        # test code
-    else:
-        print("Training...")
-        print()
-        for i in range(EPOCHS):
-            X_train, y_train = shuffle(X_train, y_train)
-            for offset in range(0, num_examples, BATCH_SIZE):
-                end = offset + BATCH_SIZE
-                batch_x, batch_y = X_train[offset:end], y_train[offset:end]
-                sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
+    # ckpt = tf.train.get_checkpoint_state('./')
+    # if ckpt: # checkpointがある場合
+    #     last_model = ckpt.model_checkpoint_path # 最後に保存したmodelへのパス
+    #     print("load " + last_model)
+    #     saver.restore(sess, last_model) # 変数データの読み込み
+    #     # test code
+    # else:
+    #     print("Training...")
+    #     print()
+    #     for i in range(EPOCHS):
+    #         X_train, y_train = shuffle(X_train, y_train)
+    #         for offset in range(0, num_examples, BATCH_SIZE):
+    #             end = offset + BATCH_SIZE
+    #             batch_x, batch_y = X_train[offset:end], y_train[offset:end]
+    #             sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
     
-            validation_accuracy = evaluate(X_valid, y_valid)
-            print("EPOCH {} ...".format(i + 1))
-            print("Validation Accuracy = {:.3f}".format(validation_accuracy))
-            print()
+    #         validation_accuracy = evaluate(X_valid, y_valid)
+    #         print("EPOCH {} ...".format(i + 1))
+    #         print("Validation Accuracy = {:.3f}".format(validation_accuracy))
+    #         print()
 
-        saver.save(sess, './lenet')
-        print("Model saved")
+    #     saver.save(sess, './lenet')
+    #     print("Model saved")
+
+    print("Training...")
+    print()
+    for i in range(EPOCHS):
+        X_train, y_train = shuffle(X_train, y_train)
+        for offset in range(0, num_examples, BATCH_SIZE):
+            end = offset + BATCH_SIZE
+            batch_x, batch_y = X_train[offset:end], y_train[offset:end]
+            sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
+
+        validation_accuracy = evaluate(X_valid, y_valid)
+        print("EPOCH {} ...".format(i + 1))
+        print("Validation Accuracy = {:.3f}".format(validation_accuracy))
+        print()
+
+    saver.save(sess, './lenet')
+    print("Model saved")
 
     # Visualization
-    _W = sess.run(logits.conv1_W)
-    for i in range(10):
-        plt.subplot(2, 5, i+1)
-        plt.title("W_%d" % i)
-        plt.axis("off")
-        plt.imshow(_W.transpose()[i].reshape(32, 32), cmap=None)
-    plt.show()
+    # _W = sess.run(logits.conv1_W)
+    # for i in range(10):
+    #     plt.subplot(2, 5, i+1)
+    #     plt.title("W_%d" % i)
+    #     plt.axis("off")
+    #     plt.imshow(_W.transpose()[i].reshape(32, 32), cmap=None)
+    # plt.show()
 
 
 # ## Evaluate the Model

@@ -117,11 +117,11 @@ X_train, y_train = shuffle(X_train, y_train)
 ### Feel free to use as many code cells as needed.
 
 EPOCHS      = 200
-BATCH_SIZE  = 128
-FILTER1_NUM =  20 #   6
+BATCH_SIZE  = 100
+FILTER1_NUM =  10 #   6
 FILTER2_NUM =  20 #  16
 FRC3_NUM    = 100 # 120
-FRC4_NUM    = 100 #  84
+FRC4_NUM    =  60 #  84
 CLASS_NUM   = 43
 
 def LeNet(x):
@@ -225,46 +225,44 @@ with tf.Session() as sess:
     num_examples = len(X_train)
 
     # test code
-    # ckpt = tf.train.get_checkpoint_state('./')
-    # if ckpt: # checkpointがある場合
-    #     last_model = ckpt.model_checkpoint_path # 最後に保存したmodelへのパス
-    #     print("load " + last_model)
-    #     saver.restore(sess, last_model) # 変数データの読み込み
-    #     # test code
-    # else:
-    #     print("Training...")
-    #     print()
-    #     for i in range(EPOCHS):
-    #         X_train, y_train = shuffle(X_train, y_train)
-    #         for offset in range(0, num_examples, BATCH_SIZE):
-    #             end = offset + BATCH_SIZE
-    #             batch_x, batch_y = X_train[offset:end], y_train[offset:end]
-    #             sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
-    
-    #         validation_accuracy = evaluate(X_valid, y_valid)
-    #         print("EPOCH {} ...".format(i + 1))
-    #         print("Validation Accuracy = {:.3f}".format(validation_accuracy))
-    #         print()
-
-    #     saver.save(sess, './lenet')
-    #     print("Model saved")
-
-    print("Training...")
-    print()
-    for i in range(EPOCHS):
-        X_train, y_train = shuffle(X_train, y_train)
-        for offset in range(0, num_examples, BATCH_SIZE):
-            end = offset + BATCH_SIZE
-            batch_x, batch_y = X_train[offset:end], y_train[offset:end]
-            sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
-
-        validation_accuracy = evaluate(X_valid, y_valid)
-        print("EPOCH {} ...".format(i + 1))
-        print("Validation Accuracy = {:.3f}".format(validation_accuracy))
+    ckpt = tf.train.get_checkpoint_state('./')
+    if ckpt: # checkpointがある場合
+        last_model = ckpt.model_checkpoint_path # 最後に保存したmodelへのパス
+        print("load " + last_model)
+        saver.restore(sess, last_model) # 変数データの読み込み
+        # test code
+    else:
+        print("Training...")
         print()
+        for i in range(EPOCHS):
+            X_train, y_train = shuffle(X_train, y_train)
+            for offset in range(0, num_examples, BATCH_SIZE):
+                end = offset + BATCH_SIZE
+                batch_x, batch_y = X_train[offset:end], y_train[offset:end]
+                sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
+    
+            validation_accuracy = evaluate(X_valid, y_valid)
+            print("EPOCH {} ...".format(i + 1))
+            print("Validation Accuracy = {:.3f}".format(validation_accuracy))
+            print()
 
-    saver.save(sess, './lenet')
-    print("Model saved")
+        saver.save(sess, './lenet')
+        print("Model saved")
+
+    # print("Additional Training...")
+    # print()
+    # for i in range(10):
+    #     X_train, y_train = shuffle(X_train, y_train)
+    #     for offset in range(0, num_examples, BATCH_SIZE):
+    #         end = offset + BATCH_SIZE
+    #         batch_x, batch_y = X_train[offset:end], y_train[offset:end]
+    #         sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
+    #     validation_accuracy = evaluate(X_valid, y_valid)
+    #     print("EPOCH {} ...".format(i + 1))
+    #     print("Validation Accuracy = {:.3f}".format(validation_accuracy))
+    #     print()
+    # saver.save(sess, './lenet')
+    # print("Model saved")
 
     # Visualization
     # _W = sess.run(logits.conv1_W)
@@ -282,3 +280,9 @@ with tf.Session() as sess:
 
     test_accuracy = evaluate(X_test, y_test)
     print("Test Accuracy = {:.3f}".format(test_accuracy))
+
+with tf.Session() as sess:
+    saver.restore(sess, tf.train.latest_checkpoint('.'))
+
+    validation_accuracy = evaluate(X_valid, y_valid)
+    print("Validation Accuracy = {:.3f}".format(validation_accuracy))

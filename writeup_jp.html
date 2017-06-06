@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="/home/ichiki/.pandoc/github-markdown.css" type="text/css" />
+</head>
+<body>
+<h1 id="traffic-sign-recognition"><strong>Traffic Sign Recognition</strong></h1>
+<hr />
+<p><strong>Build a Traffic Sign Recognition Project</strong></p>
+<p>The goals / steps of this project are the following:</p>
+<ul>
+<li>[O] Load the data set (see below for links to the project data set)</li>
+<li>[ ] Explore, summarize and visualize the data set</li>
+<li>[ ] Design, train and test a model architecture</li>
+<li>[ ] Use the model to make predictions on new images</li>
+<li>[ ] Analyze the softmax probabilities of the new images</li>
+<li>[ ] Summarize the results with a written report</li>
+<li>[ ] Notebookを提出する際に、HTML版のファイル名を report.html にすること</li>
+<li>Datasetの探索、サマリ、図示</li>
+<li>Model Architectureの設計とテスト
+<ul>
+<li>前処理の説明と、その理由</li>
+<li>Model Architecture
+<ul>
+<li>アーキの特徴量とその品質
+<ul>
+<li>モデルのタイプ</li>
+<li>階層数</li>
+<li>各層の大きさ</li>
+</ul></li>
+<li>図示することを推奨する</li>
+</ul></li>
+<li>Model Training
+<ul>
+<li>学習方法: Optimizer batch size, epoch数, hyperparametersの値</li>
+</ul></li>
+<li>Solution Approach
+<ul>
+<li>アプローチの内容</li>
+<li>Accuracy on the validation set is 0.93 or greater.</li>
+</ul></li>
+</ul></li>
+<li>Test a Model on New Images
+<ul>
+<li>Acquiring New Images: German Traffic signsから5つの画像を加え、図示し、分類が難しいかどうか論じる</li>
+<li>Performance on New Images: ？</li>
+<li>Model Certainty - Softmax Probabilities:</li>
+</ul></li>
+</ul>
+<hr />
+<p>更に</p>
+<ul>
+<li>テレーニング画像セットの強化
+<ul>
+<li>回転、移動、拡大、反転、色混同</li>
+</ul></li>
+<li>precision and recallなどで、解析してから、改善する</li>
+</ul>
+<p>画像の水増し方法をTensorFlowのコードから学ぶ http://qiita.com/Hironsan/items/e20d0c01c95cb2e08b94</p>
+<ul>
+<li>random_crop</li>
+<li>random_flip_left_right</li>
+<li>random_brightness</li>
+<li>random_contrast</li>
+<li>per_image_whitening</li>
+</ul>
+<p># Image processing for training the network. Note the many random # distortions applied to the image.</p>
+<p># Randomly crop a [height, width] section of the image. distorted_image = tf.random_crop(reshaped_image, [height, width, 3])</p>
+<p># Randomly flip the image horizontally. distorted_image = tf.image.random_flip_left_right(distorted_image)</p>
+<p># Because these operations are not commutative, consider randomizing # the order their operation. distorted_image = tf.image.random_brightness(distorted_image, max_delta=63) distorted_image = tf.image.random_contrast(distorted_image, lower=0.2, upper=1.8)</p>
+<p># Subtract off the mean and divide by the variance of the pixels. float_image = tf.image.per_image_whitening(distorted_image)</p>
+<h2 id="submission">Submission</h2>
+<hr />
+<ul>
+<li><a href="https://github.com/somof/CarND-Traffic-Sign-Classifier-Project-work/blob/master/Traffic_Sign_Classifier.ipynb">Code</a></li>
+<li><a href="https://github.com/somof/CarND-Traffic-Sign-Classifier-Project-work/blob/master/writeup.md">Writeup</a></li>
+</ul>
+<h2 id="rubric-points">Rubric Points</h2>
+<h3 id="here-i-will-consider-the-rubric-points-individually-and-describe-how-i-addressed-each-point-in-my-implementation.">Here I will consider the <a href="https://review.udacity.com/#!/rubrics/481/view">rubric points</a> individually and describe how I addressed each point in my implementation.</h3>
+<hr />
+<h3 id="writeup-readme">Writeup / README</h3>
+<h3 id="data-set-summary-exploration">Data Set Summary &amp; Exploration</h3>
+<h4 id="provide-a-basic-summary-of-the-data-set.-in-the-code-the-analysis-should-be-done-using-python-numpy-andor-pandas-methods-rather-than-hardcoding-results-manually.">1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.</h4>
+<p>I used the pandas library to calculate summary statistics of the traffic signs data set:</p>
+<ul>
+<li>The size of training set is ?</li>
+<li>The size of the validation set is ?</li>
+<li>The size of test set is ?</li>
+<li>The shape of a traffic sign image is ?</li>
+<li>The number of unique classes/labels in the data set is ?</li>
+</ul>
+<h4 id="include-an-exploratory-visualization-of-the-dataset.">2. Include an exploratory visualization of the dataset.</h4>
+<p>Here is an exploratory visualization of the data set. It is a bar chart showing how the data ...</p>
+<div class="figure">
+<img src="./examples/visualization.jpg" title="Visualization" alt="alt text" />
+<p class="caption">alt text</p>
+</div>
+<p>43種類の標識が 34799枚</p>
+<p>数量はまちまち トレーニング画像の分布と、テスト用画像の分布が、そろっていない</p>
+<p><img width=640 alt="histgram" src="./fig/HistgramOfDataset.png"/></p>
+<p><img width=640 alt="valiation sample" src="./fig/TrainingImageValiationSample.png"/></p>
+<p><img width=640 alt="training images" src="./fig/AllTrainingImage_skip28.png"/></p>
+<h3 id="design-and-test-a-model-architecture">Design and Test a Model Architecture</h3>
+<h4 id="describe-how-you-preprocessed-the-image-data.-what-techniques-were-chosen-and-why-did-you-choose-these-techniques-consider-including-images-showing-the-output-of-each-preprocessing-technique.-pre-processing-refers-to-techniques-such-as-converting-to-grayscale-normalization-etc.-optional-as-described-in-the-stand-out-suggestions-part-of-the-rubric-if-you-generated-additional-data-for-training-describe-why-you-decided-to-generate-additional-data-how-you-generated-the-data-and-provide-example-images-of-the-additional-data.-then-describe-the-characteristics-of-the-augmented-training-set-like-number-of-images-in-the-set-number-of-images-for-each-class-etc.">1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the &quot;Stand Out Suggestions&quot; part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)</h4>
+<p>As a first step, I decided to convert the images to grayscale because ...</p>
+<p>Here is an example of a traffic sign image before and after grayscaling.</p>
+<div class="figure">
+<img src="./examples/grayscale.jpg" title="Grayscaling" alt="alt text" />
+<p class="caption">alt text</p>
+</div>
+<p>As a last step, I normalized the image data because ...</p>
+<p>I decided to generate additional data because ...</p>
+<p>To add more data to the the data set, I used the following techniques because ...</p>
+<p>Here is an example of an original image and an augmented image:</p>
+<div class="figure">
+<img src="./examples/random_noise.jpg" title="Random Noise" alt="alt text" />
+<p class="caption">alt text</p>
+</div>
+<p>The difference between the original data set and the augmented data set is the following ...</p>
+<h4 id="describe-what-your-final-model-architecture-looks-like-including-model-type-layers-layer-sizes-connectivity-etc.-consider-including-a-diagram-andor-table-describing-the-final-model.">2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.</h4>
+<p>My final model consisted of the following layers:</p>
+<p>| Layer | Description | |:---------------------:|:---------------------------------------------:| | Input | 32x32x3 RGB image | | Convolution 3x3 | 1x1 stride, same padding, outputs 32x32x64 | | RELU | | | Max pooling | 2x2 stride, outputs 16x16x64 | | Convolution 3x3 | etc. | | Fully connected | etc. | | Softmax | etc. | | | | | | |</p>
+<h4 id="describe-how-you-trained-your-model.-the-discussion-can-include-the-type-of-optimizer-the-batch-size-number-of-epochs-and-any-hyperparameters-such-as-learning-rate.">3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.</h4>
+<p>To train the model, I used an ....</p>
+<h4 id="describe-the-approach-taken-for-finding-a-solution-and-getting-the-validation-set-accuracy-to-be-at-least-0.93.-include-in-the-discussion-the-results-on-the-training-validation-and-test-sets-and-where-in-the-code-these-were-calculated.-your-approach-may-have-been-an-iterative-process-in-which-case-outline-the-steps-you-took-to-get-to-the-final-solution-and-why-you-chose-those-steps.-perhaps-your-solution-involved-an-already-well-known-implementation-or-architecture.-in-this-case-discuss-why-you-think-the-architecture-is-suitable-for-the-current-problem.">4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.</h4>
+<p>My final model results were: * training set accuracy of ? * validation set accuracy of ? * test set accuracy of ?</p>
+<p>If an iterative approach was chosen: * What was the first architecture that was tried and why was it chosen? * What were some problems with the initial architecture? * How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to overfitting or underfitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting. * Which parameters were tuned? How were they adjusted and why? * What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?</p>
+<p>If a well known architecture was chosen: * What architecture was chosen? * Why did you believe it would be relevant to the traffic sign application? * How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?</p>
+<h3 id="test-a-model-on-new-images">Test a Model on New Images</h3>
+<h4 id="choose-five-german-traffic-signs-found-on-the-web-and-provide-them-in-the-report.-for-each-image-discuss-what-quality-or-qualities-might-be-difficult-to-classify.">1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.</h4>
+<p>Here are five German traffic signs that I found on the web:</p>
+<p><img src="./examples/placeholder.png" title="Traffic Sign 1" alt="alt text" /> <img src="./examples/placeholder.png" title="Traffic Sign 2" alt="alt text" /> <img src="./examples/placeholder.png" title="Traffic Sign 3" alt="alt text" /> <img src="./examples/placeholder.png" title="Traffic Sign 4" alt="alt text" /> <img src="./examples/placeholder.png" title="Traffic Sign 5" alt="alt text" /></p>
+<p>The first image might be difficult to classify because ...</p>
+<h4 id="discuss-the-models-predictions-on-these-new-traffic-signs-and-compare-the-results-to-predicting-on-the-test-set.-at-a-minimum-discuss-what-the-predictions-were-the-accuracy-on-these-new-predictions-and-compare-the-accuracy-to-the-accuracy-on-the-test-set-optional-discuss-the-results-in-more-detail-as-described-in-the-stand-out-suggestions-part-of-the-rubric.">2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the &quot;Stand Out Suggestions&quot; part of the rubric).</h4>
+<p>Here are the results of the prediction:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Image</th>
+<th align="center">Prediction</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Stop Sign</td>
+<td align="center">Stop sign</td>
+</tr>
+<tr class="even">
+<td align="center">U-turn</td>
+<td align="center">U-turn</td>
+</tr>
+<tr class="odd">
+<td align="center">Yield</td>
+<td align="center">Yield</td>
+</tr>
+<tr class="even">
+<td align="center">100 km/h</td>
+<td align="center">Bumpy Road</td>
+</tr>
+<tr class="odd">
+<td align="center">Slippery Road</td>
+<td align="center">Slippery Road</td>
+</tr>
+</tbody>
+</table>
+<p>The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...</p>
+<h4 id="describe-how-certain-the-model-is-when-predicting-on-each-of-the-five-new-images-by-looking-at-the-softmax-probabilities-for-each-prediction.-provide-the-top-5-softmax-probabilities-for-each-image-along-with-the-sign-type-of-each-probability.-optional-as-described-in-the-stand-out-suggestions-part-of-the-rubric-visualizations-can-also-be-provided-such-as-bar-charts">3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the &quot;Stand Out Suggestions&quot; part of the rubric, visualizations can also be provided such as bar charts)</h4>
+<p>The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.</p>
+<p>For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Probability</th>
+<th align="center">Prediction</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">.60</td>
+<td align="center">Stop sign</td>
+</tr>
+<tr class="even">
+<td align="center">.20</td>
+<td align="center">U-turn</td>
+</tr>
+<tr class="odd">
+<td align="center">.05</td>
+<td align="center">Yield</td>
+</tr>
+<tr class="even">
+<td align="center">.04</td>
+<td align="center">Bumpy Road</td>
+</tr>
+<tr class="odd">
+<td align="center">.01</td>
+<td align="center">Slippery Road</td>
+</tr>
+</tbody>
+</table>
+<p>For the second image ...</p>
+<h3 id="optional-visualizing-the-neural-network-see-step-4-of-the-ipython-notebook-for-more-details">(Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)</h3>
+<h4 id="discuss-the-visual-output-of-your-trained-networks-feature-maps.-what-characteristics-did-the-neural-network-use-to-make-classifications">1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?</h4>
+</body>
+</html>

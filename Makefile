@@ -9,8 +9,10 @@ PYTHON = ../../../src/miniconda3/envs/carnd-term1/bin/python
 PYTHON = ../../../src/miniconda3/envs/IntroToTensorFlow/bin/python
 endif
 
-all:
-	$(PYTHON) Restore_Variavles_Test.py
+all: vis
+
+test:
+	$(PYTHON) Restore_Variables_Test.py
 
 vis:
 	$(PYTHON) Visualize_Weights.py

@@ -1,8 +1,12 @@
+# Preprocess Data
+from sklearn.utils import shuffle
 
 # Setup TensorFlow
 import tensorflow as tf
 from tensorflow.contrib.layers import flatten
 
+import matplotlib.pyplot as plt
+import numpy as np
 
 # Step 0: Load The Data
 
@@ -94,7 +98,7 @@ print("Number of classes =", n_classes)
 ### preprocessing steps could include converting to grayscale, etc.
 ### Feel free to use as many code cells as needed.
 
-##X_train, y_train = shuffle(X_train, y_train)
+X_train, y_train = shuffle(X_train, y_train)
 
 
 
@@ -180,6 +184,7 @@ one_hot_y = tf.one_hot(y, CLASS_NUM)
 
 rate = 0.00001  # Very Slow to train
 rate = 0.001  # @ pre learning
+rate = 0.0005
 
 logits = LeNet(x)
 cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=one_hot_y, logits=logits)
@@ -213,19 +218,27 @@ def evaluate(X_data, y_data):
 # ## Evaluate the Model
 # with tf.Session() as sess:
 #     saver.restore(sess, tf.train.latest_checkpoint('.'))
-
 #     test_accuracy = evaluate(X_test, y_test)
 #     print("Test Accuracy = {:.3f}".format(test_accuracy))
 
 # with tf.Session() as sess:
 #     saver.restore(sess, tf.train.latest_checkpoint('.'))
-
 #     validation_accuracy = evaluate(X_valid, y_valid)
 #     print("Validation Accuracy = {:.3f}".format(validation_accuracy))
 
 
 
-print(weights['wc1'])
+# OK
+# with tf.Session() as sess:
+#     saver.restore(sess, tf.train.latest_checkpoint('.'))
+#     print('wc1')
+#     print(sess.run(weights['wc1']))  # 5 x 5 x 3 x 6
+#     print()
+#     print('bc1')
+#     print(sess.run(biases['bc1']))  # 6
+#     print()
+
+
 
 #
 # Visualization
@@ -238,16 +251,47 @@ print(weights['wc1'])
 # with tf.Session() as sess:
 #     print(sess.run(logits))
 
-import matplotlib.pyplot as plt
 
 with tf.Session() as sess:
     saver.restore(sess, tf.train.latest_checkpoint('.'))
-    _W = sess.run(weights['wc1'])
-    for i in range(10):
-        plt.subplot(2, 5, i+1)
-        plt.title("W_%d" % i)
+    weight = sess.run(weights['wc1'])  # 5 x 5 x 3 x 6
+    weight = weight.reshape(5, 5, 18)
+    for i in range(18):
+        # cnv = sess.run(weights['wc1'][:, :, :, i])  
+        cnv = weight[:, :, i]
+        # cnv += 0.6
+        cnv = np.abs(cnv)
+        print('cnv ', i)
+        print(cnv)
+        plt.subplot(3, 6, i + 1)
+        plt.title("Cnv_%d" % i)
         plt.axis("off")
-        plt.imshow(_W.transpose()[i].reshape(5, 5, 3), cmap=None)
+        plt.gray()
+        plt.imshow(cnv, cmap='gray')
+        # plt.imshow(cnv, cmap=None)
+        # plt.imshow(cnv.transpose()[i].reshape(5, 5, 3), cmap=None)
+    plt.show()
+
+
+
+with tf.Session() as sess:
+    saver.restore(sess, tf.train.latest_checkpoint('.'))
+    weight = sess.run(weights['wc2'])  #  5x5 6x12
+    weight = weight.reshape(5, 5, 72)
+    for i in range(72):
+        # cnv = sess.run(weights['wc1'][:, :, :, i])  # 5 x 5 x 3 x 6
+        cnv = weight[:, :, i]
+        # cnv += 0.6
+        cnv = np.abs(cnv)
+        print('cnv %d', i)
+        print(cnv)
+        plt.subplot(6, 12, i + 1)
+        plt.title("Cnv_%d" % i)
+        plt.axis("off")
+        plt.gray()
+        plt.imshow(cnv, cmap='gray')
+        # plt.imshow(cnv, cmap=None)
+        # plt.imshow(cnv.transpose()[i].reshape(5, 5, 3), cmap=None)
     plt.show()
 
 

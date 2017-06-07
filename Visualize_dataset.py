@@ -153,7 +153,7 @@ for no in range(0, len(X_train), unit):
 plt.savefig('fig/AllTrainingImage_skip28.png')  # bbox_inches="tight", pad_inches=0.0)
 plt.show()
 
-    
+
 
 
 [draw_digit2([
@@ -170,7 +170,7 @@ def draw_trafficsign(tsigns):
     plt.figure()
     # plt.figure(figsize=(len(tsigns)*1.5, 2))
     for i, data in enumerate(tsigns):
-        plt.subplot(1, len(tsigns), i+1)
+        plt.subplot(1, len(tsigns), i + 1)
         X, Y = np.meshgrid(range(size), range(size), 3)
         Z = data[0].reshape(size, size)   # convert from vector to 32x32x3 matrix
         # Z = Z[::-1, :]             # flip vertical

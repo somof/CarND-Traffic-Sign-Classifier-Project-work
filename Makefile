@@ -11,9 +11,6 @@ endif
 
 all: vis
 
-test:
-	$(PYTHON) Restore_Variables_Test.py
-
 vis:
 	$(PYTHON) Visualize_Weights.py
 

@@ -66,18 +66,6 @@ print("Number of classes =", n_classes)
 
 
 
-# Test
-# import numpy as np
-# # Pad images with 0s
-# X_train = np.pad(X_train, ((0,0),(2,2),(2,2),(0,0)), 'constant')
-# X_valid = np.pad(X_valid, ((0,0),(2,2),(2,2),(0,0)), 'constant')
-# X_test  = np.pad(X_test, ((0,0),(2,2),(2,2),(0,0)), 'constant')
-# print("Updated Image Shape: {}".format(X_train[0].shape))
-
-
-
-
-
 # Step 2: Design and Test a Model Architecture
 
 # Design and implement a deep learning model that learns to recognize traffic
@@ -116,61 +104,63 @@ X_train, y_train = shuffle(X_train, y_train)
 ### Define your architecture here.
 ### Feel free to use as many code cells as needed.
 
-EPOCHS      = 200
+EPOCHS      = 400
 BATCH_SIZE  = 100
-FILTER1_NUM =  10 #   6
-FILTER2_NUM =  20 #  16
-FRC3_NUM    = 100 # 120
-FRC4_NUM    =  60 #  84
+FILTER1_NUM =   6  #  10  #   6
+FILTER2_NUM =  12  #  20  #  16
+FRC1_NUM    =  64  # 100  # 120
+FRC2_NUM    =  32  #  60  #  84
 CLASS_NUM   = 43
+MU          = 0
+SIGMA       = 0.1
+
+
+# Arguments used for tf.truncated_normal, randomly defines variables for
+# the weights and biases for each layer
+weights = {
+    'wc1': tf.Variable(tf.truncated_normal(shape=(5, 5, 3, FILTER1_NUM), mean=MU, stddev=SIGMA)),
+    'wc2': tf.Variable(tf.truncated_normal(shape=(5, 5, FILTER1_NUM, FILTER2_NUM), mean=MU, stddev=SIGMA)),
+    'wf1': tf.Variable(tf.truncated_normal(shape=(5 * 5 * FILTER2_NUM, FRC1_NUM), mean=MU, stddev=SIGMA)),
+    'wf2': tf.Variable(tf.truncated_normal(shape=(FRC1_NUM, FRC2_NUM), mean=MU, stddev=SIGMA)),
+    'wf3': tf.Variable(tf.truncated_normal(shape=(FRC2_NUM, CLASS_NUM), mean=MU, stddev=SIGMA))}
+
+biases = {
+    'bc1': tf.Variable(tf.truncated_normal(shape=(FILTER1_NUM,), mean=MU, stddev=SIGMA)),
+    'bc2': tf.Variable(tf.truncated_normal(shape=(FILTER2_NUM,), mean=MU, stddev=SIGMA)),
+    'bf1': tf.Variable(tf.truncated_normal(shape=(FRC1_NUM,), mean=MU, stddev=SIGMA)),
+    'bf2': tf.Variable(tf.truncated_normal(shape=(FRC2_NUM,), mean=MU, stddev=SIGMA)),
+    'bf3': tf.Variable(tf.truncated_normal(shape=(CLASS_NUM,), mean=MU, stddev=SIGMA))}
 
 
 def LeNet(x):
-    # Arguments used for tf.truncated_normal, randomly defines variables for
-    # the weights and biases for each layer
-    mu = 0
-    sigma = 0.1
 
     # Layer 1: Convolutional. Input = 32x32x1. Output = 28x28xFILTER1_NUM.
-    conv1_W = tf.Variable(tf.truncated_normal(shape=(5, 5, 3, FILTER1_NUM), mean=mu, stddev=sigma))
-    conv1_b = tf.Variable(tf.zeros(FILTER1_NUM))
-    conv1   = tf.nn.conv2d(x, conv1_W, strides=[1, 1, 1, 1], padding='VALID') + conv1_b
-    # Activation.
+    conv1 = tf.nn.conv2d(x, weights['wc1'], strides=[1, 1, 1, 1], padding='VALID') + biases['bc1']
     conv1 = tf.nn.relu(conv1)
 
     # Pooling. Input = 28x28xFILTER1_NUM. Output = 14x14xFILTER1_NUM.
     conv1 = tf.nn.max_pool(conv1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
 
     # Layer 2: Convolutional. put = 14x14xFILTER1_NUM. Output = 10x10xFILTER2_NUM.
-    conv2_W = tf.Variable(tf.truncated_normal(shape=(5, 5, FILTER1_NUM, FILTER2_NUM), mean=mu, stddev=sigma))
-    conv2_b = tf.Variable(tf.zeros(FILTER2_NUM))
-    conv2   = tf.nn.conv2d(conv1, conv2_W, strides=[1, 1, 1, 1], padding='VALID') + conv2_b
-    # Activation.
+    conv2 = tf.nn.conv2d(conv1, weights['wc2'], strides=[1, 1, 1, 1], padding='VALID') + biases['bc2']
     conv2 = tf.nn.relu(conv2)
 
     # Pooling. Input = 10x10xFILTER2_NUM. Output = 5x5xFILTER2_NUM.
     conv2 = tf.nn.max_pool(conv2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
+
     # Flatten. Input = 5x5xFILTER2_NUM. Output = 5x5xFILTER2_NUM.
     fc0   = flatten(conv2)
 
-    # Layer 3: Fully Connected. Input = 5x5xFILTER2_NUM. Output = FRC3_NUM.
-    fc1_W = tf.Variable(tf.truncated_normal(shape=(5 * 5 * FILTER2_NUM, FRC3_NUM), mean=mu, stddev=sigma))
-    fc1_b = tf.Variable(tf.zeros(FRC3_NUM))
-    fc1   = tf.matmul(fc0, fc1_W) + fc1_b
-    # Activation.
-    fc1    = tf.nn.relu(fc1)
+    # Layer 3: Fully Connected. Input = 5x5xFILTER2_NUM. Output = FRC1_NUM.
+    fc1   = tf.matmul(fc0, weights['wf1']) + biases['bf1']
+    fc1   = tf.nn.relu(fc1)
 
-    # Layer 4: Fully Connected. Input = FRC3_NUM. Output = FRC4_NUM.
-    fc2_W  = tf.Variable(tf.truncated_normal(shape=(FRC3_NUM, FRC4_NUM), mean=mu, stddev=sigma))
-    fc2_b  = tf.Variable(tf.zeros(FRC4_NUM))
-    fc2    = tf.matmul(fc1, fc2_W) + fc2_b
-    # Activation.
-    fc2    = tf.nn.relu(fc2)
+    # Layer 4: Fully Connected. Input = FRC1_NUM. Output = FRC2_NUM.
+    fc2   = tf.matmul(fc1, weights['wf2']) + biases['bf2']
+    fc2   = tf.nn.relu(fc2)
 
-    # Layer 5: Fully Connected. Input = FRC4_NUM. Output = CLASS_NUM.
-    fc3_W  = tf.Variable(tf.truncated_normal(shape=(FRC4_NUM, CLASS_NUM), mean=mu, stddev=sigma))
-    fc3_b  = tf.Variable(tf.zeros(CLASS_NUM))
-    logits = tf.matmul(fc2, fc3_W) + fc3_b
+    # Layer 5: Fully Connected. Input = FRC2_NUM. Output = CLASS_NUM.
+    logits = tf.matmul(fc2, weights['wf3']) + biases['bf3']
 
     return logits
 
@@ -190,8 +180,9 @@ one_hot_y = tf.one_hot(y, CLASS_NUM)
 ### Feel free to use as many code cells as needed.
 
 
+rate = 0.00001  # Very Slow to train
 rate = 0.001  # @ pre learning
-rate = 0.00001
+rate = 0.0005
 
 logits = LeNet(x)
 cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=one_hot_y, logits=logits)
@@ -222,6 +213,7 @@ def evaluate(X_data, y_data):
 
 
 # ## Train the Model
+last_validation_accuracy = 0.9515
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     num_examples = len(X_train)
@@ -245,26 +237,29 @@ with tf.Session() as sess:
 
             validation_accuracy = evaluate(X_valid, y_valid)
             print("EPOCH {} ...".format(i + 1))
-            print("Validation Accuracy = {:.3f}".format(validation_accuracy))
+            print("Validation Accuracy = {:.5f}".format(validation_accuracy))
             print()
+            saver.save(sess, './lenet')
+            print("Model saved")
 
-        saver.save(sess, './lenet')
-        print("Model saved")
-
-    # print("Additional Training...")
-    # print()
-    # for i in range(EPOCHS):
-    #     X_train, y_train = shuffle(X_train, y_train)
-    #     for offset in range(0, num_examples, BATCH_SIZE):
-    #         end = offset + BATCH_SIZE
-    #         batch_x, batch_y = X_train[offset:end], y_train[offset:end]
-    #         sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
-    #     validation_accuracy = evaluate(X_valid, y_valid)
-    #     print("EPOCH {} ...".format(i + 1))
-    #     print("Validation Accuracy = {:.3f}".format(validation_accuracy))
-    #     print()
-    # saver.save(sess, './lenet')
-    # print("Model saved")
+    print("Additional Training...")
+    print()
+    for i in range(EPOCHS):
+        X_train, y_train = shuffle(X_train, y_train)
+        for offset in range(0, num_examples, BATCH_SIZE):
+            end = offset + BATCH_SIZE
+            batch_x, batch_y = X_train[offset:end], y_train[offset:end]
+            sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
+        validation_accuracy = evaluate(X_valid, y_valid)
+        print("EPOCH {} ...".format(i + 1))
+        print("Validation Accuracy = {:.3f}".format(validation_accuracy))
+        if last_validation_accuracy < validation_accuracy:
+            last_validation_accuracy = validation_accuracy
+            saver.save(sess, './lenet')
+            print("Model saved")
+        print()
+        if 0.957 < validation_accuracy:
+            break
 
     # Visualization
     # _W = sess.run(logits.conv1_W)

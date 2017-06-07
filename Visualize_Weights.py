@@ -244,13 +244,30 @@ def evaluate(X_data, y_data):
 # Visualization
 #
 
-# print(last_model)
-# print(logits)
-# print(tf.train)
-# print(weights['wc1'])
-# with tf.Session() as sess:
-#     print(sess.run(logits))
 
+# テスト画像の中で、予測に失敗した画像を洗い出す
+with tf.Session() as sess:
+    saver.restore(sess, tf.train.latest_checkpoint('.'))
+    # for i in range(0, len(X_test), 10):
+    for i in range(0, 1000, 1):
+        cls = sess.run(tf.argmax(logits, 1), feed_dict={x: [X_test[i]]})
+        if y_test[i] !=  cls[0]:
+            print(y_test[i], cls[0])
+
+exit(0)
+
+
+# 学習画像全体の中で、予測に失敗した画像を洗い出す
+with tf.Session() as sess:
+    saver.restore(sess, tf.train.latest_checkpoint('.'))
+    for i in range(0, len(X_train)):
+        cls = sess.run(tf.argmax(logits, 1), feed_dict={x: [X_train[i]]})
+        if y_train[i] !=  cls[0]:
+            print(y_train[i], cls[0])
+        
+
+
+exit(0)
 
 with tf.Session() as sess:
     saver.restore(sess, tf.train.latest_checkpoint('.'))
@@ -259,8 +276,8 @@ with tf.Session() as sess:
     for i in range(18):
         # cnv = sess.run(weights['wc1'][:, :, :, i])  
         cnv = weight[:, :, i]
-        # cnv += 0.6
         cnv = np.abs(cnv)
+        cnv = cnv.clip(0, 1.0)
         print('cnv ', i)
         print(cnv)
         plt.subplot(3, 6, i + 1)
@@ -283,6 +300,7 @@ with tf.Session() as sess:
         cnv = weight[:, :, i]
         # cnv += 0.6
         cnv = np.abs(cnv)
+        cnv = cnv.clip(0, 1.0)
         print('cnv %d', i)
         print(cnv)
         plt.subplot(6, 12, i + 1)

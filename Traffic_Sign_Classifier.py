@@ -104,7 +104,7 @@ X_train, y_train = shuffle(X_train, y_train)
 ### Define your architecture here.
 ### Feel free to use as many code cells as needed.
 
-EPOCHS      = 400
+EPOCHS      = 20
 BATCH_SIZE  = 100
 FILTER1_NUM =   6  #  10  #   6
 FILTER2_NUM =  12  #  20  #  16
@@ -242,24 +242,24 @@ with tf.Session() as sess:
             saver.save(sess, './lenet')
             print("Model saved")
 
-    print("Additional Training...")
-    print()
-    for i in range(EPOCHS):
-        X_train, y_train = shuffle(X_train, y_train)
-        for offset in range(0, num_examples, BATCH_SIZE):
-            end = offset + BATCH_SIZE
-            batch_x, batch_y = X_train[offset:end], y_train[offset:end]
-            sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
-        validation_accuracy = evaluate(X_valid, y_valid)
-        print("EPOCH {} ...".format(i + 1))
-        print("Validation Accuracy = {:.3f}".format(validation_accuracy))
-        if last_validation_accuracy < validation_accuracy:
-            last_validation_accuracy = validation_accuracy
-            saver.save(sess, './lenet')
-            print("Model saved")
-        print()
-        if 0.957 < validation_accuracy:
-            break
+    # print("Additional Training...")
+    # print()
+    # for i in range(EPOCHS):
+    #     X_train, y_train = shuffle(X_train, y_train)
+    #     for offset in range(0, num_examples, BATCH_SIZE):
+    #         end = offset + BATCH_SIZE
+    #         batch_x, batch_y = X_train[offset:end], y_train[offset:end]
+    #         sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
+    #     validation_accuracy = evaluate(X_valid, y_valid)
+    #     print("EPOCH {} ...".format(i + 1))
+    #     print("Validation Accuracy = {:.3f}".format(validation_accuracy))
+    #     if last_validation_accuracy < validation_accuracy:
+    #         last_validation_accuracy = validation_accuracy
+    #         saver.save(sess, './lenet')
+    #         print("Model saved")
+    #     print()
+    #     if 0.957 < validation_accuracy:
+    #         break
 
     # Visualization
     # _W = sess.run(logits.conv1_W)

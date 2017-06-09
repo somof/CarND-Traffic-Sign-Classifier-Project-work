@@ -45,6 +45,29 @@ X_test, y_test = test['features'], test['labels']
 ### Replace each question mark with the appropriate value.
 ### Use python, pandas or numpy methods rather than hard coding the results
 
+# print('\ntrain: ')
+# print('features: ', end='')
+# print(train['features'].shape)
+# print('labels: ', end='')
+# print(train['labels'].shape)
+# print('sizes: ', end='')
+# print(train['sizes'].shape)
+# print(train['sizes'])
+# print('coords: ', end='')
+# print(train['coords'].shape)
+# print(train['coords'])
+
+# print('\ntest: ')
+# print('features: ', end='')
+# print(test['features'].shape)
+# print('labels: ', end='')
+# print(test['labels'].shape)
+# print('sizes: ', end='')
+# print(test['sizes'].shape)
+# print(test['sizes'])
+# print('coords: ', end='')
+# print(test['coords'].shape)
+# print(test['coords'])
 
 # Number of training examples
 n_train = len(X_train)
@@ -100,7 +123,12 @@ print("Number of classes =", n_classes)
 
 X_train, y_train = shuffle(X_train, y_train)
 
-
+# いやいや 最初から94%越えちゃったけど
+# With the LeNet-5 solution from the lecture,
+# you should expect a validation set accuracy of about 0.89.
+# To meet specifications, the validation set accuracy will need to be at least 0.93.
+# It is possible to get an even higher accuracy,
+# but 0.93 is the minimum for a successful project submission.
 
 
 ### Define your architecture here.

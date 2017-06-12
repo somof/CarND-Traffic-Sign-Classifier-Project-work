@@ -119,7 +119,7 @@ X_train, y_train = shuffle(X_train, y_train)
 ### Define your architecture here.
 ### Feel free to use as many code cells as needed.
 
-EPOCHS      = 20
+EPOCHS      = 4
 BATCH_SIZE  = 100
 FILTER1_NUM =   6  #  10  #   6
 FILTER2_NUM =  12  #  20  #  16
@@ -149,32 +149,34 @@ biases = {
 
 def LeNet(x):
 
-    # Layer 1: Convolutional. Input = 32x32x1. Output = 28x28xFILTER1_NUM.
-    conv1 = tf.nn.conv2d(x, weights['wc1'], strides=[1, 1, 1, 1], padding='VALID') + biases['bc1']
-    conv1 = tf.nn.relu(conv1)
+    with tf.name_scope('conv1'):
+        # Layer 1: Convolutional. Input = 32x32x1. Output = 28x28xFILTER1_NUM.
+        conv1 = tf.nn.conv2d(x, weights['wc1'], strides=[1, 1, 1, 1], padding='VALID') + biases['bc1']
+        conv1 = tf.nn.relu(conv1)
+        # Pooling. Input = 28x28xFILTER1_NUM. Output = 14x14xFILTER1_NUM.
+        conv1 = tf.nn.max_pool(conv1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
 
-    # Pooling. Input = 28x28xFILTER1_NUM. Output = 14x14xFILTER1_NUM.
-    conv1 = tf.nn.max_pool(conv1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
-
-    # Layer 2: Convolutional. put = 14x14xFILTER1_NUM. Output = 10x10xFILTER2_NUM.
-    conv2 = tf.nn.conv2d(conv1, weights['wc2'], strides=[1, 1, 1, 1], padding='VALID') + biases['bc2']
-    conv2 = tf.nn.relu(conv2)
-
-    # Pooling. Input = 10x10xFILTER2_NUM. Output = 5x5xFILTER2_NUM.
-    conv2 = tf.nn.max_pool(conv2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
+    with tf.name_scope('conv2'):
+        # Layer 2: Convolutional. put = 14x14xFILTER1_NUM. Output = 10x10xFILTER2_NUM.
+        conv2 = tf.nn.conv2d(conv1, weights['wc2'], strides=[1, 1, 1, 1], padding='VALID') + biases['bc2']
+        conv2 = tf.nn.relu(conv2)
+        # Pooling. Input = 10x10xFILTER2_NUM. Output = 5x5xFILTER2_NUM.
+        conv2 = tf.nn.max_pool(conv2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
 
     # Flatten. Input = 5x5xFILTER2_NUM. Output = 5x5xFILTER2_NUM.
     fc0   = flatten(conv2)
 
-    # Layer 3: Fully Connected. Input = 5x5xFILTER2_NUM. Output = FRC1_NUM.
-    fc1   = tf.matmul(fc0, weights['wf1']) + biases['bf1']
-    fc1   = tf.nn.relu(fc1)
-    # fc1   = tf.nn.dropout(fc1, 0.5)
+    with tf.name_scope('fc1'):
+        # Layer 3: Fully Connected. Input = 5x5xFILTER2_NUM. Output = FRC1_NUM.
+        fc1   = tf.matmul(fc0, weights['wf1']) + biases['bf1']
+        fc1   = tf.nn.relu(fc1)
+        # fc1   = tf.nn.dropout(fc1, 0.5)
 
-    # Layer 4: Fully Connected. Input = FRC1_NUM. Output = FRC2_NUM.
-    fc2   = tf.matmul(fc1, weights['wf2']) + biases['bf2']
-    fc2   = tf.nn.relu(fc2)
-    # fc2   = tf.nn.dropout(fc2, 0.5)
+    with tf.name_scope('fc2'):
+        # Layer 4: Fully Connected. Input = FRC1_NUM. Output = FRC2_NUM.
+        fc2   = tf.matmul(fc1, weights['wf2']) + biases['bf2']
+        fc2   = tf.nn.relu(fc2)
+        # fc2   = tf.nn.dropout(fc2, 0.5)
 
     # Layer 5: Fully Connected. Input = FRC2_NUM. Output = CLASS_NUM.
     logits = tf.matmul(fc2, weights['wf3']) + biases['bf3']
@@ -182,11 +184,25 @@ def LeNet(x):
     return logits
 
 
+# with tf.name_scope('dropout'):
+#   keep_prob = tf.placeholder(tf.float32)
+#   tf.summary.scalar('dropout_keep_probability', keep_prob)
+#   dropped = tf.nn.dropout(hidden1, keep_prob)
+
+
 x = tf.placeholder(tf.float32, (None, 32, 32, 3))
 y = tf.placeholder(tf.int32, (None))
 one_hot_y = tf.one_hot(y, CLASS_NUM)
 
+logits = LeNet(x)
 
+with tf.name_scope('cross_entropy'):
+    cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=one_hot_y, logits=logits)
+tf.summary.scalar('cross_entropy', cross_entropy)
+
+with tf.name_scope('loss'):
+    loss_operation = tf.reduce_mean(cross_entropy)
+tf.summary.scalar('loss', loss_operation)
 
 
 
@@ -196,27 +212,20 @@ one_hot_y = tf.one_hot(y, CLASS_NUM)
 ### the accuracy on the test set should be calculated and reported as well.
 ### Feel free to use as many code cells as needed.
 
-rate = 0.00001  # Very Slow to train
-rate = 0.005  # with Dropout X
-rate = 0.0005 # without Dropout
-rate = 0.001  # @ pre learning
+rate = 0.0001  # Slow to train
+rate = 0.005   # with Dropout X
+rate = 0.0005  # without Dropout
+rate = 0.001   # @ pre learning
 
-logits = LeNet(x)
-cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=one_hot_y, logits=logits)
-loss_operation = tf.reduce_mean(cross_entropy)
-optimizer = tf.train.AdamOptimizer(learning_rate=rate)
-training_operation = optimizer.minimize(loss_operation)
+with tf.name_scope('train'):
+    optimizer = tf.train.AdamOptimizer(learning_rate=rate)
+    training_operation = optimizer.minimize(loss_operation)
 
 
 
 
 
 # ## Model Evaluation
-
-correct_prediction = tf.equal(tf.argmax(logits, 1), tf.argmax(one_hot_y, 1))
-accuracy_operation = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
-saver = tf.train.Saver()
-
 
 def evaluate(X_data, y_data):
     num_examples = len(X_data)
@@ -229,57 +238,77 @@ def evaluate(X_data, y_data):
     return total_accuracy / num_examples
 
 
+# correct_prediction = tf.equal(tf.argmax(logits, 1), tf.argmax(one_hot_y, 1))
+# accuracy_operation = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+
+with tf.name_scope('accuracy'):
+    with tf.name_scope('correct_prediction'):
+        correct_prediction = tf.equal(tf.argmax(logits, 1), tf.argmax(one_hot_y, 1))
+    with tf.name_scope('accuracy'):
+        accuracy_operation = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
+tf.summary.scalar('accuracy', accuracy_operation)
+# tf.summary.scalar("valid accuracy", evaluate(X_valid, y_valid))
+# tf.summary.scalar("test accuracy", evaluate(X_test, y_test))
+
+
+
 # ## Train the Model
+saver = tf.train.Saver()
 last_validation_accuracy = 0.9515
 last_validation_accuracy = 0.55
 with tf.Session() as sess:
+
+    # Tensorboard logdir
+    if tf.gfile.Exists('log'):
+        tf.gfile.DeleteRecursively('log')
+    tf.gfile.MakeDirs('log')
+
+    # Merge all the summaries and write them out to /tmp/mnist_logs (by default)
+    merged = tf.summary.merge_all()
+    # train_writer = tf.summary.FileWriter(FLAGS.summaries_dir + '/train', sess.graph)
+    # test_writer = tf.summary.FileWriter(FLAGS.summaries_dir + '/test')
+    summary_writer = tf.summary.FileWriter("log/", sess.graph)
+    ## tf.global_variables_initializer().run()
+
     sess.run(tf.global_variables_initializer())
     num_examples = len(X_train)
 
     # Tensorboard
-    summary_op = tf.summary.merge_all()
-    summary_writer = tf.summary.FileWriter("log/", sess.graph)
-    tf.summary.scalar("valid accuracy", evaluate(X_valid, y_valid))
-    tf.summary.scalar("test accuracy", evaluate(X_test, y_test))
+    # tf.summary.scalar("valid accuracy", evaluate(X_valid, y_valid))
+    # tf.summary.scalar("test accuracy", evaluate(X_test, y_test))
     # tf.summary.scalar("valid accuracy", validation_accuracy)
     # tf.summary.scalar("test accuracy", test_accuracy)
 
     # test code
-    ckpt = tf.train.get_checkpoint_state('./')
-    if ckpt:  # checkpointがある場合
-        last_model = ckpt.model_checkpoint_path  # 最後に保存したmodelへのパス
-        print("load " + last_model)
-        saver.restore(sess, last_model)  # 変数データの読み込み
-        # test code
-    else:
-        print("Training...")
-        print()
-        last_validation_accuracy = 0.0
-        for i in range(EPOCHS):
-            X_train, y_train = shuffle(X_train, y_train)
-            for offset in range(0, num_examples, BATCH_SIZE):
-                end = offset + BATCH_SIZE
-                batch_x, batch_y = X_train[offset:end], y_train[offset:end]
-                sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
+    # ckpt = tf.train.get_checkpoint_state('./')
+    # if None and ckpt:  # checkpointがある場合
+    #     last_model = ckpt.model_checkpoint_path  # 最後に保存したmodelへのパス
+    #     print("load " + last_model)
+    #     saver.restore(sess, last_model)  # 変数データの読み込み
+    #     # test code
+    # else:
+    #     print("Training...")
+    #     print()
+    #     last_validation_accuracy = 0.0
+    #     for i in range(EPOCHS):
+    #         X_train, y_train = shuffle(X_train, y_train)
+    #         for offset in range(0, num_examples, BATCH_SIZE):
+    #             end = offset + BATCH_SIZE
+    #             batch_x, batch_y = X_train[offset:end], y_train[offset:end]
+    #             sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
 
-            print("EPOCH {} ...".format(i + 1))
-            validation_accuracy = evaluate(X_valid, y_valid)
-            test_accuracy = evaluate(X_test, y_test)
-            print("Validation Accuracy = {:.5f}".format(validation_accuracy))
-            print("test Accuracy = {:.5f}".format(test_accuracy))
-            if last_validation_accuracy < validation_accuracy:
-                last_validation_accuracy = validation_accuracy
-                saver.save(sess, './lenet')
-                print("Model saved")
+    #         print("EPOCH {} ...".format(i + 1))
+    #         validation_accuracy = evaluate(X_valid, y_valid)
+    #         test_accuracy = evaluate(X_test, y_test)
+    #         print("Validation Accuracy = {:.5f}".format(validation_accuracy))
+    #         print("test Accuracy = {:.5f}".format(test_accuracy))
+    #         if last_validation_accuracy < validation_accuracy:
+    #             last_validation_accuracy = validation_accuracy
+    #             saver.save(sess, './lenet')
+    #             print("Model saved")
 
-            # Tensorboard
-            # tf.summary.scalar("valid accuracy", validation_accuracy)
-            # tf.summary.scalar("test accuracy", test_accuracy)
-            # summary_writer = tf.train.SummaryWriter("log/" + subdir, sess.graph)
-            # tf.summary.FileWriter('./log/', sess.graph)
-            print()
-
-        # tb.show_graph(tf.get_default_graph().as_graph_def())
+    #         # Tensorboard
+    #         print()
 
     print("Additional Training...")
     print()
@@ -289,22 +318,25 @@ with tf.Session() as sess:
             end = offset + BATCH_SIZE
             batch_x, batch_y = X_train[offset:end], y_train[offset:end]
             sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
-        validation_accuracy = evaluate(X_valid, y_valid)
-        test_accuracy = evaluate(X_test, y_test)
+
         print("EPOCH {} ...".format(i + 1))
-        print("Validation Accuracy = {:.3f}".format(validation_accuracy))
-        print("test Accuracy = {:.5f}".format(test_accuracy))
-        if last_validation_accuracy < validation_accuracy:
-            last_validation_accuracy = validation_accuracy
-            saver.save(sess, './lenet')
-            print("Model saved")
+        summary_writer = tf.summary.FileWriter("log/", sess.graph)
+
+        # validation_accuracy = evaluate(X_valid, y_valid)
+        # test_accuracy = evaluate(X_test, y_test)
+        # print("Validation Accuracy = {:.3f}".format(validation_accuracy))
+        # print("test Accuracy = {:.5f}".format(test_accuracy))
+        # if last_validation_accuracy < validation_accuracy:
+        #     last_validation_accuracy = validation_accuracy
+        #     saver.save(sess, './lenet')
+        #     print("Model saved")
+
         # Tensorboard
-        # tf.summary.scalar("valid accuracy", validation_accuracy)
-        # tf.summary.scalar("test accuracy", test_accuracy)
-        # summary_op = tf.summary.merge_all()
-        # summary_writer = tf.summary.FileWriter("log/", sess.graph)
-        # summary_writer = tf.train.SummaryWriter("log/" + subdir, sess.graph)
-        # tf.summary.FileWriter('./log/', sess.graph)
+        summary, acc = sess.run([merged, accuracy_operation], feed_dict=feed_dict(False))
+        summary_writer.add_summary(summary, i)
+        print('Accuracy at step %s: %s' % (i, acc))
+
+
         print()
         if 0.957 < validation_accuracy:
             break
@@ -318,6 +350,7 @@ with tf.Session() as sess:
     #     plt.imshow(_W.transpose()[i].reshape(32, 32), cmap=None)
     # plt.show()
 
+exit(0)
 
 # ## Evaluate the Model
 with tf.Session() as sess:

@@ -12,7 +12,8 @@ endif
 all: vis
 
 vis:
-	$(PYTHON) Visualize_Weights.py
+	$(PYTHON) Traffic_Sign_Classifier_TensorBoard.py
+	#$(PYTHON) Visualize_Weights.py
 
 train:
 	$(PYTHON) Traffic_Sign_Classifier.py

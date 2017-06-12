@@ -4,7 +4,7 @@ from sklearn.utils import shuffle
 # Setup TensorFlow
 import tensorflow as tf
 from tensorflow.contrib.layers import flatten
-import tensorboard as tb
+# import tensorboard as tb
 
 
 # Summary functions have been consolidated under the tf.summary namespace.
@@ -196,7 +196,6 @@ one_hot_y = tf.one_hot(y, CLASS_NUM)
 ### the accuracy on the test set should be calculated and reported as well.
 ### Feel free to use as many code cells as needed.
 
-
 rate = 0.00001  # Very Slow to train
 rate = 0.005  # with Dropout X
 rate = 0.0005 # without Dropout
@@ -237,6 +236,10 @@ with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     num_examples = len(X_train)
 
+    # Tensorboard
+    tf.summary.scalar("valid accuracy", validation_accuracy)
+    tf.summary.scalar("test accuracy", test_accuracy)
+
     # test code
     ckpt = tf.train.get_checkpoint_state('./')
     if ckpt:  # checkpointがある場合
@@ -259,7 +262,7 @@ with tf.Session() as sess:
             validation_accuracy = evaluate(X_valid, y_valid)
             test_accuracy = evaluate(X_test, y_test)
             print("Validation Accuracy = {:.5f}".format(validation_accuracy))
-            print("test Accuracy = {:.5f}".format(validation_accuracy))
+            print("test Accuracy = {:.5f}".format(test_accuracy))
             if last_validation_accuracy < validation_accuracy:
                 last_validation_accuracy = validation_accuracy
                 saver.save(sess, './lenet')
@@ -271,31 +274,38 @@ with tf.Session() as sess:
             summary_op = tf.summary.merge_all()
             summary_writer = tf.summary.FileWriter("log/", sess.graph)
             # summary_writer = tf.train.SummaryWriter("log/" + subdir, sess.graph)
-
             tf.summary.FileWriter('./log/', sess.graph)
-
             print()
 
         tb.show_graph(tf.get_default_graph().as_graph_def())
 
-    # print("Additional Training...")
-    # print()
-    # for i in range(EPOCHS):
-    #     X_train, y_train = shuffle(X_train, y_train)
-    #     for offset in range(0, num_examples, BATCH_SIZE):
-    #         end = offset + BATCH_SIZE
-    #         batch_x, batch_y = X_train[offset:end], y_train[offset:end]
-    #         sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
-    #     validation_accuracy = evaluate(X_valid, y_valid)
-    #     print("EPOCH {} ...".format(i + 1))
-    #     print("Validation Accuracy = {:.3f}".format(validation_accuracy))
-    #     if last_validation_accuracy < validation_accuracy:
-    #         last_validation_accuracy = validation_accuracy
-    #         saver.save(sess, './lenet')
-    #         print("Model saved")
-    #     print()
-    #     if 0.957 < validation_accuracy:
-    #         break
+    print("Additional Training...")
+    print()
+    for i in range(EPOCHS):
+        X_train, y_train = shuffle(X_train, y_train)
+        for offset in range(0, num_examples, BATCH_SIZE):
+            end = offset + BATCH_SIZE
+            batch_x, batch_y = X_train[offset:end], y_train[offset:end]
+            sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
+        validation_accuracy = evaluate(X_valid, y_valid)
+        test_accuracy = evaluate(X_test, y_test)
+        print("EPOCH {} ...".format(i + 1))
+        print("Validation Accuracy = {:.3f}".format(validation_accuracy))
+        print("test Accuracy = {:.5f}".format(test_accuracy))
+        if last_validation_accuracy < validation_accuracy:
+            last_validation_accuracy = validation_accuracy
+            saver.save(sess, './lenet')
+            print("Model saved")
+        # Tensorboard
+        tf.summary.scalar("valid accuracy", validation_accuracy)
+        tf.summary.scalar("test accuracy", test_accuracy)
+        summary_op = tf.summary.merge_all()
+        summary_writer = tf.summary.FileWriter("log/", sess.graph)
+        # summary_writer = tf.train.SummaryWriter("log/" + subdir, sess.graph)
+        tf.summary.FileWriter('./log/', sess.graph)
+        print()
+        if 0.957 < validation_accuracy:
+            break
 
     # Visualization
     # _W = sess.run(logits.conv1_W)

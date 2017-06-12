@@ -4,6 +4,21 @@ from sklearn.utils import shuffle
 # Setup TensorFlow
 import tensorflow as tf
 from tensorflow.contrib.layers import flatten
+import tensorboard as tb
+
+
+# Summary functions have been consolidated under the tf.summary namespace.
+# tf.audio_summary should be renamed to tf.summary.audio
+# tf.contrib.deprecated.histogram_summary should be renamed to tf.summary.histogram
+# tf.contrib.deprecated.scalar_summary should be renamed to tf.summary.scalar
+# tf.histogram_summary should be renamed to tf.summary.histogram
+# tf.image_summary should be renamed to tf.summary.image
+# tf.merge_all_summaries should be renamed to tf.summary.merge_all
+# tf.merge_summary should be renamed to tf.summary.merge
+# tf.scalar_summary should be renamed to tf.summary.scalar
+# tf.train.SummaryWriter should be renamed to tf.summary.FileWriter
+
+
 
 
 # Step 0: Load The Data
@@ -154,10 +169,12 @@ def LeNet(x):
     # Layer 3: Fully Connected. Input = 5x5xFILTER2_NUM. Output = FRC1_NUM.
     fc1   = tf.matmul(fc0, weights['wf1']) + biases['bf1']
     fc1   = tf.nn.relu(fc1)
+    # fc1   = tf.nn.dropout(fc1, 0.5)
 
     # Layer 4: Fully Connected. Input = FRC1_NUM. Output = FRC2_NUM.
     fc2   = tf.matmul(fc1, weights['wf2']) + biases['bf2']
     fc2   = tf.nn.relu(fc2)
+    # fc2   = tf.nn.dropout(fc2, 0.5)
 
     # Layer 5: Fully Connected. Input = FRC2_NUM. Output = CLASS_NUM.
     logits = tf.matmul(fc2, weights['wf3']) + biases['bf3']
@@ -181,8 +198,9 @@ one_hot_y = tf.one_hot(y, CLASS_NUM)
 
 
 rate = 0.00001  # Very Slow to train
+rate = 0.005  # with Dropout X
+rate = 0.0005 # without Dropout
 rate = 0.001  # @ pre learning
-rate = 0.0005
 
 logits = LeNet(x)
 cross_entropy = tf.nn.softmax_cross_entropy_with_logits(labels=one_hot_y, logits=logits)
@@ -214,6 +232,7 @@ def evaluate(X_data, y_data):
 
 # ## Train the Model
 last_validation_accuracy = 0.9515
+last_validation_accuracy = 0.55
 with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     num_examples = len(X_train)
@@ -228,6 +247,7 @@ with tf.Session() as sess:
     else:
         print("Training...")
         print()
+        last_validation_accuracy = 0.0
         for i in range(EPOCHS):
             X_train, y_train = shuffle(X_train, y_train)
             for offset in range(0, num_examples, BATCH_SIZE):
@@ -235,12 +255,28 @@ with tf.Session() as sess:
                 batch_x, batch_y = X_train[offset:end], y_train[offset:end]
                 sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
 
-            validation_accuracy = evaluate(X_valid, y_valid)
             print("EPOCH {} ...".format(i + 1))
+            validation_accuracy = evaluate(X_valid, y_valid)
+            test_accuracy = evaluate(X_test, y_test)
             print("Validation Accuracy = {:.5f}".format(validation_accuracy))
+            print("test Accuracy = {:.5f}".format(validation_accuracy))
+            if last_validation_accuracy < validation_accuracy:
+                last_validation_accuracy = validation_accuracy
+                saver.save(sess, './lenet')
+                print("Model saved")
+
+            # Tensorboard
+            tf.summary.scalar("valid accuracy", validation_accuracy)
+            tf.summary.scalar("test accuracy", test_accuracy)
+            summary_op = tf.summary.merge_all()
+            summary_writer = tf.summary.FileWriter("log/", sess.graph)
+            # summary_writer = tf.train.SummaryWriter("log/" + subdir, sess.graph)
+
+            tf.summary.FileWriter('./log/', sess.graph)
+
             print()
-            saver.save(sess, './lenet')
-            print("Model saved")
+
+        tb.show_graph(tf.get_default_graph().as_graph_def())
 
     # print("Additional Training...")
     # print()

@@ -225,7 +225,7 @@ with tf.name_scope('accuracy'):
 
 
 # ## Train the Model
-# saver = tf.train.Saver()
+saver = tf.train.Saver()
 last_validation_accuracy = 0.9515
 
 with tf.Session() as sess:

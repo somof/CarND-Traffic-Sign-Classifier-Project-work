@@ -64,12 +64,85 @@ import matplotlib.pyplot as plt
 
 
 # Visualization
-
-## Label distribution
-
-# 平均輝度
+import numpy as np
 
 
+
+# Minimally, the image data should be normalized so that the data has mean zero and equal variance. 
+# For image data, (pixel - 128)/ 128 is a quick way to approximately normalize the data and can be used in this project.
+# Other pre-processing steps are optional. You can try different techniques to see if it improves performance.
+# Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.
+
+# 平均輝度の分布
+
+print(X_train.shape)
+print(X_train.dtype)
+print(type(X_train))
+
+mean = np.zeros((len(X_train), 3)).astype(np.float)
+stdv = np.zeros((len(X_train), 3)).astype(np.float)
+
+X_train = X_train.astype(np.float)
+
+for i in range(len(X_train) // 100):
+    for c in range(3):
+        mean[i, c] = np.mean(X_train[i, :, :, c])
+        stdv[i, c] = np.std(X_train[i, :, :, c])
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+gr = plt.plot(mean, stdv, '.')
+plt.legend(['ch0', 'ch1', 'ch2'])
+plt.title('pixel mean vs stdv in X_train')
+plt.xlim(0, 255)
+plt.ylim(0, 150)
+ax.set_xlabel("mean")
+ax.set_ylabel("stdv")
+plt.show()
+exit(0)
+
+for i in range(len(X_train) // 100):
+    for c in range(3):
+        X_train[i, :, :, c] = X_train[i, :, :, c] - mean[i, c]
+        X_train[i, :, :, c] = X_train[i, :, :, c] / (stdv[i, c] * 2.0)
+
+for i in range(len(X_train) // 100):
+    for c in range(3):
+        mean[i, c] = np.mean(X_train[i, :, :, c])
+        stdv[i, c] = np.std(X_train[i, :, :, c])
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+gr = plt.plot(mean, stdv, '.')
+plt.legend(['ch0', 'ch1', 'ch2'])
+plt.title('pixel mean vs stdv in X_train (normalized)')
+plt.xlim(-1, 1)
+plt.ylim(0, 1)
+ax.set_xlabel("mean")
+ax.set_ylabel("stdv")
+plt.show()
+exit(0)
+
+for i in range(len(X_train)):
+    for c in range(3):
+        # mean[i, c] = np.mean(X_train[i, :, :, c])
+        # stdv[i, c] = np.std(X_train[i, :, :, c])
+        print('ch', c)
+        print()
+        print(' mean ', mean[i, c])
+        print(' stdv ', stdv[i, c])
+        print()
+        print(X_train[i, :, :, c])
+        print()
+        # X_train[i, :, :, c] = X_train[i, :, :, c] * 0.5
+        X_train[i, :, :, c] = X_train[i, :, :, c] - mean[i, c]
+        X_train[i, :, :, c] = X_train[i, :, :, c] / (stdv[i, c] * 2.0)
+        print(X_train[i, :, :, c])
+        print()
+
+        exit(0)
+
+exit(0)
 
 # ラベルの頻度分布
 fig = plt.figure(figsize=(12,8))
@@ -162,7 +235,6 @@ plt.show()
 for i in range(10)]
 
 
-import numpy as np
 def draw_trafficsign(tsigns):
     print(tsigns.shape)
     print(len(tsigns))

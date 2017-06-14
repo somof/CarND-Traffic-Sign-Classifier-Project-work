@@ -5,6 +5,7 @@ from sklearn.utils import shuffle
 import tensorflow as tf
 from tensorflow.contrib.layers import flatten
 
+import numpy as np
 
 
 # Step 0: Load The Data
@@ -98,22 +99,71 @@ print("Number of classes =", n_classes)
 ### preprocessing steps could include converting to grayscale, etc.
 ### Feel free to use as many code cells as needed.
 
-# X_train, y_train = shuffle(X_train, y_train)
+X_train, y_train = shuffle(X_train, y_train)
 
+X_train = X_train.astype(np.float)
+X_valid = X_valid.astype(np.float)
+X_test = X_test.astype(np.float)
+
+for i in range(len(X_train)):
+    for c in range(3):
+        mean = np.mean(X_train[i, :, :, c])
+        stdv = np.std(X_train[i, :, :, c])
+        X_train[i, :, :, c] = X_train[i, :, :, c] - mean
+        X_train[i, :, :, c] = X_train[i, :, :, c] / (stdv * 2.0)
+
+for i in range(len(X_valid)):
+    for c in range(3):
+        mean = np.mean(X_valid[i, :, :, c])
+        stdv = np.std(X_valid[i, :, :, c])
+        X_valid[i, :, :, c] = X_valid[i, :, :, c] - mean
+        X_valid[i, :, :, c] = X_valid[i, :, :, c] / (stdv * 2.0)
+
+for i in range(len(X_test)):
+    for c in range(3):
+        mean = np.mean(X_test[i, :, :, c])
+        stdv = np.std(X_test[i, :, :, c])
+        X_test[i, :, :, c] = X_test[i, :, :, c] - mean
+        X_test[i, :, :, c] = X_test[i, :, :, c] / (stdv * 2.0)
+
+# EPOCH 20
+# No   limitation Validation Accuracy = 0.972 @ epoch 269
+# With Limitation Validation Accuracy = 0.971 @ epoch 224
+X_train = X_train.clip(-1.0, 1.0)
+X_valid = X_valid.clip(-1.0, 1.0)
+X_test = X_test.clip(-1.0, 1.0)
+### x_train = X_train + 1.0
+### X_valid = X_valid + 1.0
+### X_test = X_test + 1.0
 
 
 
 ### Define your architecture here.
 ### Feel free to use as many code cells as needed.
 
-EPOCHS      =  20
-BATCH_SIZE  = 400  # 32  #  64
-FILTER1_NUM =  16  #  6  #  10  #   6
-FILTER2_NUM =  32  # 12  #  20  #  16
-FRC1_NUM    = 128  # 64  # 100  # 120
-FRC2_NUM    =  80  # 32  #  60  #  84
+# Large Model
+FILTER1_NUM =  64
+FILTER2_NUM = 256
+FRC1_NUM    = 256
+FRC2_NUM    = 256
+
+# Middle-Size Model
+FILTER1_NUM =  32
+FILTER2_NUM =  84
+FRC1_NUM    = 240
+FRC2_NUM    = 240
+
+# LeNet-Lesson Model
+FILTER1_NUM =   6
+FILTER2_NUM =  16
+FRC1_NUM    = 120
+FRC2_NUM    =  84
+
+
+EPOCHS      =  20  # 200 # 20 # 100
+BATCH_SIZE  = 100  # 200 # 128
 CLASS_NUM   =  43
-MU          = 0
+MU          =   0
 SIGMA       = 0.1
 
 
@@ -152,7 +202,7 @@ def LeNet(x):
         fc1_b = tf.Variable(tf.truncated_normal(shape=(FRC1_NUM,), mean=MU, stddev=SIGMA))
         fc1   = tf.matmul(fc0, fc1_w) + fc1_b
         fc1   = tf.nn.relu(fc1)
-        # fc1   = tf.nn.dropout(fc1, 0.5)
+        fc1   = tf.nn.dropout(fc1, 0.35)
         # Tensorboard
         fc1_w_hist = tf.summary.histogram("fc1_w", fc1_w)
         fc1_b_hist = tf.summary.histogram("fc1_b", fc1_b)
@@ -163,7 +213,7 @@ def LeNet(x):
         fc2_b = tf.Variable(tf.truncated_normal(shape=(FRC2_NUM,), mean=MU, stddev=SIGMA))
         fc2   = tf.matmul(fc1, fc2_w) + fc2_b
         fc2   = tf.nn.relu(fc2)
-        # fc2   = tf.nn.dropout(fc2, 0.5)
+        fc2   = tf.nn.dropout(fc2, 0.35)
         # Tensorboard
         fc2_w_hist = tf.summary.histogram("fc2_w", fc2_w)
         fc2_b_hist = tf.summary.histogram("fc2_b", fc2_b)
@@ -209,8 +259,8 @@ with tf.name_scope('loss'):
 ### Feel free to use as many code cells as needed.
 
 rate = 0.0001  # Slow to train
-rate = 0.001   # @ pre learning
-rate = 0.0007  #
+rate = 0.0010  # @ pre learning
+rate = 0.0005  # Good performance but slow
 
 with tf.name_scope('train'):
     optimizer = tf.train.AdamOptimizer(learning_rate=rate)

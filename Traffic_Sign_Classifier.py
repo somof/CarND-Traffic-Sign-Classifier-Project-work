@@ -8,20 +8,6 @@ from tensorflow.contrib.layers import flatten
 import numpy as np
 
 
-# Summary functions have been consolidated under the tf.summary namespace.
-# tf.audio_summary should be renamed to tf.summary.audio
-# tf.contrib.deprecated.histogram_summary should be renamed to tf.summary.histogram
-# tf.contrib.deprecated.scalar_summary should be renamed to tf.summary.scalar
-# tf.histogram_summary should be renamed to tf.summary.histogram
-# tf.image_summary should be renamed to tf.summary.image
-# tf.merge_all_summaries should be renamed to tf.summary.merge_all
-# tf.merge_summary should be renamed to tf.summary.merge
-# tf.scalar_summary should be renamed to tf.summary.scalar
-# tf.train.SummaryWriter should be renamed to tf.summary.FileWriter
-
-
-
-
 # Step 0: Load The Data
 
 # Load pickled data
@@ -113,11 +99,15 @@ print("Number of classes =", n_classes)
 ### preprocessing steps could include converting to grayscale, etc.
 ### Feel free to use as many code cells as needed.
 
+seed = 0
+np.random.seed(seed)
+tf.set_random_seed(seed)
+
 X_train, y_train = shuffle(X_train, y_train)
 
-X_train = X_train.astype(np.float)
-X_valid = X_valid.astype(np.float)
-X_test = X_test.astype(np.float)
+X_train = X_train.astype(np.float32)
+X_valid = X_valid.astype(np.float32)
+X_test = X_test.astype(np.float32)
 
 for i in range(len(X_train)):
     for c in range(3):
@@ -140,12 +130,11 @@ for i in range(len(X_test)):
         X_test[i, :, :, c] = X_test[i, :, :, c] - mean
         X_test[i, :, :, c] = X_test[i, :, :, c] / (stdv * 2.0)
 
-# EPOCH 20
-# No   limitation Validation Accuracy = 0.972 @ epoch 269
-# With Limitation Validation Accuracy = 0.971 @ epoch 224
 # X_train = X_train.clip(-1.0, 1.0)
 # X_valid = X_valid.clip(-1.0, 1.0)
 # X_test = X_test.clip(-1.0, 1.0)
+# No   limitation Validation Accuracy = 0.972 @ epoch 269
+# With Limitation Validation Accuracy = 0.971 @ epoch 224
 ### x_train = X_train + 1.0
 ### X_valid = X_valid + 1.0
 ### X_test = X_test + 1.0
@@ -155,21 +144,32 @@ for i in range(len(X_test)):
 ### Define your architecture here.
 ### Feel free to use as many code cells as needed.
 
+# LeNet-Lesson Model
+FILTER1_NUM =   6
+FILTER2_NUM =  16
+FRC1_NUM    = 120
+FRC2_NUM    =  84
+netdir = 'lenet-small'
+
 # Middle-Size Model
 FILTER1_NUM =  16
 FILTER2_NUM =  48
 FRC1_NUM    = 100
 FRC2_NUM    = 100
+netdir = 'lenet-middle'
 
-# Large Model -> GPU fail
-FILTER1_NUM =  32
+# Large Model
+FILTER1_NUM =  64  # 32
 FILTER2_NUM =  84
 FRC1_NUM    = 240
 FRC2_NUM    = 240
+netdir = 'lenet-large'
+
 
 CLASS_NUM   =  43
 MU          =   0
 SIGMA       = 0.1
+
 
 def LeNet(x):
 
@@ -257,13 +257,15 @@ with tf.name_scope('loss'):
 ### the accuracy on the test set should be calculated and reported as well.
 ### Feel free to use as many code cells as needed.
 
-EPOCHS      = 150  # 200 # 20 # 100
-BATCH_SIZE  = 100  # 200 # 128
+EPOCHS      = 400
+BATCH_SIZE  = 100
 
 rate = 0.0001  # Slow to train
 rate = 0.0010  # @ pre learning
 rate = 0.0005  # Good performance but slow
+rate = 0.0002
 
+netdir = 'lenet-largeXX'
 
 with tf.name_scope('train'):
     optimizer = tf.train.AdamOptimizer(learning_rate=rate)
@@ -276,7 +278,7 @@ with tf.name_scope('accuracy'):
         accuracy_operation = tf.reduce_mean(tf.cast(correct_prediction, tf.float32))
 
 
-# ## Model Evaluation
+# Model Evaluation
 
 def evaluate(X_data, y_data):
     num_examples = len(X_data)
@@ -292,62 +294,42 @@ def evaluate(X_data, y_data):
 # ## Train the Model
 
 saver = tf.train.Saver()
-last_validation_accuracy = 0.95
+last_validation_accuracy = 0.98165
 
 with tf.Session() as sess:
+
+    # Initialize & Train
     sess.run(tf.global_variables_initializer())
     num_examples = len(X_train)
 
     # test code
-    ckpt = tf.train.get_checkpoint_state('./')
-    ckpt = None
+    ckpt = tf.train.get_checkpoint_state(netdir)
     if ckpt:  # checkpointがある場合
         last_model = ckpt.model_checkpoint_path  # 最後に保存したmodelへのパス
         print("load " + last_model)
         saver.restore(sess, last_model)  # 変数データの読み込み
-    else:
-        print("Training...")
-        print()
-        for i in range(EPOCHS):
-            print("EPOCH {} ...".format(i + 1))
 
-            X_train, y_train = shuffle(X_train, y_train)
-            for offset in range(0, num_examples, BATCH_SIZE):
-                end = offset + BATCH_SIZE
-                batch_x, batch_y = X_train[offset:end], y_train[offset:end]
-                sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
+    print("Training...")
+    print()
+    print('netdir: ', netdir)
+    print('  FILTER1_NUM = ', FILTER1_NUM)
+    print('  FILTER2_NUM = ', FILTER2_NUM)
+    print('  FRC1_NUM    = ', FRC1_NUM)
+    print('  FRC2_NUM    = ', FRC2_NUM)
+    print()
+    for i in range(EPOCHS):
+        print("\nEPOCH {} ...".format(i + 1))
 
-            validation_accuracy = evaluate(X_valid, y_valid)
-            test_accuracy = evaluate(X_test, y_test)
-            print("Validation Accuracy = {:.5f}".format(validation_accuracy))
-            print("test Accuracy       = {:.5f}".format(test_accuracy))
-            if last_validation_accuracy < validation_accuracy:
-                last_validation_accuracy = validation_accuracy
-                saver.save(sess, './lenet')
-                print("Model saved")
+        X_train, y_train = shuffle(X_train, y_train)
+        for offset in range(0, num_examples, BATCH_SIZE):
+            end = offset + BATCH_SIZE
+            batch_x, batch_y = X_train[offset:end], y_train[offset:end]
+            sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
 
-            print()
+        validation_accuracy = evaluate(X_valid, y_valid)
+        print("Validation Accuracy = {:.5f}".format(validation_accuracy))
 
-        # tb.show_graph(tf.get_default_graph().as_graph_def())
-
-    # print("Additional Training...")
-    # print()
-    # for i in range(EPOCHS):
-    #     X_train, y_train = shuffle(X_train, y_train)
-    #     for offset in range(0, num_examples, BATCH_SIZE):
-    #         end = offset + BATCH_SIZE
-    #         batch_x, batch_y = X_train[offset:end], y_train[offset:end]
-    #         sess.run(training_operation, feed_dict={x: batch_x, y: batch_y})
-    #     validation_accuracy = evaluate(X_valid, y_valid)
-    #     test_accuracy = evaluate(X_test, y_test)
-    #     print("EPOCH {} ...".format(i + 1))
-    #     print("Validation Accuracy = {:.3f}".format(validation_accuracy))
-    #     print("test Accuracy = {:.5f}".format(test_accuracy))
-    #     if last_validation_accuracy < validation_accuracy:
-    #         last_validation_accuracy = validation_accuracy
-    #         saver.save(sess, './lenet')
-    #         print("Model saved")
-
-    #     print()
-    #     if 0.957 < validation_accuracy:
-    #         break
+        if last_validation_accuracy <= validation_accuracy:
+            last_validation_accuracy = validation_accuracy
+            saver.save(sess, './lenet')
+            print(" ** Model saved **")

@@ -264,6 +264,7 @@ rate = 0.0001  # Slow to train
 rate = 0.0010  # @ pre learning
 rate = 0.0005  # Good performance but slow
 rate = 0.0002
+rate = 0.0001
 
 netdir = 'lenet-large_7'
 
@@ -297,6 +298,7 @@ saver = tf.train.Saver()
 last_validation_accuracy = 0.98165
 last_validation_accuracy = 0.97030
 last_validation_accuracy = 0.97167
+last_validation_accuracy = 0.98096
 
 with tf.Session() as sess:
 

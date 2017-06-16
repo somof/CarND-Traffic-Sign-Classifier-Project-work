@@ -13,7 +13,6 @@ GTSRB_data/
 *.sw*
 traffic-signs-data/
 *memo.txt
-/fig/
 /__pycache__/
 /log/
 mnist_with_summaries.py

@@ -52,21 +52,21 @@ http://qiita.com/Hironsan/items/e20d0c01c95cb2e08b94
 
 
   
-  # Image processing for training the network. Note the many random
-  # distortions applied to the image.
+  - Image processing for training the network. Note the many random
+  - distortions applied to the image.
   
-  # Randomly crop a [height, width] section of the image.
+  - Randomly crop a [height, width] section of the image.
   distorted_image = tf.random_crop(reshaped_image, [height, width, 3])
   
-  # Randomly flip the image horizontally.
+  - Randomly flip the image horizontally.
   distorted_image = tf.image.random_flip_left_right(distorted_image)
   
-  # Because these operations are not commutative, consider randomizing
-  # the order their operation.
+  - Because these operations are not commutative, consider randomizing
+  - the order their operation.
   distorted_image = tf.image.random_brightness(distorted_image, max_delta=63)
   distorted_image = tf.image.random_contrast(distorted_image, lower=0.2, upper=1.8)
   
-  # Subtract off the mean and divide by the variance of the pixels.
+  - Subtract off the mean and divide by the variance of the pixels.
   float_image = tf.image.per_image_whitening(distorted_image)
 
 

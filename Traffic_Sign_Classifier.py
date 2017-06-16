@@ -265,7 +265,7 @@ rate = 0.0010  # @ pre learning
 rate = 0.0005  # Good performance but slow
 rate = 0.0002
 
-netdir = 'lenet-largeXX'
+# netdir = 'dummy-to-renew'
 
 with tf.name_scope('train'):
     optimizer = tf.train.AdamOptimizer(learning_rate=rate)

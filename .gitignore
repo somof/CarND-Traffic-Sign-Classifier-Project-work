@@ -16,3 +16,4 @@ traffic-signs-data/
 /__pycache__/
 /log/
 mnist_with_summaries.py
+/trash/

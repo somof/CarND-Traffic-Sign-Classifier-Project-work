@@ -78,6 +78,34 @@ print("Number of classes =", n_classes)
 
 
 
+# 同じラベルの教師画像の平均値の分布
+
+images = X_train
+labels = y_train
+
+simages = images[labels == 20, :, :, :]
+
+wtile = 8
+htile = 4
+displimit = wtile * htile
+for no in range(displimit):
+    if no < len(simages):
+        ax = plt.subplot(htile, wtile, no + 1)
+        plt.subplots_adjust(left=0.005, right=0.990, top=0.995, bottom=0.001, hspace=0.0, wspace=0.0)
+        plt.title("%d" % no, fontsize=6)
+        plt.axis("off")
+        plt.tick_params(labelbottom="off")
+        plt.tick_params(labelleft="off")
+        plt.imshow(simages[no].reshape(32, 32, 3), cmap=None)
+# plt.savefig('fig/XXX.png')
+# exit(0)
+plt.show()
+
+
+exit(0)
+
+
+
 # ラベルの頻度分布
 fig = plt.figure(figsize=(12,8))
 plt.subplots_adjust(left=0.1, right=0.99, top=0.95, bottom=0.45, hspace=0.0, wspace=0.0)

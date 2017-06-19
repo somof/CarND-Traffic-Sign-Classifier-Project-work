@@ -4,7 +4,12 @@
 
 **Build a Traffic Sign Recognition Project**
 
-The goals / steps of this project are the following:
+## Submission
+---
+
+- [Code](https://github.com/somof/CarND-Traffic-Sign-Classifier-Project-work/blob/master/Traffic_Sign_Classifier.ipynb)
+- [Writeup](https://github.com/somof/CarND-Traffic-Sign-Classifier-Project-work/blob/master/writeup.md)
+
 
 * [x] Load the data set (see below for links to the project data set)
 * [ ] Explore, summarize and visualize the data set
@@ -98,18 +103,6 @@ http://qiita.com/Hironsan/items/e20d0c01c95cb2e08b94
 [image8]: ./examples/placeholder.png "Traffic Sign 5"
 
 
-
-## Submission
-
----
-
-- [Code](https://github.com/somof/CarND-Traffic-Sign-Classifier-Project-work/blob/master/Traffic_Sign_Classifier.ipynb)
-- [Writeup](https://github.com/somof/CarND-Traffic-Sign-Classifier-Project-work/blob/master/writeup.md)
-
-## Rubric Points
-###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) 
-individually and describe how I addressed each point in my implementation.  
-
 ---
 ###Writeup / README
 
@@ -122,7 +115,7 @@ signs data set:
 
 * The size of training set is 34799
 * The size of the validation set is 4410
-* The size of test set is 34799
+* The size of test set is 12630
 * The shape of a traffic sign image is (32, 32, 3)
 * The number of unique classes/labels in the data set is 43
 

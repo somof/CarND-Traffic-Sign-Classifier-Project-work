@@ -315,8 +315,8 @@ def evaluate(X_data, y_data):
 
 saver = tf.train.Saver()
 last_validation_accuracy = 0.95760
-last_validation_accuracy = 0.96440
-  
+last_validation_accuracy = 0.96803
+
 with tf.Session() as sess:
 
     # Initialize & Train

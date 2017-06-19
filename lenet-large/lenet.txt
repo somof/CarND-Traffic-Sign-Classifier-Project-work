@@ -9,3 +9,4 @@ FRC2_NUM    = 240
 XX Validation Accuracy = 0.98027
 XX Validation Accuracy = 0.98163
 Validation Accuracy = 0.96440
+Validation Accuracy = 0.96803

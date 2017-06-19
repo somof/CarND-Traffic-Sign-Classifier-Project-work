@@ -76,14 +76,90 @@ print("Number of classes =", n_classes)
 # Other pre-processing steps are optional. You can try different techniques to see if it improves performance.
 # Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.
 
-
-
-# 同じラベルの教師画像の平均値の分布
-
 images = X_train
 labels = y_train
+title = 'X_train'
 
-simages = images[labels == 20, :, :, :]
+# 同じラベルの教師画像の平均値の分布
+mean = np.zeros((len(images), 3)).astype(np.float)
+stdv = np.zeros((len(images), 3)).astype(np.float)
+for i in range(len(images)):
+    for c in range(3):
+        mean[i, c] = np.mean(images[i, :, :, c])
+        stdv[i, c] = np.std(images[i, :, :, c])
+
+cls_mean = np.zeros((43, 3)).astype(np.float)
+cls_stdv = np.zeros((43, 3)).astype(np.float)
+
+for cls in range(43):
+    smean = mean[labels == cls, :]
+    for c in range(3):
+        cls_mean[cls, c] = np.mean(smean[:, c])
+        cls_stdv[cls, c] = np.std(smean[:, c])
+
+w = 0.3
+X0 = np.arange(43)
+X1 = X0 + w
+X2 = X1 + w
+
+fig = plt.figure(figsize=(12,8))
+ax = fig.add_subplot(111)
+plt.subplots_adjust(left=0.1, right=0.99, top=0.95, bottom=0.45, hspace=0.0, wspace=0.0)
+gr = plt.bar(X0, cls_stdv[:, 0], color='r', width=w, label='ch0', align="center")
+gr = plt.bar(X1, cls_stdv[:, 1], color='g', width=w, label='ch1', align="center")
+gr = plt.bar(X2, cls_stdv[:, 2], color='b', width=w, label='ch2', align="center")
+names = ['0:Speed limit (20km/h)', '1:Speed limit (30km/h)', '2:Speed limit (50km/h)', '3:Speed limit (60km/h)', '4:Speed limit (70km/h)', '5:Speed limit (80km/h)', '6:End of speed limit (80km/h)', '7:Speed limit (100km/h)', '8:Speed limit (120km/h)', '9:No passing', '10:No passing for vehicles over 3.5 metric tons', '11:Right-of-way at the next intersection', '12:Priority road', '13:Yield', '14:Stop', '15:No vehicles', '16:Vehicles over 3.5 metric tons prohibited', '17:No entry', '18:General caution', '19:Dangerous curve to the left', '20:Dangerous curve to the right', '21:Double curve', '22:Bumpy road', '23:Slippery road', '24:Road narrows on the right', '25:Road work', '26:Traffic signals', '27:Pedestrians', '28:Children crossing', '29:Bicycles crossing', '30:Beware of ice/snow', '31:Wild animals crossing', '32:End of all speed and passing limits', '33:Turn right ahead', '34:Turn left ahead', '35:Ahead only', '36:Go straight or right', '37:Go straight or left', '38:Keep right', '39:Keep left', '40:Roundabout mandatory', '41:End of no passing', '42:End of no passing by vehicles over 3.5 metric tons']
+plt.xticks(range(43), names, rotation=-90, fontsize="small")
+plt.legend(['ch0', 'ch1', 'ch2'], loc="best")
+plt.title('pixel stdv of mean vs label in ' + title)
+plt.xlim(0, 43)
+# plt.ylim(0, 120)
+ax.set_xlabel("class(label)")
+ax.set_ylabel("mean")
+plt.savefig('fig/pixel_mean_stdv_vs_label.png')
+
+for cls in range(43):
+    sstdv = stdv[labels == cls, :]
+    for c in range(3):
+        cls_mean[cls, c] = np.mean(sstdv[:, c])
+        cls_stdv[cls, c] = np.std(sstdv[:, c])
+
+fig = plt.figure(figsize=(12,8))
+ax = fig.add_subplot(111)
+plt.subplots_adjust(left=0.1, right=0.99, top=0.95, bottom=0.45, hspace=0.0, wspace=0.0)
+gr = plt.bar(X0, cls_stdv[:, 0], color='r', width=w, label='ch0', align="center")
+gr = plt.bar(X1, cls_stdv[:, 1], color='g', width=w, label='ch1', align="center")
+gr = plt.bar(X2, cls_stdv[:, 2], color='b', width=w, label='ch2', align="center")
+names = ['0:Speed limit (20km/h)', '1:Speed limit (30km/h)', '2:Speed limit (50km/h)', '3:Speed limit (60km/h)', '4:Speed limit (70km/h)', '5:Speed limit (80km/h)', '6:End of speed limit (80km/h)', '7:Speed limit (100km/h)', '8:Speed limit (120km/h)', '9:No passing', '10:No passing for vehicles over 3.5 metric tons', '11:Right-of-way at the next intersection', '12:Priority road', '13:Yield', '14:Stop', '15:No vehicles', '16:Vehicles over 3.5 metric tons prohibited', '17:No entry', '18:General caution', '19:Dangerous curve to the left', '20:Dangerous curve to the right', '21:Double curve', '22:Bumpy road', '23:Slippery road', '24:Road narrows on the right', '25:Road work', '26:Traffic signals', '27:Pedestrians', '28:Children crossing', '29:Bicycles crossing', '30:Beware of ice/snow', '31:Wild animals crossing', '32:End of all speed and passing limits', '33:Turn right ahead', '34:Turn left ahead', '35:Ahead only', '36:Go straight or right', '37:Go straight or left', '38:Keep right', '39:Keep left', '40:Roundabout mandatory', '41:End of no passing', '42:End of no passing by vehicles over 3.5 metric tons']
+plt.xticks(range(43), names, rotation=-90, fontsize="small")
+plt.legend(['ch0', 'ch1', 'ch2'], loc="best")
+plt.title('pixel stdv of stdv vs label in ' + title)
+plt.xlim(0, 43)
+# plt.ylim(0, 120)
+ax.set_xlabel("class(label)")
+ax.set_ylabel("stdv")
+plt.savefig('fig/pixel_stdv_stdv_vs_label.png')
+
+plt.show()
+
+fig = plt.figure()
+ax = fig.add_subplot(111)
+gr = plt.plot(range(43), cls_mean, '.')
+plt.legend(['ch0', 'ch1', 'ch2'])
+plt.title('pixel mean vs label in ' + title)
+plt.xlim(0, 43)
+# plt.ylim(0, 120)
+ax.set_xlabel("class(label)")
+ax.set_ylabel("mean")
+plt.savefig('fig/pixel_mean_vs_label.png')
+# plt.show()
+
+exit(0)
+
+# 同じラベルの教師画像の表示
+
+
+simages = images[labels == 21, :, :, :]
 
 wtile = 8
 htile = 4

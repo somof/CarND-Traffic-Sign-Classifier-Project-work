@@ -23,7 +23,7 @@ import matplotlib.pyplot as plt
 #         if 375 <= no:
 #             print(no, 'images displayed')
 #             break
-# plt.savefig('fig/class21_mistake_images.png')
+# plt.savefig('fig/class21_images_mistake.png')
 # plt.show()
 # exit(0)
 
@@ -48,7 +48,7 @@ clslist = (21, )  # (21, 24, 20, 41, 27):
 #             if 250 <= no:
 #                 print(no, 'images displayed')
 #                 break
-# plt.savefig('fig/class%d_training_images.png' % clslist[0])  # bbox_inches="tight", pad_inches=0.0)
+# plt.savefig('fig/class%d_images_training.png' % clslist[0])  # bbox_inches="tight", pad_inches=0.0)
 # plt.show()
 
 if tf.train.get_checkpoint_state(netdir):
@@ -73,7 +73,7 @@ if tf.train.get_checkpoint_state(netdir):
                     plt.tick_params(labelleft="off")
                     plt.imshow(X_valid_org[i].reshape(32, 32, 3), cmap=None)
                     print(i, truth, infcls[0])
-plt.savefig('fig/class%d_failed_valid_images.png' % clslist[0])  # bbox_inches="tight", pad_inches=0.0)
+plt.savefig('fig/class%d_images_failed_valid.png' % clslist[0])  # bbox_inches="tight", pad_inches=0.0)
 plt.show()
 exit(0)
 
@@ -105,7 +105,7 @@ if ckpt:  # checkpointがある場合
                     plt.tick_params(labelleft="off")
                     plt.imshow(X_valid_org[i].reshape(32, 32, 3), cmap=None)
                     print(i, truth, infcls[0])
-plt.savefig('fig/faled_valid_images.png')  # bbox_inches="tight", pad_inches=0.0)
+plt.savefig('fig/failed_images_valid.png')  # bbox_inches="tight", pad_inches=0.0)
 plt.show()
 exit(0)
 
@@ -168,7 +168,7 @@ plt.hist([fail_valid, fail_test],
          )
 plt.xticks(range(0,43), names, rotation=-90, fontsize="small")
 plt.legend()
-plt.savefig('fig/fialed_samples.png')
+plt.savefig('fig/histgram_failed_samples.png')
 # plt.show()
 
 # gtruth = [25, 9, 2, 5, 2, 5, 7, 22, 21, 26, 7, 19, 18, 41, 27, 25, 38, 2, 24, 35, 25, 8, 18, 18, 18, 14, 40, 7, 30, 26, 8, 5, 24, 2, 7, 31, 21, 42, 21, 38, 14, 18, 7, 11, 6, 8, 1, 3, 0, 8, 9, 35]
@@ -191,7 +191,7 @@ plt.hist([gtruth_test, y_fail_test],
          )
 plt.xticks(range(0,43), names, rotation=-90, fontsize="small")
 plt.legend()
-plt.savefig('fig/fialed_test_samples.png')
+plt.savefig('fig/histgram_failed_test_samples.png')
 
 fig = plt.figure(figsize=(12,8))
 plt.subplots_adjust(left=0.1, right=0.99, top=0.95, bottom=0.45, hspace=0.0, wspace=0.0)
@@ -207,7 +207,7 @@ plt.hist([gtruth_valid, y_fail_valid],
          )
 plt.xticks(range(0,43), names, rotation=-90, fontsize="small")
 plt.legend()
-plt.savefig('fig/fialed_validation_samples_2.png')
+plt.savefig('fig/histgram_failed_validation_samples.png')
 
 plt.show()
 

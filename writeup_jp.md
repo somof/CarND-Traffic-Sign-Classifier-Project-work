@@ -6,13 +6,25 @@
 
 The goals / steps of this project are the following:
 
-* [O] Load the data set (see below for links to the project data set)
+* [x] Load the data set (see below for links to the project data set)
 * [ ] Explore, summarize and visualize the data set
 * [ ] Design, train and test a model architecture
-* [ ] Use the model to make predictions on new images
-* [ ] Analyze the softmax probabilities of the new images
-* [ ] Summarize the results with a written report
+* [ ] Preprocessing: preprocessing techniques used
+* [ ] Preprocessing: and why these techniques were chosen.
+* [ ] Model Architecture: the type of model used, the number of layers, the size of each layer. 
+* [ ] Model Architecture: Visualizations emphasizing particular qualities of the architecture
+* [ ] Model Training: how the model was trained by discussing, what optimizer was used/batch size/number of epochs/values for hyperparameters.
+* [ ] Solution Approach: the approach to finding a solution. 
+* [ ] Solution Approach: Accuracy on the validation set is 0.93 or greater.
+* [ ] Acquiring New Images: five new German Traffic signs found on the web, and the images are visualized. 
+* [ ] Acquiring New Images: Discussion is made as to particular qualities of the images or traffic signs in the images that are of interest, 
+* [ ] Acquiring New Images: such as whether they would be difficult for the model to classify.
+* [ ] Performance on New Images: the performance of the model when tested on the captured images. 
+* [ ] Performance on New Images: The performance on the new images is compared to the accuracy results of the test set.
+* [ ] Model Certainty - Softmax Probabilities: The top five softmax probabilities of the predictions on the captured images are outputted.
+* [ ] Model Certainty - Softmax Probabilities: discusses how certain or uncertain the model is of its predictions.
 * [ ] Notebookを提出する際に、HTML版のファイル名を report.html にすること
+
 - Datasetの探索、サマリ、図示
 - Model Architectureの設計とテスト
     - 前処理の説明と、その理由
@@ -29,8 +41,10 @@ The goals / steps of this project are the following:
         - Accuracy on the validation set is 0.93 or greater.
 - Test a Model on New Images
     - Acquiring New Images: German Traffic signsから5つの画像を加え、図示し、分類が難しいかどうか論じる
-    - Performance on New Images: ？
+    - Performance on New Images: キャプチャ画像をテストすつ時のモデルの性能
+    - Performance on New Images: テストセットに対する、新しい画像に対する性能
     - Model Certainty - Softmax Probabilities:
+	
 
 ---
 
@@ -93,7 +107,8 @@ http://qiita.com/Hironsan/items/e20d0c01c95cb2e08b94
 - [Writeup](https://github.com/somof/CarND-Traffic-Sign-Classifier-Project-work/blob/master/writeup.md)
 
 ## Rubric Points
-###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) individually and describe how I addressed each point in my implementation.  
+###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/481/view) 
+individually and describe how I addressed each point in my implementation.  
 
 ---
 ###Writeup / README

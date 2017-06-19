@@ -111,29 +111,29 @@ X_test = X_test.astype(np.float32)
 nsigma = 2.0
 
 for i in range(len(X_train)):
-    mean = np.mean(X_train[i, :, :, :])
-    stdv = np.std(X_train[i, :, :, :])
+    # mean = np.mean(X_train[i, :, :, :])
+    # stdv = np.std(X_train[i, :, :, :])
     for c in range(3):
-        # mean = np.mean(X_train[i, :, :, c])
-        # stdv = np.std(X_train[i, :, :, c])
+        mean = np.mean(X_train[i, :, :, c])
+        stdv = np.std(X_train[i, :, :, c])
         X_train[i, :, :, c] = X_train[i, :, :, c] - mean
         X_train[i, :, :, c] = X_train[i, :, :, c] / (stdv * nsigma)
 
 for i in range(len(X_valid)):
-    mean = np.mean(X_valid[i, :, :, :])
-    stdv = np.std(X_valid[i, :, :, :])
+    # mean = np.mean(X_valid[i, :, :, :])
+    # stdv = np.std(X_valid[i, :, :, :])
     for c in range(3):
-        # mean = np.mean(X_valid[i, :, :, c])
-        # stdv = np.std(X_valid[i, :, :, c])
+        mean = np.mean(X_valid[i, :, :, c])
+        stdv = np.std(X_valid[i, :, :, c])
         X_valid[i, :, :, c] = X_valid[i, :, :, c] - mean
         X_valid[i, :, :, c] = X_valid[i, :, :, c] / (stdv * nsigma)
 
 for i in range(len(X_test)):
-    mean = np.mean(X_test[i, :, :, :])
-    stdv = np.std(X_test[i, :, :, :])
+    # mean = np.mean(X_test[i, :, :, :])
+    # stdv = np.std(X_test[i, :, :, :])
     for c in range(3):
-        # mean = np.mean(X_test[i, :, :, c])
-        # stdv = np.std(X_test[i, :, :, c])
+        mean = np.mean(X_test[i, :, :, c])
+        stdv = np.std(X_test[i, :, :, c])
         X_test[i, :, :, c] = X_test[i, :, :, c] - mean
         X_test[i, :, :, c] = X_test[i, :, :, c] / (stdv * nsigma)
 
@@ -193,16 +193,17 @@ def LeNet(x):
     with tf.name_scope('conv1'):
         # Layer 1: Convolutional. Input = 32x32x3. Output = 26x26xFILTER1_NUM.
         conv1_w = tf.Variable(tf.truncated_normal(shape=(7, 7, 3, FILTER1_NUM), mean=MU, stddev=SIGMA))
-        conv1_b = tf.Variable(tf.truncated_normal(shape=(FILTER1_NUM,), mean=MU, stddev=SIGMA))
-        conv1 = tf.nn.conv2d(x, conv1_w, strides=[1, 1, 1, 1], padding='VALID') + conv1_b
+        # conv1_b = tf.Variable(tf.truncated_normal(shape=(FILTER1_NUM,), mean=MU, stddev=SIGMA))
+        # conv1 = tf.nn.conv2d(x, conv1_w, strides=[1, 1, 1, 1], padding='VALID') + conv1_b
         # batch Normalization
+        conv1 = tf.nn.conv2d(x, conv1_w, strides=[1, 1, 1, 1], padding='VALID')
         conv1 = batch_normalization(conv1)
         conv1 = tf.nn.relu(conv1)
         # Pooling. Input = 26x26xFILTER1_NUM. Output = 13x13xFILTER1_NUM.
         conv1 = tf.nn.max_pool(conv1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
         # Tensorboard
         conv1_w_hist = tf.summary.histogram("conv1_w", conv1_w)
-        conv1_b_hist = tf.summary.histogram("conv1_b", conv1_b)
+        # conv1_b_hist = tf.summary.histogram("conv1_b", conv1_b)
 
     with tf.name_scope('conv2'):
         # Layer 2: Convolutional. put = 13x13xFILTER1_NUM. Output = 9x9xFILTER2_NUM.
@@ -225,7 +226,7 @@ def LeNet(x):
         fc1_b = tf.Variable(tf.truncated_normal(shape=(FRC1_NUM,), mean=MU, stddev=SIGMA))
         fc1   = tf.matmul(fc0, fc1_w) + fc1_b
         fc1   = tf.nn.relu(fc1)
-#        fc1   = tf.nn.dropout(fc1, 0.5)
+        fc1   = tf.nn.dropout(fc1, 0.5)
         # Tensorboard
         fc1_w_hist = tf.summary.histogram("fc1_w", fc1_w)
         fc1_b_hist = tf.summary.histogram("fc1_b", fc1_b)
@@ -236,7 +237,7 @@ def LeNet(x):
         fc2_b = tf.Variable(tf.truncated_normal(shape=(FRC2_NUM,), mean=MU, stddev=SIGMA))
         fc2   = tf.matmul(fc1, fc2_w) + fc2_b
         fc2   = tf.nn.relu(fc2)
-#        fc2   = tf.nn.dropout(fc2, 0.5)
+        fc2   = tf.nn.dropout(fc2, 0.5)
         # Tensorboard
         fc2_w_hist = tf.summary.histogram("fc2_w", fc2_w)
         fc2_b_hist = tf.summary.histogram("fc2_b", fc2_b)
@@ -282,9 +283,10 @@ BATCH_SIZE  = 100
 rate = 0.0010  # good for pre learning
 rate = 0.0005  # Good performance
 rate = 0.0002  # Slow to train
+rate = 0.0001
 
 netdir = 'lenet-large_7'
-netdir = 'dummy-to-renew'
+# netdir = 'dummy-to-renew'
 
 with tf.name_scope('train'):
     optimizer = tf.train.AdamOptimizer(learning_rate=rate)
@@ -313,9 +315,6 @@ def evaluate(X_data, y_data):
 # ## Train the Model
 
 saver = tf.train.Saver()
-last_validation_accuracy = 0.98165
-last_validation_accuracy = 0.97030
-last_validation_accuracy = 0.97167
 last_validation_accuracy = 0.98096
 
 with tf.Session() as sess:
@@ -340,7 +339,7 @@ with tf.Session() as sess:
     print('  FRC2_NUM    = ', FRC2_NUM)
     print()
     for i in range(EPOCHS):
-        print("\nEPOCH {} ...".format(i + 1))
+        print("EPOCH {} ...".format(i + 1))
 
         X_train, y_train = shuffle(X_train, y_train)
         for offset in range(0, num_examples, BATCH_SIZE):
@@ -351,7 +350,18 @@ with tf.Session() as sess:
         validation_accuracy = evaluate(X_valid, y_valid)
         print("Validation Accuracy = {:.5f}".format(validation_accuracy))
 
-        if last_validation_accuracy <= validation_accuracy:
+        if last_validation_accuracy < validation_accuracy:
             last_validation_accuracy = validation_accuracy
             saver.save(sess, './lenet')
             print(" ** Model saved **")
+            print("test Accuracy       = {:.5f}".format(evaluate(X_test, y_test)))
+            print("Training Accuracy   = {:.5f}".format(evaluate(X_train, y_train)))
+
+        elif (i + 1) % 5 == 0:
+            print("test Accuracy       = {:.5f}".format(evaluate(X_test, y_test)))
+            print("Training Accuracy   = {:.5f}".format(evaluate(X_train, y_train)))
+
+    print()
+    print("test Accuracy       = {:.5f}".format(evaluate(X_test, y_test)))
+    print("Training Accuracy   = {:.5f}".format(evaluate(X_train, y_train)))
+    print()

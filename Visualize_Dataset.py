@@ -96,7 +96,7 @@ for i in range(0, wtile * htile):
         plt.tick_params(labelbottom="off")
         plt.tick_params(labelleft="off")
         plt.imshow(X_train[no].reshape(32, 32, 3), cmap=None)
-plt.savefig('fig/TrainingImageValiationSample_2.png')  # bbox_inches="tight", pad_inches=0.0)
+plt.savefig('fig/TrainingImageValiationSample.png')  # bbox_inches="tight", pad_inches=0.0)
 # exit(0)
 # plt.show()
 
@@ -119,7 +119,7 @@ for no in range(0, len(X_train), unit):
         plt.tick_params(labelleft="off")
         plt.imshow(X_train[no].reshape(32, 32, 3), cmap=None)
 
-plt.savefig('fig/AllTrainingImage_skip28_2.png')  # bbox_inches="tight", pad_inches=0.0)
+plt.savefig('fig/AllTrainingImage_skip28.png')  # bbox_inches="tight", pad_inches=0.0)
 # plt.show()
 
 

@@ -196,7 +196,8 @@ def LeNet(x):
         conv1_b = tf.Variable(tf.truncated_normal(shape=(FILTER1_NUM,), mean=MU, stddev=SIGMA))
         conv1 = tf.nn.conv2d(x, conv1_w, strides=[1, 1, 1, 1], padding='VALID') + conv1_b
         # batch Normalization
-        conv1 = batch_normalization(conv1)
+        # conv1 = tf.nn.conv2d(x, conv1_w, strides=[1, 1, 1, 1], padding='VALID')
+        # conv1 = batch_normalization(conv1)
         conv1 = tf.nn.relu(conv1)
         # Pooling. Input = 28x28xFILTER1_NUM. Output = 14x14xFILTER1_NUM.
         conv1 = tf.nn.max_pool(conv1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
@@ -207,14 +208,17 @@ def LeNet(x):
     with tf.name_scope('conv2'):
         # Layer 2: Convolutional. put = 14x14xFILTER1_NUM. Output = 10x10xFILTER2_NUM.
         conv2_w = tf.Variable(tf.truncated_normal(shape=(5, 5, FILTER1_NUM, FILTER2_NUM), mean=MU, stddev=SIGMA))
-        conv2_b = tf.Variable(tf.truncated_normal(shape=(FILTER2_NUM,), mean=MU, stddev=SIGMA))
-        conv2 = tf.nn.conv2d(conv1, conv2_w, strides=[1, 1, 1, 1], padding='VALID') + conv2_b
+        # conv2_b = tf.Variable(tf.truncated_normal(shape=(FILTER2_NUM,), mean=MU, stddev=SIGMA))
+        # conv2 = tf.nn.conv2d(conv1, conv2_w, strides=[1, 1, 1, 1], padding='VALID') + conv2_b
+        # batch Normalization
+        conv2 = tf.nn.conv2d(conv1, conv2_w, strides=[1, 1, 1, 1], padding='VALID')
+        conv2 = batch_normalization(conv2)
         conv2 = tf.nn.relu(conv2)
         # Pooling. Input = 10x10xFILTER2_NUM. Output = 5x5xFILTER2_NUM.
         conv2 = tf.nn.max_pool(conv2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
         # Tensorboard
         conv2_w_hist = tf.summary.histogram("conv2_w", conv2_w)
-        conv2_b_hist = tf.summary.histogram("conv2_b", conv2_b)
+        # conv2_b_hist = tf.summary.histogram("conv2_b", conv2_b)
 
     # Flatten. Input = 5x5xFILTER2_NUM. Output = 5x5xFILTER2_NUM.
     fc0   = flatten(conv2)
@@ -236,7 +240,7 @@ def LeNet(x):
         fc2_b = tf.Variable(tf.truncated_normal(shape=(FRC2_NUM,), mean=MU, stddev=SIGMA))
         fc2   = tf.matmul(fc1, fc2_w) + fc2_b
         fc2   = tf.nn.relu(fc2)
-        fc2   = tf.nn.dropout(fc2, 0.5)
+#        fc2   = tf.nn.dropout(fc2, 0.5)
         # Tensorboard
         fc2_w_hist = tf.summary.histogram("fc2_w", fc2_w)
         fc2_b_hist = tf.summary.histogram("fc2_b", fc2_b)
@@ -283,7 +287,7 @@ rate = 0.0010  # good for pre learning
 rate = 0.0005  # Good performance
 rate = 0.0002  # Slow to train
 
-netdir = 'dummy-to-renew'
+# netdir = 'dummy-to-renew'
 
 with tf.name_scope('train'):
     optimizer = tf.train.AdamOptimizer(learning_rate=rate)
@@ -313,6 +317,8 @@ def evaluate(X_data, y_data):
 
 saver = tf.train.Saver()
 last_validation_accuracy = 0.98165
+last_validation_accuracy = 0.98367
+last_validation_accuracy = 0.95556
 
 with tf.Session() as sess:
 
@@ -336,7 +342,7 @@ with tf.Session() as sess:
     print('  FRC2_NUM    = ', FRC2_NUM)
     print()
     for i in range(EPOCHS):
-        print("\nEPOCH {} ...".format(i + 1))
+        print("EPOCH {} ...".format(i + 1))
 
         X_train, y_train = shuffle(X_train, y_train)
         for offset in range(0, num_examples, BATCH_SIZE):
@@ -347,7 +353,18 @@ with tf.Session() as sess:
         validation_accuracy = evaluate(X_valid, y_valid)
         print("Validation Accuracy = {:.5f}".format(validation_accuracy))
 
-        if last_validation_accuracy <= validation_accuracy:
+        if last_validation_accuracy < validation_accuracy:
             last_validation_accuracy = validation_accuracy
             saver.save(sess, './lenet')
             print(" ** Model saved **")
+            print("test Accuracy       = {:.5f}".format(evaluate(X_test, y_test)))
+            print("Training Accuracy   = {:.5f}".format(evaluate(X_train, y_train)))
+
+        elif (i + 1) % 5 == 0:
+            print("test Accuracy       = {:.5f}".format(evaluate(X_test, y_test)))
+            print("Training Accuracy   = {:.5f}".format(evaluate(X_train, y_train)))
+
+    print()
+    print("test Accuracy       = {:.5f}".format(evaluate(X_test, y_test)))
+    print("Training Accuracy   = {:.5f}".format(evaluate(X_train, y_train)))
+    print()

@@ -13,8 +13,10 @@ endif
 all: vis
 
 vis:
-	$(PYTHONG) Traffic_Sign_Classifier_TensorBoard.py
 	#$(PYTHONC) Visualize_Weights.py
+
+tb:
+	$(PYTHONG) Traffic_Sign_Classifier_TensorBoard.py
 
 train:
 	$(PYTHONG) Traffic_Sign_Classifier.py

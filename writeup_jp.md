@@ -36,7 +36,7 @@ The goals / steps of this project are the following:
 
 更に
 
-- テレーニング画像セットの強化
+- トレーニング画像セットの強化
     - 回転、移動、拡大、反転、色混同
 - precision and recallなどで、解析してから、改善する
 

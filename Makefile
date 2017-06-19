@@ -13,9 +13,13 @@ endif
 all: vis
 
 vis:
+	$(PYTHONC) Visualize_Dataset_distribution_labels.py
+	#$(PYTHONC) Visualize_Dataset_Images.py
+
+weight:
 	$(PYTHONC) Visualize_Weights.py
 
-tensor:
+tb:
 	$(PYTHONG) Traffic_Sign_Classifier_TensorBoard.py
 
 train:

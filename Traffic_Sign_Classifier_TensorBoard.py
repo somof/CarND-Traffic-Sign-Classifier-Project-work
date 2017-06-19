@@ -113,6 +113,7 @@ X_train, y_train = shuffle(X_train, y_train)
 X_train = X_train.astype(np.float32)
 X_valid = X_valid.astype(np.float32)
 X_test = X_test.astype(np.float32)
+nsigma = 2.0
 
 # (V-128)/128 epoch 60 -> 0.875 (middle)
 # (V-mean)/3xstdv epoch 60 -> 0.946 (middle)
@@ -120,28 +121,31 @@ X_test = X_test.astype(np.float32)
 # (V-mean)/2xstdv epoch 60 -> 0.96 (large)
 
 for i in range(len(X_train)):
+    mean = np.mean(X_train[i, :, :, :])
+    stdv = np.std(X_train[i, :, :, :])
     for c in range(3):
-        mean = np.mean(X_train[i, :, :, c])
-        stdv = np.std(X_train[i, :, :, c])
+        # mean = np.mean(X_train[i, :, :, c])
+        # stdv = np.std(X_train[i, :, :, c])
         X_train[i, :, :, c] = X_train[i, :, :, c] - mean
-        X_train[i, :, :, c] = X_train[i, :, :, c] / (stdv * 2.0)
-        #X_train[i, :, :, c] = X_train[i, :, :, c] / 128.0
+        X_train[i, :, :, c] = X_train[i, :, :, c] / (stdv * nsigma)
 
 for i in range(len(X_valid)):
+    mean = np.mean(X_valid[i, :, :, :])
+    stdv = np.std(X_valid[i, :, :, :])
     for c in range(3):
-        mean = np.mean(X_valid[i, :, :, c])
-        stdv = np.std(X_valid[i, :, :, c])
+        # mean = np.mean(X_valid[i, :, :, c])
+        # stdv = np.std(X_valid[i, :, :, c])
         X_valid[i, :, :, c] = X_valid[i, :, :, c] - mean
-        X_valid[i, :, :, c] = X_valid[i, :, :, c] / (stdv * 2.0)
-        # X_valid[i, :, :, c] = X_valid[i, :, :, c] / 128.0
+        X_valid[i, :, :, c] = X_valid[i, :, :, c] / (stdv * nsigma)
 
 for i in range(len(X_test)):
+    mean = np.mean(X_test[i, :, :, :])
+    stdv = np.std(X_test[i, :, :, :])
     for c in range(3):
-        mean = np.mean(X_test[i, :, :, c])
-        stdv = np.std(X_test[i, :, :, c])
+        # mean = np.mean(X_test[i, :, :, c])
+        # stdv = np.std(X_test[i, :, :, c])
         X_test[i, :, :, c] = X_test[i, :, :, c] - mean
-        X_test[i, :, :, c] = X_test[i, :, :, c] / (stdv * 2.0)
-        # X_test[i, :, :, c] = X_test[i, :, :, c] / 128.0
+        X_test[i, :, :, c] = X_test[i, :, :, c] / (stdv * nsigma)
 
 # X_train = X_train.clip(-1.0, 1.0)
 # X_valid = X_valid.clip(-1.0, 1.0)
@@ -181,20 +185,33 @@ MU          =   0
 SIGMA       = 0.1
 
 
+def batch_normalization(x, decay=0.9, eps=1e-5):
+    shape = x.get_shape().as_list()
+    if len(shape) == 2:
+        batch_mean, batch_var = tf.nn.moments(x, [0])
+    else:
+        batch_mean, batch_var = tf.nn.moments(x, [0, 1, 2])
+
+    return tf.nn.batch_normalization(x, batch_mean, batch_var, None, None, eps)
+
+
 def LeNet(x):
 
     with tf.name_scope('conv1'):
         # Layer 1: Convolutional. Input = 32x32x1. Output = 28x28xFILTER1_NUM.
         conv1_w = tf.Variable(tf.truncated_normal(shape=(5, 5, 3, FILTER1_NUM), mean=MU, stddev=SIGMA))
-        conv1_b = tf.Variable(tf.truncated_normal(shape=(FILTER1_NUM,), mean=MU, stddev=SIGMA))
+        # conv1_b = tf.Variable(tf.truncated_normal(shape=(FILTER1_NUM,), mean=MU, stddev=SIGMA))
         # conv1 = tf.nn.conv2d(x, conv1_w, strides=[1, 1, 1, 1], padding='VALID', use_cudnn_on_gpu=False) + conv1_b
-        conv1 = tf.nn.conv2d(x, conv1_w, strides=[1, 1, 1, 1], padding='VALID') + conv1_b
+        # conv1 = tf.nn.conv2d(x, conv1_w, strides=[1, 1, 1, 1], padding='VALID') + conv1_b
+        conv1 = tf.nn.conv2d(x, conv1_w, strides=[1, 1, 1, 1], padding='VALID')
+        # batch Normalization
+        conv1 = batch_normalization(conv1)
         conv1 = tf.nn.relu(conv1)
         # Pooling. Input = 28x28xFILTER1_NUM. Output = 14x14xFILTER1_NUM.
         conv1 = tf.nn.max_pool(conv1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
         # Tensorboard
         conv1_w_hist = tf.summary.histogram("conv1_w", conv1_w)
-        conv1_b_hist = tf.summary.histogram("conv1_b", conv1_b)
+        # conv1_b_hist = tf.summary.histogram("conv1_b", conv1_b)
 
     with tf.name_scope('conv2'):
         # Layer 2: Convolutional. put = 14x14xFILTER1_NUM. Output = 10x10xFILTER2_NUM.
@@ -218,7 +235,7 @@ def LeNet(x):
         fc1_b = tf.Variable(tf.truncated_normal(shape=(FRC1_NUM,), mean=MU, stddev=SIGMA))
         fc1   = tf.matmul(fc0, fc1_w) + fc1_b
         fc1   = tf.nn.relu(fc1)
-        fc1   = tf.nn.dropout(fc1, 0.5)
+#        fc1   = tf.nn.dropout(fc1, 0.5)
         # Tensorboard
         fc1_w_hist = tf.summary.histogram("fc1_w", fc1_w)
         fc1_b_hist = tf.summary.histogram("fc1_b", fc1_b)
@@ -229,7 +246,7 @@ def LeNet(x):
         fc2_b = tf.Variable(tf.truncated_normal(shape=(FRC2_NUM,), mean=MU, stddev=SIGMA))
         fc2   = tf.matmul(fc1, fc2_w) + fc2_b
         fc2   = tf.nn.relu(fc2)
-        fc2   = tf.nn.dropout(fc2, 0.5)
+#        fc2   = tf.nn.dropout(fc2, 0.5)
         # Tensorboard
         fc2_w_hist = tf.summary.histogram("fc2_w", fc2_w)
         fc2_b_hist = tf.summary.histogram("fc2_b", fc2_b)
@@ -272,9 +289,9 @@ with tf.name_scope('loss'):
 EPOCHS      = 150
 BATCH_SIZE  = 100
 
-rate = 0.0001  # Slow to train
-rate = 0.0005  # Good performance but slow
-rate = 0.0010  # Good for pre test
+rate = 0.0010  # good for pre learning
+rate = 0.0005  # Good performance
+rate = 0.0002  # Slow to train
 
 
 with tf.name_scope('train'):
@@ -334,14 +351,13 @@ with tf.Session() as sess:
     print("Training...")
     print()
     print('boarddir: ', boarddir)
-    print('netdir: ', netdir)
     print('  FILTER1_NUM = ', FILTER1_NUM)
     print('  FILTER2_NUM = ', FILTER2_NUM)
     print('  FRC1_NUM    = ', FRC1_NUM)
     print('  FRC2_NUM    = ', FRC2_NUM)
     print()
     for i in range(EPOCHS):
-        print("\nEPOCH {} ...".format(i + 1))
+        print("EPOCH {} ...".format(i + 1))
 
         X_train, y_train = shuffle(X_train, y_train)
         for offset in range(0, num_examples, BATCH_SIZE):

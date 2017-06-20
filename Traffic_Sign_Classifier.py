@@ -164,14 +164,17 @@ FILTER2_NUM =  48
 FRC1_NUM    = 100
 FRC2_NUM    = 100
 netdir = 'lenet-middle'
+last_validation_accuracy = 0.95125
 
 # Large Model
-FILTER1_NUM =  64  # 32
-FILTER2_NUM =  84
-FRC1_NUM    = 240
-FRC2_NUM    = 240
-netdir = 'lenet-large'
+# FILTER1_NUM =  64
+# FILTER2_NUM =  84
+# FRC1_NUM    = 240
+# FRC2_NUM    = 240
+# netdir = 'lenet-large'
+# last_validation_accuracy = 0.98163
 
+netdir = 'dummy-to-renew'
 
 CLASS_NUM   =  43
 MU          =   0
@@ -277,15 +280,13 @@ with tf.name_scope('loss'):
 ### the accuracy on the test set should be calculated and reported as well.
 ### Feel free to use as many code cells as needed.
 
-EPOCHS      = 400
+EPOCHS      = 100
 BATCH_SIZE  = 100
 
 rate = 0.0010  # good for pre learning
-rate = 0.0005  # Good performance
 rate = 0.0002  # Slow to train
-rate = 0.0001
+rate = 0.0005  # Good performance
 
-# netdir = 'dummy-to-renew'
 
 with tf.name_scope('train'):
     optimizer = tf.train.AdamOptimizer(learning_rate=rate)
@@ -314,8 +315,6 @@ def evaluate(X_data, y_data):
 # ## Train the Model
 
 saver = tf.train.Saver()
-last_validation_accuracy = 0.95760
-last_validation_accuracy = 0.96803
 
 with tf.Session() as sess:
 

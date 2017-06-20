@@ -124,35 +124,3 @@ plt.savefig('fig/AllTrainingImage_skip28.png')  # bbox_inches="tight", pad_inche
 
 
 
-exit(0)
-
-
-[draw_digit2([
-    [notmnist_data[idx], notmnist_target[idx]]
-    for idx in rd.randint(len(dataset), size=10)])
-for i in range(10)]
-
-
-def draw_trafficsign(tsigns):
-    print(tsigns.shape)
-    print(len(tsigns))
-    size = 32
-    plt.figure()
-    # plt.figure(figsize=(len(tsigns)*1.5, 2))
-    for i, data in enumerate(tsigns):
-        plt.subplot(1, len(tsigns), i + 1)
-        X, Y = np.meshgrid(range(size), range(size), 3)
-        Z = data[0].reshape(size, size)   # convert from vector to 32x32x3 matrix
-        # Z = Z[::-1, :]             # flip vertical
-        plt.xlim(0, size - 1)
-        plt.ylim(0, size - 1)
-        plt.pcolor(X, Y, Z)
-        # plt.gray()
-        plt.title(num2alpha[data[1]])
-        plt.tick_params(labelbottom="off")
-        plt.tick_params(labelleft="off")
-
-    plt.show()
-
-#draw_trafficsign(X_train)
-

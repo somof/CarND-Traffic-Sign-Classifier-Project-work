@@ -78,7 +78,71 @@ print("Number of classes =", n_classes)
 # Use the code cell (or multiple code cells, if necessary) to implement the first step of your project.
 
 
-fig = plt.figure(figsize=(26,14))
+clslist = (16, 21, 20, 25, 24, 0)
+clslist = (16, 21, 20, 24, 25, 0, 5, 27, 8, 29, 23, 22)
+clslist = (22, )
+
+# images = X_valid
+# labels = y_valid
+# title = 'X_valid'
+# fig = plt.figure(figsize=(26,14))
+# wtile = 16
+# htile = 6
+# limit = wtile * htile
+# no = 0
+# for i in range(len(images)):
+#     if labels[i] in clslist and no < limit:
+#         # print(no)
+#         ax = plt.subplot(htile, wtile, no + 1)
+#         plt.subplots_adjust(left=0.005, right=0.990, top=0.995, bottom=0.001, hspace=0.0, wspace=0.0)
+#         plt.title("%d" % no, fontsize=6)
+#         plt.axis("off")
+#         plt.tick_params(labelbottom="off")
+#         plt.tick_params(labelleft="off")
+#         plt.imshow(images[i].reshape(32, 32, 3), cmap=None)
+#         no += 1
+# plt.savefig('fig/class%02d_images_valid.png' % clslist[0])
+# plt.show()
+
+
+
+images = X_train
+labels = y_train
+title = 'X_train'
+
+clslist = range(43)
+for cls in clslist:
+    fig = plt.figure(figsize=(26,14))
+    wtile = 40  # 30
+    htile = 16  # 12
+    limit = wtile * htile  # 2000
+    no = 0
+    for i in range(len(images)):
+        if labels[i] == cls:
+            if no % 2 == 0 and no < limit:
+                ax = plt.subplot(htile, wtile, no//2 + 1)
+                plt.subplots_adjust(left=0.005, right=0.990, top=0.995, bottom=0.001, hspace=0.0, wspace=0.0)
+                plt.title("%d" % no, fontsize=6)
+                plt.axis("off")
+                plt.tick_params(labelbottom="off")
+                plt.tick_params(labelleft="off")
+                plt.imshow(images[i].reshape(32, 32, 3), cmap=None)
+            no += 1
+    plt.savefig('fig/class%02d_images_training.png' % cls)
+    # plt.show()
+
+exit(0)
+
+
+
+
+
+
+
+
+
+
+
 
 # 34799 image ->
 
@@ -124,36 +188,4 @@ plt.savefig('fig/AllTrainingImage_skip28.png')  # bbox_inches="tight", pad_inche
 # plt.show()
 
 
-
-exit(0)
-
-
-[draw_digit2([
-    [notmnist_data[idx], notmnist_target[idx]]
-    for idx in rd.randint(len(dataset), size=10)])
-for i in range(10)]
-
-
-def draw_trafficsign(tsigns):
-    print(tsigns.shape)
-    print(len(tsigns))
-    size = 32
-    plt.figure()
-    # plt.figure(figsize=(len(tsigns)*1.5, 2))
-    for i, data in enumerate(tsigns):
-        plt.subplot(1, len(tsigns), i + 1)
-        X, Y = np.meshgrid(range(size), range(size), 3)
-        Z = data[0].reshape(size, size)   # convert from vector to 32x32x3 matrix
-        # Z = Z[::-1, :]             # flip vertical
-        plt.xlim(0, size - 1)
-        plt.ylim(0, size - 1)
-        plt.pcolor(X, Y, Z)
-        # plt.gray()
-        plt.title(num2alpha[data[1]])
-        plt.tick_params(labelbottom="off")
-        plt.tick_params(labelleft="off")
-
-    plt.show()
-
-#draw_trafficsign(X_train)
 

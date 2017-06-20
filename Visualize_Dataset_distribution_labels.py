@@ -126,7 +126,7 @@ plt.legend(['ch0', 'ch1', 'ch2'], loc="best")
 plt.savefig('fig/pixel_stdv_vs_label.png')
 plt.show()
 
-exit(0)
+#exit(0)
 
 
 

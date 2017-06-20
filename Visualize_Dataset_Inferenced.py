@@ -417,8 +417,8 @@ with tf.Session() as sess:
         limit = wtile * htile
         no = 0
         fig = plt.figure(figsize=(26,14))
-        plt.subplots_adjust(left=0.005, right=0.990, top=0.960, bottom=0.001, hspace=0.0, wspace=0.0)
-        fig.suptitle('class%02d: infered samples' % cls)
+        plt.subplots_adjust(left=0.005, right=0.990, top=0.910, bottom=0.001, hspace=0.0, wspace=0.0)
+        fig.suptitle('class%02d: infered samples' % cls, fontsize=96)
         for i in range(len(images)):
             if labels[i] == cls and correct_prediction[i] and no < limit:
                 ax = plt.subplot(htile, wtile, no + 1)
@@ -433,8 +433,8 @@ with tf.Session() as sess:
         # 
         no = 0
         fig = plt.figure(figsize=(26,14))
-        plt.subplots_adjust(left=0.005, right=0.990, top=0.960, bottom=0.001, hspace=0.0, wspace=0.0)
-        fig.suptitle('class%02d: failed samples' % cls)
+        plt.subplots_adjust(left=0.005, right=0.990, top=0.910, bottom=0.001, hspace=0.0, wspace=0.0)
+        fig.suptitle('class%02d: failed samples' % cls, fontsize=96)
         for i in range(len(images)):
             if labels[i] == cls and not correct_prediction[i] and no < limit:
                 ax = plt.subplot(htile, wtile, no + 1)

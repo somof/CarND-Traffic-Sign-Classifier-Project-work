@@ -11,7 +11,7 @@
 - [Writeup](https://github.com/somof/CarND-Traffic-Sign-Classifier-Project-work/blob/master/writeup.md)
 
 
-* [x] Load the data set (see below for links to the project data set)
+* [X] Load the data set (see below for links to the project data set)
 * [ ] Explore, summarize and visualize the data set
 * [ ] Design, train and test a model architecture
 * [ ] Preprocessing: preprocessing techniques used
@@ -93,7 +93,7 @@ http://qiita.com/Hironsan/items/e20d0c01c95cb2e08b94
 
 [//]: # (Image References)
 
-[image1]: ./examples/visualization.jpg "Visualization"
+<!-- [image1]: ./examples/visualization.jpg "Visualization" -->
 [image2]: ./examples/grayscale.jpg "Grayscaling"
 [image3]: ./examples/random_noise.jpg "Random Noise"
 [image4]: ./examples/placeholder.png "Traffic Sign 1"
@@ -123,30 +123,69 @@ signs data set:
 
 Here is an exploratory visualization of the data set. It is a bar chart showing how the data ...
 
-![alt text][image1]
+<!-- ![alt text][image1] -->
 
 
 - 43種類の標識が 34799枚
 - 数量はまちまち
 - トレーニング画像の分布と、テスト用画像の分布が、そろっていない
 
-<img width=640 alt="histgram" src="./fig/HistgramOfDataset.png"/>
+<img width=640 alt="histgram" src="./fig/histgram_of_dataset.png"/>
 
-
-<img width=640 alt="valiation sample" src="./fig/TrainingImageValiationSample.png"/>
-
-<img width=640 alt="training images" src="./fig/AllTrainingImage_skip28.png"/>
+<!-- <img width=640 alt="valiation sample" src="./fig/TrainingImageValiationSample.png"/> -->
+<!-- <img width=640 alt="training images" src="./fig/AllTrainingImage_skip28.png"/> -->
 
 
 
 - ダメな画像を見付ける
 - 新たな画像５枚を選んで教師画像に加える
 
+<img width=640 src="./fig/histgram_failed_samples_and_trainigdata.png"/>
+<img width=640 src="./fig/histgram_failed_samples.png"/>
+<img width=640 src="./fig/histgram_of_dataset_all.png"/>
+<img width=640 src="./fig/histgram_of_dataset.png"/>
+
+
+<img width=640 src="./fig/pixel_mean_vs_stdv_in_X_train_each.png"/>
+<img width=640 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_3chonce.png"/>
+<img width=640 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_eachch.png"/>
+
+
+clslist = (16, 21, 20, 24, 25, 0, 5, 27, 8, 29, 23, 22)
+
+<img width=320 src="./fig/class16_images_valid_failed.png"/>
+<img width=320 src="./fig/class16_images_valid_infered.png"/><br>
+<img width=320 src="./fig/class21_images_valid_failed.png"/>
+<img width=320 src="./fig/class21_images_valid_infered.png"/><br>
+<img width=320 src="./fig/class20_images_valid_failed.png"/>
+<img width=320 src="./fig/class20_images_valid_infered.png"/><br>
+<img width=320 src="./fig/class24_images_valid_failed.png"/>
+<img width=320 src="./fig/class24_images_valid_infered.png"/><br>
+<img width=320 src="./fig/class25_images_valid_failed.png"/>
+<img width=320 src="./fig/class25_images_valid_infered.png"/><br>
+<img width=320 src="./fig/class00_images_valid_failed.png"/>
+<img width=320 src="./fig/class00_images_valid_infered.png"/><br>
+<img width=320 src="./fig/class05_images_valid_failed.png"/>
+<img width=320 src="./fig/class05_images_valid_infered.png"/><br>
+<img width=320 src="./fig/class27_images_valid_failed.png"/>
+<img width=320 src="./fig/class27_images_valid_infered.png"/><br>
+<img width=320 src="./fig/class08_images_valid_failed.png"/>
+<img width=320 src="./fig/class08_images_valid_infered.png"/><br>
+<img width=320 src="./fig/class29_images_valid_failed.png"/>
+<img width=320 src="./fig/class29_images_valid_infered.png"/><br>
+<img width=320 src="./fig/class23_images_valid_failed.png"/>
+<img width=320 src="./fig/class23_images_valid_infered.png"/><br>
+<img width=320 src="./fig/class22_images_valid_failed.png"/>
+<img width=320 src="./fig/class22_images_valid_infered.png"/><br>
 
 
 ###Design and Test a Model Architecture
 
 ####1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)
+
+<img width=640 alt="training data normalization" src="./fig/images_normalized_for_training.png"/>
+
+
 
 As a first step, I decided to convert the images to grayscale because ...
 

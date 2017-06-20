@@ -12,15 +12,28 @@
 <h1 id="traffic-sign-recognition"><strong>Traffic Sign Recognition</strong></h1>
 <hr />
 <p><strong>Build a Traffic Sign Recognition Project</strong></p>
-<p>The goals / steps of this project are the following:</p>
+<h2 id="submission">## Submission</h2>
 <ul>
-<li>[O] Load the data set (see below for links to the project data set)</li>
+<li><a href="https://github.com/somof/CarND-Traffic-Sign-Classifier-Project-work/blob/master/Traffic_Sign_Classifier.ipynb">Code</a></li>
+<li><p><a href="https://github.com/somof/CarND-Traffic-Sign-Classifier-Project-work/blob/master/writeup.md">Writeup</a></p></li>
+<li>[X] Load the data set (see below for links to the project data set)</li>
 <li>[ ] Explore, summarize and visualize the data set</li>
 <li>[ ] Design, train and test a model architecture</li>
-<li>[ ] Use the model to make predictions on new images</li>
-<li>[ ] Analyze the softmax probabilities of the new images</li>
-<li>[ ] Summarize the results with a written report</li>
-<li>[ ] Notebookを提出する際に、HTML版のファイル名を report.html にすること</li>
+<li>[ ] Preprocessing: preprocessing techniques used</li>
+<li>[ ] Preprocessing: and why these techniques were chosen.</li>
+<li>[ ] Model Architecture: the type of model used, the number of layers, the size of each layer.</li>
+<li>[ ] Model Architecture: Visualizations emphasizing particular qualities of the architecture</li>
+<li>[ ] Model Training: how the model was trained by discussing, what optimizer was used/batch size/number of epochs/values for hyperparameters.</li>
+<li>[ ] Solution Approach: the approach to finding a solution.</li>
+<li>[ ] Solution Approach: Accuracy on the validation set is 0.93 or greater.</li>
+<li>[ ] Acquiring New Images: five new German Traffic signs found on the web, and the images are visualized.</li>
+<li>[ ] Acquiring New Images: Discussion is made as to particular qualities of the images or traffic signs in the images that are of interest,</li>
+<li>[ ] Acquiring New Images: such as whether they would be difficult for the model to classify.</li>
+<li>[ ] Performance on New Images: the performance of the model when tested on the captured images.</li>
+<li>[ ] Performance on New Images: The performance on the new images is compared to the accuracy results of the test set.</li>
+<li>[ ] Model Certainty - Softmax Probabilities: The top five softmax probabilities of the predictions on the captured images are outputted.</li>
+<li>[ ] Model Certainty - Softmax Probabilities: discusses how certain or uncertain the model is of its predictions.</li>
+<li><p>[ ] Notebookを提出する際に、HTML版のファイル名を report.html にすること</p></li>
 <li>Datasetの探索、サマリ、図示</li>
 <li>Model Architectureの設計とテスト
 <ul>
@@ -48,14 +61,15 @@
 <li>Test a Model on New Images
 <ul>
 <li>Acquiring New Images: German Traffic signsから5つの画像を加え、図示し、分類が難しいかどうか論じる</li>
-<li>Performance on New Images: ？</li>
+<li>Performance on New Images: キャプチャ画像をテストすつ時のモデルの性能</li>
+<li>Performance on New Images: テストセットに対する、新しい画像に対する性能</li>
 <li>Model Certainty - Softmax Probabilities:</li>
 </ul></li>
 </ul>
 <hr />
 <p>更に</p>
 <ul>
-<li>テレーニング画像セットの強化
+<li>トレーニング画像セットの強化
 <ul>
 <li>回転、移動、拡大、反転、色混同</li>
 </ul></li>
@@ -67,53 +81,50 @@
 <li>random_flip_left_right</li>
 <li>random_brightness</li>
 <li>random_contrast</li>
-<li>per_image_whitening</li>
+<li><p>per_image_whitening</p></li>
+<li>Image processing for training the network. Note the many random</li>
+<li><p>distortions applied to the image.</p></li>
+<li><p>Randomly crop a [height, width] section of the image. distorted_image = tf.random_crop(reshaped_image, [height, width, 3])</p></li>
+<li><p>Randomly flip the image horizontally. distorted_image = tf.image.random_flip_left_right(distorted_image)</p></li>
+<li>Because these operations are not commutative, consider randomizing</li>
+<li><p>the order their operation. distorted_image = tf.image.random_brightness(distorted_image, max_delta=63) distorted_image = tf.image.random_contrast(distorted_image, lower=0.2, upper=1.8)</p></li>
+<li><p>Subtract off the mean and divide by the variance of the pixels. float_image = tf.image.per_image_whitening(distorted_image)</p></li>
 </ul>
-<p># Image processing for training the network. Note the many random # distortions applied to the image.</p>
-<p># Randomly crop a [height, width] section of the image. distorted_image = tf.random_crop(reshaped_image, [height, width, 3])</p>
-<p># Randomly flip the image horizontally. distorted_image = tf.image.random_flip_left_right(distorted_image)</p>
-<p># Because these operations are not commutative, consider randomizing # the order their operation. distorted_image = tf.image.random_brightness(distorted_image, max_delta=63) distorted_image = tf.image.random_contrast(distorted_image, lower=0.2, upper=1.8)</p>
-<p># Subtract off the mean and divide by the variance of the pixels. float_image = tf.image.per_image_whitening(distorted_image)</p>
-<h2 id="submission">Submission</h2>
-<hr />
-<ul>
-<li><a href="https://github.com/somof/CarND-Traffic-Sign-Classifier-Project-work/blob/master/Traffic_Sign_Classifier.ipynb">Code</a></li>
-<li><a href="https://github.com/somof/CarND-Traffic-Sign-Classifier-Project-work/blob/master/writeup.md">Writeup</a></li>
-</ul>
-<h2 id="rubric-points">Rubric Points</h2>
-<h3 id="here-i-will-consider-the-rubric-points-individually-and-describe-how-i-addressed-each-point-in-my-implementation.">Here I will consider the <a href="https://review.udacity.com/#!/rubrics/481/view">rubric points</a> individually and describe how I addressed each point in my implementation.</h3>
+<!-- [image1]: ./examples/visualization.jpg "Visualization" -->
 <hr />
 <h3 id="writeup-readme">Writeup / README</h3>
 <h3 id="data-set-summary-exploration">Data Set Summary &amp; Exploration</h3>
 <h4 id="provide-a-basic-summary-of-the-data-set.-in-the-code-the-analysis-should-be-done-using-python-numpy-andor-pandas-methods-rather-than-hardcoding-results-manually.">1. Provide a basic summary of the data set. In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.</h4>
 <p>I used the pandas library to calculate summary statistics of the traffic signs data set:</p>
 <ul>
-<li>The size of training set is ?</li>
-<li>The size of the validation set is ?</li>
-<li>The size of test set is ?</li>
-<li>The shape of a traffic sign image is ?</li>
-<li>The number of unique classes/labels in the data set is ?</li>
+<li>The size of training set is 34799</li>
+<li>The size of the validation set is 4410</li>
+<li>The size of test set is 12630</li>
+<li>The shape of a traffic sign image is (32, 32, 3)</li>
+<li>The number of unique classes/labels in the data set is 43</li>
 </ul>
 <h4 id="include-an-exploratory-visualization-of-the-dataset.">2. Include an exploratory visualization of the dataset.</h4>
 <p>Here is an exploratory visualization of the data set. It is a bar chart showing how the data ...</p>
-<div class="figure">
-<img src="./examples/visualization.jpg" title="Visualization" alt="alt text" />
-<p class="caption">alt text</p>
-</div>
+<!-- ![alt text][image1] -->
 <ul>
 <li>43種類の標識が 34799枚</li>
 <li>数量はまちまち</li>
 <li>トレーニング画像の分布と、テスト用画像の分布が、そろっていない</li>
 </ul>
-<p><img width=640 alt="histgram" src="./fig/HistgramOfDataset.png"/></p>
-<p><img width=640 alt="valiation sample" src="./fig/TrainingImageValiationSample.png"/></p>
-<p><img width=640 alt="training images" src="./fig/AllTrainingImage_skip28.png"/></p>
+<p><img width=640 alt="histgram" src="./fig/histgram_of_dataset.png"/></p>
+<!-- <img width=640 alt="valiation sample" src="./fig/TrainingImageValiationSample.png"/> -->
+<!-- <img width=640 alt="training images" src="./fig/AllTrainingImage_skip28.png"/> -->
 <ul>
 <li>ダメな画像を見付ける</li>
 <li>新たな画像５枚を選んで教師画像に加える</li>
 </ul>
+<p><img width=640 src="./fig/histgram_failed_samples_and_trainigdata.png"/> <img width=640 src="./fig/histgram_failed_samples.png"/> <img width=640 src="./fig/histgram_of_dataset_all.png"/> <img width=640 src="./fig/histgram_of_dataset.png"/></p>
+<p><img width=640 src="./fig/pixel_mean_vs_stdv_in_X_train_each.png"/> <img width=640 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_3chonce.png"/> <img width=640 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_eachch.png"/></p>
+<p>clslist = (16, 21, 20, 24, 25, 0, 5, 27, 8, 29, 23, 22)</p>
+<p><img width=320 src="./fig/class16_images_valid_failed.png"/> <img width=320 src="./fig/class16_images_valid_infered.png"/><br> <img width=320 src="./fig/class21_images_valid_failed.png"/> <img width=320 src="./fig/class21_images_valid_infered.png"/><br> <img width=320 src="./fig/class20_images_valid_failed.png"/> <img width=320 src="./fig/class20_images_valid_infered.png"/><br> <img width=320 src="./fig/class24_images_valid_failed.png"/> <img width=320 src="./fig/class24_images_valid_infered.png"/><br> <img width=320 src="./fig/class25_images_valid_failed.png"/> <img width=320 src="./fig/class25_images_valid_infered.png"/><br> <img width=320 src="./fig/class00_images_valid_failed.png"/> <img width=320 src="./fig/class00_images_valid_infered.png"/><br> <img width=320 src="./fig/class05_images_valid_failed.png"/> <img width=320 src="./fig/class05_images_valid_infered.png"/><br> <img width=320 src="./fig/class27_images_valid_failed.png"/> <img width=320 src="./fig/class27_images_valid_infered.png"/><br> <img width=320 src="./fig/class08_images_valid_failed.png"/> <img width=320 src="./fig/class08_images_valid_infered.png"/><br> <img width=320 src="./fig/class29_images_valid_failed.png"/> <img width=320 src="./fig/class29_images_valid_infered.png"/><br> <img width=320 src="./fig/class23_images_valid_failed.png"/> <img width=320 src="./fig/class23_images_valid_infered.png"/><br> <img width=320 src="./fig/class22_images_valid_failed.png"/> <img width=320 src="./fig/class22_images_valid_infered.png"/><br></p>
 <h3 id="design-and-test-a-model-architecture">Design and Test a Model Architecture</h3>
 <h4 id="describe-how-you-preprocessed-the-image-data.-what-techniques-were-chosen-and-why-did-you-choose-these-techniques-consider-including-images-showing-the-output-of-each-preprocessing-technique.-pre-processing-refers-to-techniques-such-as-converting-to-grayscale-normalization-etc.-optional-as-described-in-the-stand-out-suggestions-part-of-the-rubric-if-you-generated-additional-data-for-training-describe-why-you-decided-to-generate-additional-data-how-you-generated-the-data-and-provide-example-images-of-the-additional-data.-then-describe-the-characteristics-of-the-augmented-training-set-like-number-of-images-in-the-set-number-of-images-for-each-class-etc.">1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the &quot;Stand Out Suggestions&quot; part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)</h4>
+<p><img width=640 alt="training data normalization" src="./fig/images_normalized_for_training.png"/></p>
 <p>As a first step, I decided to convert the images to grayscale because ...</p>
 <p>Here is an example of a traffic sign image before and after grayscaling.</p>
 <div class="figure">

@@ -6,10 +6,6 @@ models
 *.p
 MNIST_data/
 GTSRB_data/
-# checkpoint
-# lenet.data*
-# lenet.index
-# lenet.meta*
 *.sw*
 traffic-signs-data/
 *memo.txt

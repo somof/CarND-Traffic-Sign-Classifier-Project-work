@@ -110,6 +110,21 @@ X_valid = X_valid.astype(np.float32)
 X_test = X_test.astype(np.float32)
 nsigma = 2.0
 
+# for i in range(len(X_train)):
+#     gray = (X_train[i, :, :, 0] + X_train[i, :, :, 1] + X_train[i, :, :, 2]) / 3.0
+#     for c in range(3):
+#         X_train[i, :, :, c] = gray
+
+# for i in range(len(X_valid)):
+#     gray = (X_valid[i, :, :, 0] + X_valid[i, :, :, 1] + X_valid[i, :, :, 2]) / 3.0
+#     for c in range(3):
+#         X_valid[i, :, :, c] = gray
+
+# for i in range(len(X_test)):
+#     gray = (X_test[i, :, :, 0] + X_test[i, :, :, 1] + X_test[i, :, :, 2]) / 3.0
+#     for c in range(3):
+#         X_test[i, :, :, c] = gray
+
 for i in range(len(X_train)):
     # mean = np.mean(X_train[i, :, :, :])
     # stdv = np.std(X_train[i, :, :, :])
@@ -173,8 +188,10 @@ last_validation_accuracy = 0.95125
 # FRC2_NUM    = 240
 # netdir = 'lenet-large'
 # last_validation_accuracy = 0.98163
+# Mono  EPOCH 431 Validation Accuracy = 0.97574
+# Color EPOCH 414 Validation Accuracy = 0.97234
 
-netdir = 'dummy-to-renew'
+# netdir = 'dummy-to-renew'
 
 CLASS_NUM   =  43
 MU          =   0

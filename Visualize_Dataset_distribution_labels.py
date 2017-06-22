@@ -80,7 +80,7 @@ images = X_train
 labels = y_train
 title = 'X_train'
 
-# 同じラベルの教師画像の平均値の分布
+# 教師画像ごとの平均と分散
 mean = np.zeros((len(images), 3)).astype(np.float)
 stdv = np.zeros((len(images), 3)).astype(np.float)
 for i in range(len(images)):
@@ -88,9 +88,9 @@ for i in range(len(images)):
         mean[i, c] = np.mean(images[i, :, :, c])
         stdv[i, c] = np.std(images[i, :, :, c])
 
+# 同じラベルの画像の平均値と分散
 cls_mean = np.zeros((43, 3)).astype(np.float)
 cls_stdv = np.zeros((43, 3)).astype(np.float)
-
 for cls in range(43):
     smean = mean[labels == cls, :]
     for c in range(3):
@@ -110,7 +110,7 @@ ax.set_ylabel("mean")
 names = ['0:Speed limit (20km/h)', '1:Speed limit (30km/h)', '2:Speed limit (50km/h)', '3:Speed limit (60km/h)', '4:Speed limit (70km/h)', '5:Speed limit (80km/h)', '6:End of speed limit (80km/h)', '7:Speed limit (100km/h)', '8:Speed limit (120km/h)', '9:No passing', '10:No passing for vehicles over 3.5 metric tons', '11:Right-of-way at the next intersection', '12:Priority road', '13:Yield', '14:Stop', '15:No vehicles', '16:Vehicles over 3.5 metric tons prohibited', '17:No entry', '18:General caution', '19:Dangerous curve to the left', '20:Dangerous curve to the right', '21:Double curve', '22:Bumpy road', '23:Slippery road', '24:Road narrows on the right', '25:Road work', '26:Traffic signals', '27:Pedestrians', '28:Children crossing', '29:Bicycles crossing', '30:Beware of ice/snow', '31:Wild animals crossing', '32:End of all speed and passing limits', '33:Turn right ahead', '34:Turn left ahead', '35:Ahead only', '36:Go straight or right', '37:Go straight or left', '38:Keep right', '39:Keep left', '40:Roundabout mandatory', '41:End of no passing', '42:End of no passing by vehicles over 3.5 metric tons']
 plt.xticks(range(43), names, rotation=-90, fontsize="small")
 plt.legend(['ch0', 'ch1', 'ch2'], loc="best")
-# plt.savefig('fig/pixel_mean_vs_label.png')
+plt.savefig('fig/pixel_mean_vs_label.png')
 plt.show()
 
 fig = plt.figure(figsize=(12,8))
@@ -126,7 +126,7 @@ plt.legend(['ch0', 'ch1', 'ch2'], loc="best")
 plt.savefig('fig/pixel_stdv_vs_label.png')
 plt.show()
 
-#exit(0)
+exit(0)
 
 
 

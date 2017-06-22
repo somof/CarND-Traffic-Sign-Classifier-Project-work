@@ -339,6 +339,9 @@ with tf.Session() as sess:
     print("Validation Accuracy = {:.5f}".format(sess.run(accuracy_operation, feed_dict={x: X_valid, y: y_valid})))
 
     correct_prediction = sess.run(correct_prediction, feed_dict={x: X_valid, y: y_valid})
+    print(correct_prediction)
+    exit(0)
+
     infer_failed = y_valid[np.logical_not(correct_prediction)]
     infer_failed10 = infer_failed
     for i in range(2, 10):
@@ -366,6 +369,26 @@ with tf.Session() as sess:
 
     import matplotlib.pyplot as plt
 
+
+作業中
+間違えられたクラスの頻度を見る
+    fig = plt.figure(figsize=(12,8))
+    plt.subplots_adjust(left=0.1, right=0.99, top=0.95, bottom=0.45, hspace=0.0, wspace=0.0)
+    plt.title('Histgram of Failed samples and training data')
+    names=['0:Speed limit (20km/h)', '1:Speed limit (30km/h)', '2:Speed limit (50km/h)', '3:Speed limit (60km/h)', '4:Speed limit (70km/h)', '5:Speed limit (80km/h)', '6:End of speed limit (80km/h)', '7:Speed limit (100km/h)', '8:Speed limit (120km/h)', '9:No passing', '10:No passing for vehicles over 3.5 metric tons', '11:Right-of-way at the next intersection', '12:Priority road', '13:Yield', '14:Stop', '15:No vehicles', '16:Vehicles over 3.5 metric tons prohibited', '17:No entry', '18:General caution', '19:Dangerous curve to the left', '20:Dangerous curve to the right', '21:Double curve', '22:Bumpy road', '23:Slippery road', '24:Road narrows on the right', '25:Road work', '26:Traffic signals', '27:Pedestrians', '28:Children crossing', '29:Bicycles crossing', '30:Beware of ice/snow', '31:Wild animals crossing', '32:End of all speed and passing limits', '33:Turn right ahead', '34:Turn left ahead', '35:Ahead only', '36:Go straight or right', '37:Go straight or left', '38:Keep right', '39:Keep left', '40:Roundabout mandatory', '41:End of no passing', '42:End of no passing by vehicles over 3.5 metric tons']
+    labels=['inference failed data x 10', 'validation data']
+    plt.hist(infer_failed,
+             range=(0, 43),
+             rwidth=20,
+             stacked=False,
+             bins=43,
+             label=labels
+             )
+    plt.xticks(range(0,43), names, rotation=-90, fontsize="small")
+    plt.legend(loc="best")
+    plt.savefig('fig/histgram_misunderstood_labels.png')
+    plt.show()
+    exit(0)
 
     fig = plt.figure(figsize=(12,8))
     plt.subplots_adjust(left=0.1, right=0.99, top=0.95, bottom=0.45, hspace=0.0, wspace=0.0)

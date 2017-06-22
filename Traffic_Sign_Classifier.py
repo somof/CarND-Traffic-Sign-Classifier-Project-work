@@ -110,45 +110,51 @@ X_valid = X_valid.astype(np.float32)
 X_test = X_test.astype(np.float32)
 nsigma = 2.0
 
-# for i in range(len(X_train)):
-#     gray = (X_train[i, :, :, 0] + X_train[i, :, :, 1] + X_train[i, :, :, 2]) / 3.0
-#     for c in range(3):
-#         X_train[i, :, :, c] = gray
+for i in range(len(X_train)):
+    gray = (X_train[i, :, :, 0] + X_train[i, :, :, 1] + X_train[i, :, :, 2]) / 3.0
+    for c in range(3):
+        X_train[i, :, :, c] = gray
 
-# for i in range(len(X_valid)):
-#     gray = (X_valid[i, :, :, 0] + X_valid[i, :, :, 1] + X_valid[i, :, :, 2]) / 3.0
-#     for c in range(3):
-#         X_valid[i, :, :, c] = gray
+for i in range(len(X_valid)):
+    gray = (X_valid[i, :, :, 0] + X_valid[i, :, :, 1] + X_valid[i, :, :, 2]) / 3.0
+    for c in range(3):
+        X_valid[i, :, :, c] = gray
 
-# for i in range(len(X_test)):
-#     gray = (X_test[i, :, :, 0] + X_test[i, :, :, 1] + X_test[i, :, :, 2]) / 3.0
-#     for c in range(3):
-#         X_test[i, :, :, c] = gray
+for i in range(len(X_test)):
+    gray = (X_test[i, :, :, 0] + X_test[i, :, :, 1] + X_test[i, :, :, 2]) / 3.0
+    for c in range(3):
+        X_test[i, :, :, c] = gray
 
+mean = np.mean(X_train[:, :, :, :])
+stdv = np.std(X_train[:, :, :, :])
 for i in range(len(X_train)):
     # mean = np.mean(X_train[i, :, :, :])
     # stdv = np.std(X_train[i, :, :, :])
     for c in range(3):
-        mean = np.mean(X_train[i, :, :, c])
-        stdv = np.std(X_train[i, :, :, c])
+        # mean = np.mean(X_train[i, :, :, c])
+        # stdv = np.std(X_train[i, :, :, c])
         X_train[i, :, :, c] = X_train[i, :, :, c] - mean
         X_train[i, :, :, c] = X_train[i, :, :, c] / (stdv * nsigma)
 
+mean = np.mean(X_valid[:, :, :, :])
+stdv = np.std(X_valid[:, :, :, :])
 for i in range(len(X_valid)):
     # mean = np.mean(X_valid[i, :, :, :])
     # stdv = np.std(X_valid[i, :, :, :])
     for c in range(3):
-        mean = np.mean(X_valid[i, :, :, c])
-        stdv = np.std(X_valid[i, :, :, c])
+        # mean = np.mean(X_valid[i, :, :, c])
+        # stdv = np.std(X_valid[i, :, :, c])
         X_valid[i, :, :, c] = X_valid[i, :, :, c] - mean
         X_valid[i, :, :, c] = X_valid[i, :, :, c] / (stdv * nsigma)
 
+mean = np.mean(X_test[:, :, :, :])
+stdv = np.std(X_test[:, :, :, :])
 for i in range(len(X_test)):
     # mean = np.mean(X_test[i, :, :, :])
     # stdv = np.std(X_test[i, :, :, :])
     for c in range(3):
-        mean = np.mean(X_test[i, :, :, c])
-        stdv = np.std(X_test[i, :, :, c])
+        # mean = np.mean(X_test[i, :, :, c])
+        # stdv = np.std(X_test[i, :, :, c])
         X_test[i, :, :, c] = X_test[i, :, :, c] - mean
         X_test[i, :, :, c] = X_test[i, :, :, c] / (stdv * nsigma)
 
@@ -180,18 +186,25 @@ FRC1_NUM    = 100
 FRC2_NUM    = 100
 netdir = 'lenet-middle'
 last_validation_accuracy = 0.95125
+# Color EPOCH 396 Validation Accuracy = 0.95215
 
 # Large Model
-# FILTER1_NUM =  64
-# FILTER2_NUM =  84
-# FRC1_NUM    = 240
-# FRC2_NUM    = 240
-# netdir = 'lenet-large'
+FILTER1_NUM =  64
+FILTER2_NUM =  84
+FRC1_NUM    = 240
+FRC2_NUM    = 240
+netdir = 'lenet-large'
 # last_validation_accuracy = 0.98163
+# normalize each image
 # Mono  EPOCH 431 Validation Accuracy = 0.97574
 # Color EPOCH 414 Validation Accuracy = 0.97234
+# normalize all image
+# Mono  EPOCH 384 Validation Accuracy = 0.97256
+# Color EPOCH 374 Validation Accuracy = 0.96621
 
-# netdir = 'dummy-to-renew'
+last_validation_accuracy = 0.97
+
+netdir = 'dummy-to-renew'
 
 CLASS_NUM   =  43
 MU          =   0
@@ -297,12 +310,12 @@ with tf.name_scope('loss'):
 ### the accuracy on the test set should be calculated and reported as well.
 ### Feel free to use as many code cells as needed.
 
-EPOCHS      = 100
+EPOCHS      = 400
 BATCH_SIZE  = 100
 
 rate = 0.0010  # good for pre learning
-rate = 0.0002  # Slow to train
 rate = 0.0005  # Good performance
+rate = 0.0002  # Slow to train
 
 
 with tf.name_scope('train'):

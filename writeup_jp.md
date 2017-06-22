@@ -1,10 +1,8 @@
 #**Traffic Sign Recognition** 
 
-TODO: 各クラスの平均画像を作って確認する
-
-TODO: 正規化の順を画像単位から、データセット全体に変更してみる
-
-TODO: pandasで解析するように変更！
+TODO: 各クラスの平均画像を作って確認する  
+TODO: 正規化の順を画像単位から、データセット全体に変更してみる  
+TODO: pandasで解析するように変更！  
 
 
 ---
@@ -34,16 +32,10 @@ TODO: pandasで解析するように変更！
 ---
 
 ##Data Set Summary & Exploration
-##Datasetの探索、サマリ、図示
-
 
 ###1. a basic summary of the data set.
 
-pandasで解析するように変更！
-
-**In the code, the analysis should be done using python, numpy and/or pandas methods rather than hardcoding results manually.**
-
-Here are summary statistics of the traffic signs data set:
+Here are summary statistics of the traffic signs data sets:
 
 * The size of training set is 34799
 * The size of the validation set is 4410
@@ -55,42 +47,80 @@ As follow, the each datasets have different distributions of frequency.
 
 <img width=640 src="./fig/histgram_of_dataset_all.png"/>
 
-In the traing dataset, there is near ten times difference among 43 labels(classes).
-Therefore it is possible that equal training can not be done with this dataset.
-
+In the traing dataset, there is near ten times difference among 43 labels(classes).  
+Therefore it is possible that training under this dataset can not be equal condition for each labels.
 
 Moreover, some labels may have shortage of sample number to adequately train.
 
+The followings is each label's mean of pixel mean value.   
+It shows labels 6, 20, 10 and 8 have very dark images, less than about 50 pixel value.
+
 <img width=640 src="./fig/pixel_mean_vs_label.png"/>
+
+The followings is each label's stdv of pixel mean value.   
+It shows labels 6, 21, 27, 21 and others have low deviation amang same lable sample images.
 
 <img width=640 src="./fig/pixel_stdv_vs_label.png"/>
 
-
-各ラベルの分散の違い
-
-平均値の分布
-画素値分散の分布
-
+As explained above, the training dataset may have some issue to train like:  
+ 1. sample number shortage in some lables  
+ 2. low contrast(dark) images  
+ 3. low variance in some labels  
 
 ###2. an exploratory visualization of the dataset.
 
-Here is an exploratory visualization of the data set.
-
-Dataset seems to be augmented via some image processing like changing brightness, contrast, chroma and cropping position.
+Here is a quick look of typical images in the training dataset.
 
 <img width=640 alt="image data" src="./fig/AllTrainingImage_skip28.png"/>
 
-It is a bar chart showing how the data ...
+This Dataset has a lot of similar images that seem to be augmented via image processing techniques like changing brightness, contrast, chroma and cropping position.
 
 
-##各クラスの平均画像
+###3. avaraged class images of the dataset.
 
-各クラスの平均画像を作る
+Here are class example images(the first class image in the traininf dataset) and class average images.
+
+<img width=640 src="./fig/sampled_43_images_in_X_train.png"/>
+
+<img width=640 src="./fig/mean_images_in_X_train_wo_normalization.png"/>
+
+All class average images still have their own characteristic enough to cognize as traffic signs.
+
+But some classes seem to have some troubles.
+
+ 1. dark brightness: class 3, 5, 6, 7, 10, 20  
+ 2. low chroma: class 6, 32, 41, 42  
+ 3. background has unnecessary texture: class 16, 19, 20, 24, 30  
 
 
-##最初の正規化検討
+##Design and Test a Model Architecture
+
+The training data images potentially have tourble factors as described above.
+
+
+
+###0. phisibility training test
+
+middleモデルの
+
+グラフ追加
+
+###1. pre-processing images
+###2. CNN design for color image 
+###3. augment training images
+
+
+###1. preprocessing the image data.
+
+
+So 
 
 前処理の説明と、その理由
+
+<img width=640 src="./fig/mean_images_in_X_train_type0_normalization.png"/>
+<img width=640 src="./fig/mean_images_in_X_train_type1_normalization.png"/>
+<img width=640 src="./fig/mean_images_in_X_train_type2_normalization.png"/>
+
 
 <img width=640 src="./fig/pixel_mean_stdv_vs_label.png"/>
 <img width=640 src="./fig/pixel_mean_vs_stdv_in_X_train_each.png"/>
@@ -128,12 +158,12 @@ After the 1st trial of LeNet-5 with above normalization
 |  |uncertain reason
 |24|uncertain reason(really dark images)
 |25|low contrast inside a sign board
-|0|low contrast inside a sign board
-|5|blur
-| |unknown background color
-| |uncertain reason
+| 0|low contrast inside a sign board
+| 5|blur
+|  |unknown background color
+|  |uncertain reason
 |27|low contrast inside a sign board
-|8|low contrast
+| 8|low contrast
 |29|uncertain reason
 |23|uncertain reason
 |22|uncertain reason

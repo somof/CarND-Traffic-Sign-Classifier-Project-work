@@ -1,0 +1,9 @@
+
+# Middle-Size Model
+FILTER1_NUM =  16
+FILTER2_NUM =  48
+FRC1_NUM    = 100
+FRC2_NUM    = 100
+
+=========================================
+Validation Accuracy = 0.95125

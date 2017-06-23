@@ -46,7 +46,7 @@ As follow, the each datasets have different distributions of frequency.
 
 <img width=640 src="./fig/histgram_of_dataset_all.png"/>
 
-In the traing dataset, there is near ten times difference among 43 labels(classes).  
+In the training dataset, there is near ten times difference among 43 labels(classes).  
 Therefore it is possible that training under this dataset can not be equal condition for each labels.
 
 Moreover, some labels may have shortage of sample number to adequately train.
@@ -56,8 +56,8 @@ It shows labels 6, 20, 10 and 8 have very dark images, less than about 50 pixel 
 
 <img width=640 src="./fig/pixel_mean_vs_label.png"/>
 
-The followings is each label's stdv of pixel mean value.   
-It shows labels 6, 21, 27, 21 and others have low deviation amang same lable sample images.
+The followings is each label's stdev of pixel mean value.   
+It shows labels 6, 21, 27, 21 and others have low deviation among same label sample images.
 
 <img width=640 src="./fig/pixel_stdv_vs_label.png"/>
 
@@ -75,15 +75,15 @@ Here is a quick look of typical images in the training dataset.
 This Dataset has a lot of similar images that seem to be augmented via image processing techniques like changing brightness, contrast, chroma and cropping position.
 
 
-###3. avaraged class images of the dataset.
+###3. averaged class images of the dataset.
 
-Here are class example images(the first class image in the traininf dataset) and class average images.
+Here are class example images(the first class image in the training dataset) and class average images.
 
 <img width=800 src="./fig/sampled_43_images_in_X_train.png"/>
 
 <img width=800 src="./fig/mean_images_in_X_train_wo_normalization.png"/>
 
-All class average images still have their own characteristic enough to cognize as traffic signs.
+All class average images still have their own characteristic enough to recognize as traffic signs.
 
 But some classes seem to have some troubles.
 
@@ -91,22 +91,19 @@ But some classes seem to have some troubles.
  2. low chroma: class 6, 32, 41, 42  
  3. background has unnecessary texture: class 16, 19, 20, 24, 30  
 
+<!-- <img width=640 src="./fig/pixel_mean_stdv_vs_label.png"/> -->
 
 ##Design and Test a Model Architecture
 
-The training data images potentially have tourble factors as described above.
+The training data images potentially have trouble factors as described above.  
+So methods for pre-processing, CNN design and augmenting image data have to choose in order to reduce the training data risk.
 
-So I tried to choose methods for pre-processing, CNN design and augmenting image data in order to reduce the training data risk.
+###1. feasibility training test
 
-I show the choices as below.
+At the first, I had a feasibility test via a reasonable scale model.  
+This model is bigger than the LeNet-5 on lesson 8 and would be smaller than the final model, so I named it "middle model".
 
-###0. phisibility training test
-
-At the first, I had a phisibility test via a reasonable scale model.
-
-This model is bigger than the LeNet-5 at lesson 8 and would be smaller than my final CNN model, so I named it "middle model".
-
-####design of "middle model" and training parameters
+####1.1 design of "middle model" and training parameters
 
 Here are the specifications of the middle model and training parameters.
 
@@ -129,8 +126,6 @@ Here are the specifications of the middle model and training parameters.
 | Dropout				| keep prob. 0.5								|
 | Softmax				| outputs 43 (class number)						|
 
-
-
 | Title         		|     Description	        					| 
 |:----------------------|:----------------------------------------------| 
 | Optimizer				| Adam
@@ -139,42 +134,92 @@ Here are the specifications of the middle model and training parameters.
 | EPOCH Number			| 200
 
 
-####potential of "middle model" with normalization methods
+####1.2 original training image data overview
 
-To check the potential of the middle mode, I examined 7 types of input data for it.
+Following figure shows a pixel mean value and stdev distribution for each training images.
+
+<img width=400 src="./fig/pixel_mean_vs_stdv_in_X_train_each.png"/>
+
+To make training work better, following normalization types are possible.
+
+- Type0: normalize with mean and stdev of all pixels in the training data
+- Type1: normalize with mean and stdev of each images pixels
+- Type2: normalize with mean and stdev of RGB each image plane pixels
+
+Following figure shows pixel mean value and stdev distributions for each types.
+
+<img width=300 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type0.png"/>
+<img width=300 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type1.png"/>
+<img width=300 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type2.png"/>
+
+
+After the normalization, the average images of each class are up as follow.
+
+<img width=640 src="./fig/mean_images_in_X_train_type0_normalization.png"/>
+<img width=640 src="./fig/mean_images_in_X_train_type1_normalization.png"/>
+<img width=640 src="./fig/mean_images_in_X_train_type2_normalization.png"/>
+
+Relatively to the average images without normalization, describer above, the dark brightness issue is declined by type 1 and 2 normalizations.  
+But the training images still have chroma and background texture issues as following.
+
+ 1. low chroma: class 6, 32, 41, 42
+ 2. background has unnecessary texture: class 16, 19, 20, 24, 30
+
+The issues can be resolved by augmenting training data.
+
+
+####1.3 potential of "middle model" for the normalization type and color information use
+
+To check the potential of the middle mode, I examined 7 types of input data as follow.
 
 | No | Title      | image type | Normalization type									| 
 |:---|:-----------|:-----------|:---------------------------------------------------| 
 | 0  | RGB        | RGB-3ch    | Not normalized										|
 | 1  | RGB-Type0  | RGB-3ch    | normalized for all pixels in the training data		|
 | 2  | RGB-Type1  | RGB-3ch    | normalized for each images pixels					|
-| 3  | RGB-Type2  | RGB-3ch    | normalized for each image plane pixels (RGB each)	|
+| 3  | RGB-Type2  | RGB-3ch    | normalized for RGB each image plane pixels			|
 | 4  | Gray       | Gray       | Not normalized										|
 | 5  | Gray-Type0 | Gray       | normalized for all pixels in the training data		|
 | 6  | Gray-Type1 | Gray       | normalized for each images pixels					|
 
-Normalization is executed by a equation as below.
+Normalization is executed by a follwing equation.
 
     normalized_image = (org_image - mean) / (2.0 * stdev)
 
-<img width=400 src="./fig/pixel_mean_vs_stdv_in_X_train_each.png"/>
-
-<img width=300 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type0.png"/>
-<img width=300 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type1.png"/>
-<img width=300 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type2.png"/>
-
-####potential of "middle model" with normalization methods
-
 After 200 epochs of training, every type obtained 93% over in validation accuracy as below.
 
+<img width=320 src="./fig/middle_model_feasibility_Test.png"/>
+<img width=320 src="./fig/middle_model_feasibility_Test_overfitting.png"/>
 
-<img width=400 src="./fig/middle_model_phisibility_Test.png"/>
-<img width=400 src="./fig/middle_model_phisibility_Test_overfitting.png"/>
+All of the input type seem to get more accuracy after more training.
+
+####1.4 selection of inpu data format
+
+The feasibility test shows that gray scale got better accuracy than RGB input.  
+But I'd take RGB-type1 as the input format to study hereafter.
+
+Because the all 7 input format types are already available to satisfy the 93% accuracy goal of the project, and RGB input may be useful to make sure what modification affects to the issues of the training dataset,  
+I can try to reduce chroma and background texture issues above.
 
 
+####1.5 inferences of "middle model" with RGB-type1 input
 
 
-####inferences of "middle model"
+(array([ 1,  4,  3,  3,  0,  2,  4,  2,  1,  2,
+	     0,  0,  0,  2,  0,  0, 22,  0,  1,  1,
+		 7, 15,  3,  3,  5,  5,  0,  4,  0,  2,
+		 0,  1,  0,  0,  3,  0,  0,  0,  0,  0,
+		 10,  3, 0]), 
+		array([  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.,   9.,
+		10., 11.,  12.,  13.,  14.,  15.,  16.,  17.,  18.,  19.,
+		20.,  21., 22.,  23.,  24.,  25.,  26.,  27.,  28.,  29.,
+		30.,  31.,  32., 33.,  34.,  35.,  36.,  37.,  38.,  39.,
+		40.,  41.,  42.]))
+
+
+<img width=640 src="./fig/histgram_failed_samples.png"/>
+<img width=640 src="./fig/histgram_failed_samples_and_traingdata.png"/>
+
 
 middleモデルの認識結果
 色々な正規化方法で比較する
@@ -187,29 +232,18 @@ middleモデルの認識結果
 
 
 
-###1. pre-processing images
+###2. pre-processing images
 
 
 妥当性確認
 
 
-###2. CNN design for color image 
-###3. augment training images
-
-
-###1. preprocessing the image data.
+###3. CNN design for color image 
+###4. augment training images
 
 
 So 
 
-前処理の説明と、その理由
-
-<img width=640 src="./fig/mean_images_in_X_train_type0_normalization.png"/>
-<img width=640 src="./fig/mean_images_in_X_train_type1_normalization.png"/>
-<img width=640 src="./fig/mean_images_in_X_train_type2_normalization.png"/>
-
-
-<img width=640 src="./fig/pixel_mean_stdv_vs_label.png"/>
 
 ##各クラスの平均画像の変化
 

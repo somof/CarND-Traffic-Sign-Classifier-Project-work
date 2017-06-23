@@ -79,9 +79,9 @@ This Dataset has a lot of similar images that seem to be augmented via image pro
 
 Here are class example images(the first class image in the traininf dataset) and class average images.
 
-<img width=640 src="./fig/sampled_43_images_in_X_train.png"/>
+<img width=800 src="./fig/sampled_43_images_in_X_train.png"/>
 
-<img width=640 src="./fig/mean_images_in_X_train_wo_normalization.png"/>
+<img width=800 src="./fig/mean_images_in_X_train_wo_normalization.png"/>
 
 All class average images still have their own characteristic enough to cognize as traffic signs.
 
@@ -106,6 +106,74 @@ At the first, I had a phisibility test via a reasonable scale model.
 
 This model is bigger than the LeNet-5 at lesson 8 and would be smaller than my final CNN model, so I named it "middle model".
 
+####design of "middle model" and training parameters
+
+Here are the specifications of the middle model and training parameters.
+
+| Layer         		|     Description	        					| 
+|:----------------------|:----------------------------------------------| 
+| Input         		| 32x32x3 RGB/Gray image   						| 
+| Convolution 5x5     	| 1x1 stride, VALID padding, outputs 28x28x16 	|
+| Batch Normalization	|												|
+| RELU					|												|
+| Max pooling	      	| 2x2 stride, VALID padding, outputs 14x14x16	|
+| Convolution 5x5     	| 1x1 stride, VALID padding, outputs 10x10x48 	|
+| RELU					|												|
+| Max pooling	      	| 2x2 stride, VALID padding, outputs 5x5x48		|
+| flatten				| 5x5x48 => 1200 								|
+| Fully connected		| outputs 100  									|
+| RELU					|												|
+| Dropout				| keep prob. 0.5								|
+| Fully connected		| outputs 100  									|
+| RELU					|												|
+| Dropout				| keep prob. 0.5								|
+| Softmax				| outputs 43 (class number)						|
+
+
+
+| Title         		|     Description	        					| 
+|:----------------------|:----------------------------------------------| 
+| Optimizer				| Adam
+| learning_rate			| 0.0002
+| batch size			| 100
+| EPOCH Number			| 200
+
+
+####potential of "middle model" with normalization methods
+
+To check the potential of the middle mode, I examined 7 types of input data for it.
+
+| No | Title      | image type | Normalization type									| 
+|:---|:-----------|:-----------|:---------------------------------------------------| 
+| 0  | RGB        | RGB-3ch    | Not normalized										|
+| 1  | RGB-Type0  | RGB-3ch    | normalized for all pixels in the training data		|
+| 2  | RGB-Type1  | RGB-3ch    | normalized for each images pixels					|
+| 3  | RGB-Type2  | RGB-3ch    | normalized for each image plane pixels (RGB each)	|
+| 4  | Gray       | Gray       | Not normalized										|
+| 5  | Gray-Type0 | Gray       | normalized for all pixels in the training data		|
+| 6  | Gray-Type1 | Gray       | normalized for each images pixels					|
+
+Normalization is executed by a equation as below.
+
+    normalized_image = (org_image - mean) / (2.0 * stdev)
+
+<img width=400 src="./fig/pixel_mean_vs_stdv_in_X_train_each.png"/>
+
+<img width=300 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type0.png"/>
+<img width=300 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type1.png"/>
+<img width=300 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type2.png"/>
+
+####potential of "middle model" with normalization methods
+
+After 200 epochs of training, every type obtained 93% over in validation accuracy as below.
+
+
+<img width=400 src="./fig/middle_model_phisibility_Test.png"/>
+<img width=400 src="./fig/middle_model_phisibility_Test_overfitting.png"/>
+
+
+
+
 ####inferences of "middle model"
 
 middleモデルの認識結果
@@ -113,7 +181,18 @@ middleモデルの認識結果
 
 グラフ追加
 
+あたり付け結果
+
+
+
+
+
 ###1. pre-processing images
+
+
+妥当性確認
+
+
 ###2. CNN design for color image 
 ###3. augment training images
 
@@ -131,9 +210,6 @@ So
 
 
 <img width=640 src="./fig/pixel_mean_stdv_vs_label.png"/>
-<img width=640 src="./fig/pixel_mean_vs_stdv_in_X_train_each.png"/>
-<img width=640 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_3chonce.png"/>
-<img width=640 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_eachch.png"/>
 
 ##各クラスの平均画像の変化
 

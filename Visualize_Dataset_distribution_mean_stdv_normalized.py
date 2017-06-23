@@ -13,14 +13,14 @@ testing_file    = 'traffic-signs-data/test.p'
 
 with open(training_file, mode='rb') as f:
     train = pickle.load(f)
-with open(validation_file, mode='rb') as f:
-    valid = pickle.load(f)
-with open(testing_file, mode='rb') as f:
-    test = pickle.load(f)
+# with open(validation_file, mode='rb') as f:
+#     valid = pickle.load(f)
+# with open(testing_file, mode='rb') as f:
+#     test = pickle.load(f)
 
 X_train, y_train = train['features'], train['labels']
-X_valid, y_valid = valid['features'], valid['labels']
-X_test, y_test = test['features'], test['labels']
+# X_valid, y_valid = valid['features'], valid['labels']
+# X_test, y_test = test['features'], test['labels']
 
 # Step 1: Dataset Summary & Exploration
 
@@ -44,22 +44,22 @@ X_test, y_test = test['features'], test['labels']
 n_train = len(X_train)
 
 # Number of validation examples
-n_validation = len(y_valid)
+# n_validation = len(y_valid)
 
 # Number of testing examples.
-n_test = len(y_test)
+# n_test = len(y_test)
 
 # What's the shape of an traffic sign image?
-image_shape = X_train[0].shape
+# image_shape = X_train[0].shape
 
 # How many unique classes/labels there are in the dataset.
-n_classes = len(set(y_train))
+# n_classes = len(set(y_train))
 
-print("Number of training examples    =", n_train)
-print("Number of validation examples  =", n_validation)
-print("Number of testing examples     =", n_test)
-print("Image data shape =", image_shape)
-print("Number of classes =", n_classes)
+# print("Number of training examples    =", n_train)
+# print("Number of validation examples  =", n_validation)
+# print("Number of testing examples     =", n_test)
+# print("Image data shape =", image_shape)
+# print("Number of classes =", n_classes)
 
 
 ### Data exploration visualization code goes here.
@@ -82,31 +82,35 @@ print(X_train.shape)
 print(X_train.dtype)
 print(type(X_train))
 
-mean_all = np.zeros((len(X_train))).astype(np.float)
-stdv_all = np.zeros((len(X_train))).astype(np.float)
-mean = np.zeros((len(X_train), 3)).astype(np.float)
-stdv = np.zeros((len(X_train), 3)).astype(np.float)
-
 X_train = X_train.astype(np.float)
 X_train_org = X_train
 
+
+mean_all = np.mean(X_train[:, :, :, :])
+stdv_all = np.std(X_train[:, :, :, :])
+mean_3ch = np.zeros((len(X_train))).astype(np.float)
+stdv_3ch = np.zeros((len(X_train))).astype(np.float)
+mean = np.zeros((len(X_train), 3)).astype(np.float)
+stdv = np.zeros((len(X_train), 3)).astype(np.float)
+
+
 for i in range(len(X_train)):
-    mean_all[i] = np.mean(X_train[i, :, :, :])
-    stdv_all[i] = np.std(X_train[i, :, :, :])
+    mean_3ch[i] = np.mean(X_train[i, :, :, :])
+    stdv_3ch[i] = np.std(X_train[i, :, :, :])
     for c in range(3):
         mean[i, c] = np.mean(X_train[i, :, :, c])
         stdv[i, c] = np.std(X_train[i, :, :, c])
 
-fig = plt.figure()
-ax = fig.add_subplot(111)
-gr = plt.plot(mean_all, stdv_all, '.')
-plt.legend(['ch0/1/2'])
-plt.title('pixel mean vs stdv in X_train')
-plt.xlim(0, 255)
-plt.ylim(0, 120)
-ax.set_xlabel("mean")
-ax.set_ylabel("stdv")
-plt.savefig('fig/pixel_mean_vs_stdv_in_X_train_3chonce.png')
+# fig = plt.figure()
+# ax = fig.add_subplot(111)
+# gr = plt.plot(mean_3ch, stdv_3ch, '.')
+# plt.legend(['ch0/1/2'])
+# plt.title('pixel mean vs stdv in X_train')
+# plt.xlim(0, 255)
+# plt.ylim(0, 120)
+# ax.set_xlabel("mean")
+# ax.set_ylabel("stdv")
+# plt.savefig('fig/pixel_mean_vs_stdv_in_X_train_3chonce.png')
 # plt.show()
 
 fig = plt.figure()
@@ -124,30 +128,59 @@ plt.savefig('fig/pixel_mean_vs_stdv_in_X_train_each.png')
 
 
 
-for i in range(len(X_train)):
-    for c in range(3):
-        X_train[i, :, :, c] = X_train_org[i, :, :, c] - mean_all[i]
-        X_train[i, :, :, c] = X_train[i, :, :, c] / (stdv_all[i] * 2.0)
 
-for i in range(len(X_train)):
-    for c in range(3):
-        mean[i, c] = np.mean(X_train[i, :, :, c])
-        stdv[i, c] = np.std(X_train[i, :, :, c])
+# Type0
+# for i in range(len(X_train)):
+#     for c in range(3):
+#         X_train[i, :, :, c] = X_train_org[i, :, :, c] - mean_all
+#         X_train[i, :, :, c] = X_train[i, :, :, c] / (stdv_all * 2.0)
 
-fig = plt.figure()
-ax = fig.add_subplot(111)
-gr = plt.plot(mean, stdv, '.')
-plt.legend(['ch0', 'ch1', 'ch2'])
-plt.title('pixel mean vs stdv in X_train (normalized once 3ch)')
-plt.xlim(-1, 1)
-plt.ylim(0, 1)
-ax.set_xlabel("mean")
-ax.set_ylabel("stdv")
-plt.savefig('fig/pixel_mean_vs_stdv_in_X_train_normalized_3chonce.png')
-# plt.show()
-# exit(0)
+# for i in range(len(X_train)):
+#     for c in range(3):
+#         mean[i, c] = np.mean(X_train[i, :, :, c])
+#         stdv[i, c] = np.std(X_train[i, :, :, c])
+
+# fig = plt.figure()
+# ax = fig.add_subplot(111)
+# gr = plt.plot(mean, stdv, '.')
+# plt.legend(['ch0', 'ch1', 'ch2'])
+# plt.title('pixel mean vs stdv in X_train (type0 normalization)')
+# # plt.xlim(-1, 1)
+# # plt.ylim(0, 1)
+# ax.set_xlabel("mean")
+# ax.set_ylabel("stdv")
+# plt.savefig('fig/pixel_mean_vs_stdv_in_X_train_normalized_type0.png')
+# # plt.show()
+# # exit(0)
 
 
+
+# Type1
+# for i in range(len(X_train)):
+#     for c in range(3):
+#         X_train[i, :, :, c] = X_train_org[i, :, :, c] - mean_3ch[i]
+#         X_train[i, :, :, c] = X_train[i, :, :, c] / (stdv_3ch[i] * 2.0)
+
+# for i in range(len(X_train)):
+#     for c in range(3):
+#         mean[i, c] = np.mean(X_train[i, :, :, c])
+#         stdv[i, c] = np.std(X_train[i, :, :, c])
+
+# fig = plt.figure()
+# ax = fig.add_subplot(111)
+# gr = plt.plot(mean, stdv, '.')
+# plt.legend(['ch0', 'ch1', 'ch2'])
+# plt.title('pixel mean vs stdv in X_train (type1 normalization)')
+# # plt.xlim(-1, 1)
+# # plt.ylim(0, 1)
+# ax.set_xlabel("mean")
+# ax.set_ylabel("stdv")
+# plt.savefig('fig/pixel_mean_vs_stdv_in_X_train_normalized_type1.png')
+# # plt.show()
+# # exit(0)
+
+
+# Type2
 for i in range(len(X_train)):
     for c in range(3):
         X_train[i, :, :, c] = X_train_org[i, :, :, c] - mean[i, c]
@@ -162,36 +195,11 @@ fig = plt.figure()
 ax = fig.add_subplot(111)
 gr = plt.plot(mean, stdv, '.')
 plt.legend(['ch0', 'ch1', 'ch2'])
-plt.title('pixel mean vs stdv in X_train (normalized each ch)')
+plt.title('pixel mean vs stdv in X_train (type2 normalization)')
 plt.xlim(-1, 1)
 plt.ylim(0, 1)
 ax.set_xlabel("mean")
 ax.set_ylabel("stdv")
-plt.savefig('fig/pixel_mean_vs_stdv_in_X_train_normalized_eachch.png')
+plt.savefig('fig/pixel_mean_vs_stdv_in_X_train_normalized_type2.png')
 # plt.show()
 # exit(0)
-
-
-exit(0)
-for i in range(len(X_train)):
-    for c in range(3):
-        # mean[i, c] = np.mean(X_train[i, :, :, c])
-        # stdv[i, c] = np.std(X_train[i, :, :, c])
-        print('ch', c)
-        print()
-        print(' mean ', mean[i, c])
-        print(' stdv ', stdv[i, c])
-        print()
-        print(X_train[i, :, :, c])
-        print()
-        # X_train[i, :, :, c] = X_train[i, :, :, c] * 0.5
-        X_train[i, :, :, c] = X_train[i, :, :, c] - mean[i, c]
-        X_train[i, :, :, c] = X_train[i, :, :, c] / (stdv[i, c] * 2.0)
-        print(X_train[i, :, :, c])
-        print()
-
-        exit(0)
-
-exit(0)
-
-

@@ -1,19 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-
 <head>
-<title>writeup_jp.html</title>
-
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <link rel="stylesheet" href="/home/ichiki/.pandoc/github.css" type="text/css" />
 </head>
-
 <body>
-
 <h1 id="traffic-sign-recognition"><strong>Traffic Sign Recognition</strong></h1>
-<p>TODO: 各クラスの平均画像を作って確認する<br />
-TODO: 正規化の順を画像単位から、データセット全体に変更してみる<br />
+<p>TODO: 正規化の順を画像単位から、データセット全体に変更してみる<br />
 TODO: pandasで解析するように変更！</p>
 <hr />
 <p><strong>Build a Traffic Sign Recognition Project</strong></p>
@@ -56,8 +53,8 @@ It shows labels 6, 21, 27, 21 and others have low deviation amang same lable sam
 <p>This Dataset has a lot of similar images that seem to be augmented via image processing techniques like changing brightness, contrast, chroma and cropping position.</p>
 <h3 id="avaraged-class-images-of-the-dataset.">3. avaraged class images of the dataset.</h3>
 <p>Here are class example images(the first class image in the traininf dataset) and class average images.</p>
-<p><img width=640 src="./fig/sampled_43_images_in_X_train.png"/></p>
-<p><img width=640 src="./fig/mean_images_in_X_train_wo_normalization.png"/></p>
+<p><img width=800 src="./fig/sampled_43_images_in_X_train.png"/></p>
+<p><img width=800 src="./fig/mean_images_in_X_train_wo_normalization.png"/></p>
 <p>All class average images still have their own characteristic enough to cognize as traffic signs.</p>
 <p>But some classes seem to have some troubles.</p>
 <ol style="list-style-type: decimal">
@@ -67,11 +64,191 @@ It shows labels 6, 21, 27, 21 and others have low deviation amang same lable sam
 </li>
 <li>background has unnecessary texture: class 16, 19, 20, 24, 30</li>
 </ol>
-<p>各クラスの平均画像を作る</p>
-<h2 id="最初の正規化検討">最初の正規化検討</h2>
+<h2 id="design-and-test-a-model-architecture">Design and Test a Model Architecture</h2>
+<p>The training data images potentially have tourble factors as described above.</p>
+<p>So I tried to choose methods for pre-processing, CNN design and augmenting image data in order to reduce the training data risk.</p>
+<p>I show the choices as below.</p>
+<h3 id="phisibility-training-test">0. phisibility training test</h3>
+<p>At the first, I had a phisibility test via a reasonable scale model.</p>
+<p>This model is bigger than the LeNet-5 at lesson 8 and would be smaller than my final CNN model, so I named it &quot;middle model&quot;.</p>
+<h4 id="design-of-middle-model-and-training-parameters">design of &quot;middle model&quot; and training parameters</h4>
+<p>Here are the specifications of the middle model and training parameters.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Layer</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Input</td>
+<td align="left">32x32x3 RGB/Gray image</td>
+</tr>
+<tr class="even">
+<td align="left">Convolution 5x5</td>
+<td align="left">1x1 stride, VALID padding, outputs 28x28x16</td>
+</tr>
+<tr class="odd">
+<td align="left">Batch Normalization</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">RELU</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Max pooling</td>
+<td align="left">2x2 stride, VALID padding, outputs 14x14x16</td>
+</tr>
+<tr class="even">
+<td align="left">Convolution 5x5</td>
+<td align="left">1x1 stride, VALID padding, outputs 10x10x48</td>
+</tr>
+<tr class="odd">
+<td align="left">RELU</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Max pooling</td>
+<td align="left">2x2 stride, VALID padding, outputs 5x5x48</td>
+</tr>
+<tr class="odd">
+<td align="left">flatten</td>
+<td align="left">5x5x48 =&gt; 1200</td>
+</tr>
+<tr class="even">
+<td align="left">Fully connected</td>
+<td align="left">outputs 100</td>
+</tr>
+<tr class="odd">
+<td align="left">RELU</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">Dropout</td>
+<td align="left">keep prob. 0.5</td>
+</tr>
+<tr class="odd">
+<td align="left">Fully connected</td>
+<td align="left">outputs 100</td>
+</tr>
+<tr class="even">
+<td align="left">RELU</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Dropout</td>
+<td align="left">keep prob. 0.5</td>
+</tr>
+<tr class="even">
+<td align="left">Softmax</td>
+<td align="left">outputs 43 (class number)</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Title</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Optimizer</td>
+<td align="left">Adam</td>
+</tr>
+<tr class="even">
+<td align="left">learning_rate</td>
+<td align="left">0.0002</td>
+</tr>
+<tr class="odd">
+<td align="left">batch size</td>
+<td align="left">100</td>
+</tr>
+<tr class="even">
+<td align="left">EPOCH Number</td>
+<td align="left">200</td>
+</tr>
+</tbody>
+</table>
+<h4 id="potential-of-middle-model-with-normalization-methods">potential of &quot;middle model&quot; with normalization methods</h4>
+<p>To check the potential of the middle mode, I examined 7 types of input data for it.</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">No</th>
+<th align="left">Title</th>
+<th align="left">image type</th>
+<th align="left">Normalization type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">0</td>
+<td align="left">RGB</td>
+<td align="left">RGB-3ch</td>
+<td align="left">Not normalized</td>
+</tr>
+<tr class="even">
+<td align="left">1</td>
+<td align="left">RGB-Type0</td>
+<td align="left">RGB-3ch</td>
+<td align="left">normalized for all pixels in the training data</td>
+</tr>
+<tr class="odd">
+<td align="left">2</td>
+<td align="left">RGB-Type1</td>
+<td align="left">RGB-3ch</td>
+<td align="left">normalized for each images pixels</td>
+</tr>
+<tr class="even">
+<td align="left">3</td>
+<td align="left">RGB-Type2</td>
+<td align="left">RGB-3ch</td>
+<td align="left">normalized for each image plane pixels (RGB each)</td>
+</tr>
+<tr class="odd">
+<td align="left">4</td>
+<td align="left">Gray</td>
+<td align="left">Gray</td>
+<td align="left">Not normalized</td>
+</tr>
+<tr class="even">
+<td align="left">5</td>
+<td align="left">Gray-Type0</td>
+<td align="left">Gray</td>
+<td align="left">normalized for all pixels in the training data</td>
+</tr>
+<tr class="odd">
+<td align="left">6</td>
+<td align="left">Gray-Type1</td>
+<td align="left">Gray</td>
+<td align="left">normalized for each images pixels</td>
+</tr>
+</tbody>
+</table>
+<p>Normalization is executed by a equation as below.</p>
+<pre><code>normalized_image = (org_image - mean) / (2.0 * stdev)</code></pre>
+<p><img width=400 src="./fig/pixel_mean_vs_stdv_in_X_train_each.png"/></p>
+<p><img width=300 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type0.png"/> <img width=300 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type1.png"/> <img width=300 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type2.png"/></p>
+<h4 id="potential-of-middle-model-with-normalization-methods-1">potential of &quot;middle model&quot; with normalization methods</h4>
+<p>After 200 epochs of training, every type obtained 93% over in validation accuracy as below.</p>
+<p><img width=400 src="./fig/middle_model_phisibility_Test.png"/> <img width=400 src="./fig/middle_model_phisibility_Test_overfitting.png"/></p>
+<h4 id="inferences-of-middle-model">inferences of &quot;middle model&quot;</h4>
+<p>middleモデルの認識結果 色々な正規化方法で比較する</p>
+<p>グラフ追加</p>
+<p>あたり付け結果</p>
+<h3 id="pre-processing-images">1. pre-processing images</h3>
+<p>妥当性確認</p>
+<h3 id="cnn-design-for-color-image">2. CNN design for color image</h3>
+<h3 id="augment-training-images">3. augment training images</h3>
+<h3 id="preprocessing-the-image-data.">1. preprocessing the image data.</h3>
+<p>So</p>
 <p>前処理の説明と、その理由</p>
 <p><img width=640 src="./fig/mean_images_in_X_train_type0_normalization.png"/> <img width=640 src="./fig/mean_images_in_X_train_type1_normalization.png"/> <img width=640 src="./fig/mean_images_in_X_train_type2_normalization.png"/></p>
-<p><img width=640 src="./fig/pixel_mean_stdv_vs_label.png"/> <img width=640 src="./fig/pixel_mean_vs_stdv_in_X_train_each.png"/> <img width=640 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_3chonce.png"/> <img width=640 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_eachch.png"/></p>
+<p><img width=640 src="./fig/pixel_mean_stdv_vs_label.png"/></p>
 <h2 id="各クラスの平均画像の変化">各クラスの平均画像の変化</h2>
 <h3 id="間違えられたクラスの頻度を見る">間違えられたクラスの頻度を見る</h3>
 <h2 id="間違えられたクラスの頻度を見る-1">間違えられたクラスの頻度を見る</h2>
@@ -155,7 +332,7 @@ It shows labels 6, 21, 27, 21 and others have low deviation amang same lable sam
 </table>
 <p>clslist = (16, 21, 20, 24, 25, 0, 5, 27, 8, 29, 23, 22)</p>
 <p><img width=480 src="./fig/class16_images_valid_failed.png"/> <img width=480 src="./fig/class16_images_valid_infered.png"/><br> <img width=480 src="./fig/class21_images_valid_failed.png"/> <img width=480 src="./fig/class21_images_valid_infered.png"/><br> <img width=480 src="./fig/class20_images_valid_failed.png"/> <img width=480 src="./fig/class20_images_valid_infered.png"/><br> <img width=480 src="./fig/class24_images_valid_failed.png"/> <img width=480 src="./fig/class24_images_valid_infered.png"/><br> <img width=480 src="./fig/class25_images_valid_failed.png"/> <img width=480 src="./fig/class25_images_valid_infered.png"/><br> <img width=480 src="./fig/class00_images_valid_failed.png"/> <img width=480 src="./fig/class00_images_valid_infered.png"/><br> <img width=480 src="./fig/class05_images_valid_failed.png"/> <img width=480 src="./fig/class05_images_valid_infered.png"/><br> <img width=480 src="./fig/class27_images_valid_failed.png"/> <img width=480 src="./fig/class27_images_valid_infered.png"/><br> <img width=480 src="./fig/class08_images_valid_failed.png"/> <img width=480 src="./fig/class08_images_valid_infered.png"/><br> <img width=480 src="./fig/class29_images_valid_failed.png"/> <img width=480 src="./fig/class29_images_valid_infered.png"/><br> <img width=480 src="./fig/class23_images_valid_failed.png"/> <img width=480 src="./fig/class23_images_valid_infered.png"/><br> <img width=480 src="./fig/class22_images_valid_failed.png"/> <img width=480 src="./fig/class22_images_valid_infered.png"/><br></p>
-<h2 id="design-and-test-a-model-architecture">Design and Test a Model Architecture</h2>
+<h2 id="design-and-test-a-model-architecture-1">Design and Test a Model Architecture</h2>
 <h3 id="describe-how-you-preprocessed-the-image-data.-what-techniques-were-chosen-and-why-did-you-choose-these-techniques-consider-including-images-showing-the-output-of-each-preprocessing-technique.-pre-processing-refers-to-techniques-such-as-converting-to-grayscale-normalization-etc.-optional-as-described-in-the-stand-out-suggestions-part-of-the-rubric-if-you-generated-additional-data-for-training-describe-why-you-decided-to-generate-additional-data-how-you-generated-the-data-and-provide-example-images-of-the-additional-data.-then-describe-the-characteristics-of-the-augmented-training-set-like-number-of-images-in-the-set-number-of-images-for-each-class-etc.">1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the &quot;Stand Out Suggestions&quot; part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)</h3>
 <ul>
 <li>Model Architecture
@@ -371,6 +548,5 @@ It shows labels 6, 21, 27, 21 and others have low deviation amang same lable sam
 <li><p>the order their operation. distorted_image = tf.image.random_brightness(distorted_image, max_delta=63) distorted_image = tf.image.random_contrast(distorted_image, lower=0.2, upper=1.8)</p></li>
 <li><p>Subtract off the mean and divide by the variance of the pixels. float_image = tf.image.per_image_whitening(distorted_image)</p></li>
 </ul>
-
 </body>
 </html>

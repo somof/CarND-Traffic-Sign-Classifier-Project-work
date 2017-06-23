@@ -112,51 +112,51 @@ nsigma = 2.0
 
 
 # Gray
-# for i in range(len(X_train)):
-#     gray = (X_train[i, :, :, 0] + X_train[i, :, :, 1] + X_train[i, :, :, 2]) / 3.0
-#     for c in range(3):
-#         X_train[i, :, :, c] = gray
-# for i in range(len(X_valid)):
-#     gray = (X_valid[i, :, :, 0] + X_valid[i, :, :, 1] + X_valid[i, :, :, 2]) / 3.0
-#     for c in range(3):
-#         X_valid[i, :, :, c] = gray
-# for i in range(len(X_test)):
-#     gray = (X_test[i, :, :, 0] + X_test[i, :, :, 1] + X_test[i, :, :, 2]) / 3.0
-#     for c in range(3):
-#         X_test[i, :, :, c] = gray
+for i in range(len(X_train)):
+    gray = (X_train[i, :, :, 0] + X_train[i, :, :, 1] + X_train[i, :, :, 2]) / 3.0
+    for c in range(3):
+        X_train[i, :, :, c] = gray
+for i in range(len(X_valid)):
+    gray = (X_valid[i, :, :, 0] + X_valid[i, :, :, 1] + X_valid[i, :, :, 2]) / 3.0
+    for c in range(3):
+        X_valid[i, :, :, c] = gray
+for i in range(len(X_test)):
+    gray = (X_test[i, :, :, 0] + X_test[i, :, :, 1] + X_test[i, :, :, 2]) / 3.0
+    for c in range(3):
+        X_test[i, :, :, c] = gray
 
 # mean = np.mean(X_train[:, :, :, :])
 # stdv = np.std(X_train[:, :, :, :])
-# for i in range(len(X_train)):
-#     # mean = np.mean(X_train[i, :, :, :])
-#     # stdv = np.std(X_train[i, :, :, :])
-#     for c in range(3):
-#         # mean = np.mean(X_train[i, :, :, c])
-#         # stdv = np.std(X_train[i, :, :, c])
-#         X_train[i, :, :, c] = X_train[i, :, :, c] - mean
-#         X_train[i, :, :, c] = X_train[i, :, :, c] / (stdv * nsigma)
-# 
+for i in range(len(X_train)):
+    # mean = np.mean(X_train[i, :, :, :])
+    # stdv = np.std(X_train[i, :, :, :])
+    for c in range(3):
+        mean = np.mean(X_train[i, :, :, c])
+        stdv = np.std(X_train[i, :, :, c])
+        X_train[i, :, :, c] = X_train[i, :, :, c] - mean
+        X_train[i, :, :, c] = X_train[i, :, :, c] / (stdv * nsigma)
+
 # mean = np.mean(X_valid[:, :, :, :])
 # stdv = np.std(X_valid[:, :, :, :])
-# for i in range(len(X_valid)):
-#     # mean = np.mean(X_valid[i, :, :, :])
-#     # stdv = np.std(X_valid[i, :, :, :])
-#     for c in range(3):
-#         # mean = np.mean(X_valid[i, :, :, c])
-#         # stdv = np.std(X_valid[i, :, :, c])
-#         X_valid[i, :, :, c] = X_valid[i, :, :, c] - mean
-#         X_valid[i, :, :, c] = X_valid[i, :, :, c] / (stdv * nsigma)
-# 
+for i in range(len(X_valid)):
+    # mean = np.mean(X_valid[i, :, :, :])
+    # stdv = np.std(X_valid[i, :, :, :])
+    for c in range(3):
+        mean = np.mean(X_valid[i, :, :, c])
+        stdv = np.std(X_valid[i, :, :, c])
+        X_valid[i, :, :, c] = X_valid[i, :, :, c] - mean
+        X_valid[i, :, :, c] = X_valid[i, :, :, c] / (stdv * nsigma)
+
 # mean = np.mean(X_test[:, :, :, :])
 # stdv = np.std(X_test[:, :, :, :])
-# for i in range(len(X_test)):
-#     # mean = np.mean(X_test[i, :, :, :])
-#     # stdv = np.std(X_test[i, :, :, :])
-#     for c in range(3):
-#         # mean = np.mean(X_test[i, :, :, c])
-#         # stdv = np.std(X_test[i, :, :, c])
-#         X_test[i, :, :, c] = X_test[i, :, :, c] - mean
-#         X_test[i, :, :, c] = X_test[i, :, :, c] / (stdv * nsigma)
+for i in range(len(X_test)):
+    # mean = np.mean(X_test[i, :, :, :])
+    # stdv = np.std(X_test[i, :, :, :])
+    for c in range(3):
+        mean = np.mean(X_test[i, :, :, c])
+        stdv = np.std(X_test[i, :, :, c])
+        X_test[i, :, :, c] = X_test[i, :, :, c] - mean
+        X_test[i, :, :, c] = X_test[i, :, :, c] / (stdv * nsigma)
 
 
 # X_train = X_train.clip(-1.0, 1.0)

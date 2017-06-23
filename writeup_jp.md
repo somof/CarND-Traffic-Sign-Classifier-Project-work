@@ -104,9 +104,9 @@ I show the choices as below.
 
 At the first, I had a phisibility test via a reasonable scale model.
 
-This model is bigger than the LeNet-5 at lesson 8 and would be smaller than my final CNN model, so I name it "middle model".
+This model is bigger than the LeNet-5 at lesson 8 and would be smaller than my final CNN model, so I named it "middle model".
 
-####inference of "middle model"
+####inferences of "middle model"
 
 middleモデルの認識結果
 色々な正規化方法で比較する

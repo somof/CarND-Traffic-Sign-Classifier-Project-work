@@ -1,6 +1,5 @@
 #**Traffic Sign Recognition** 
 
-TODO: 各クラスの平均画像を作って確認する  
 TODO: 正規化の順を画像単位から、データセット全体に変更してみる  
 TODO: pandasで解析するように変更！  
 
@@ -97,11 +96,20 @@ But some classes seem to have some troubles.
 
 The training data images potentially have tourble factors as described above.
 
+So I tried to choose methods for pre-processing, CNN design and augmenting image data in order to reduce the training data risk.
 
+I show the choices as below.
 
 ###0. phisibility training test
 
-middleモデルの
+At the first, I had a phisibility test via a reasonable scale model.
+
+This model is bigger than the LeNet-5 at lesson 8 and would be smaller than my final CNN model, so I name it "middle model".
+
+####inference of "middle model"
+
+middleモデルの認識結果
+色々な正規化方法で比較する
 
 グラフ追加
 

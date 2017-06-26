@@ -427,7 +427,7 @@ with tf.Session() as sess:
     plt.subplots_adjust(left=0.1, right=0.99, top=0.95, bottom=0.45, hspace=0.0, wspace=0.0)
     plt.title('Histgram of Failed samples and training data')
     names=['0:Speed limit (20km/h)', '1:Speed limit (30km/h)', '2:Speed limit (50km/h)', '3:Speed limit (60km/h)', '4:Speed limit (70km/h)', '5:Speed limit (80km/h)', '6:End of speed limit (80km/h)', '7:Speed limit (100km/h)', '8:Speed limit (120km/h)', '9:No passing', '10:No passing for vehicles over 3.5 metric tons', '11:Right-of-way at the next intersection', '12:Priority road', '13:Yield', '14:Stop', '15:No vehicles', '16:Vehicles over 3.5 metric tons prohibited', '17:No entry', '18:General caution', '19:Dangerous curve to the left', '20:Dangerous curve to the right', '21:Double curve', '22:Bumpy road', '23:Slippery road', '24:Road narrows on the right', '25:Road work', '26:Traffic signals', '27:Pedestrians', '28:Children crossing', '29:Bicycles crossing', '30:Beware of ice/snow', '31:Wild animals crossing', '32:End of all speed and passing limits', '33:Turn right ahead', '34:Turn left ahead', '35:Ahead only', '36:Go straight or right', '37:Go straight or left', '38:Keep right', '39:Keep left', '40:Roundabout mandatory', '41:End of no passing', '42:End of no passing by vehicles over 3.5 metric tons']
-    labels=['inference failed data x 10', 'validation data']
+    labels=['inference failed data']
     plt.hist(infer_failed,
              range=(0, 43),
              rwidth=20,
@@ -444,7 +444,7 @@ with tf.Session() as sess:
     plt.subplots_adjust(left=0.1, right=0.99, top=0.95, bottom=0.45, hspace=0.0, wspace=0.0)
     plt.title('Histgram of Failed samples and training data')
     names=['0:Speed limit (20km/h)', '1:Speed limit (30km/h)', '2:Speed limit (50km/h)', '3:Speed limit (60km/h)', '4:Speed limit (70km/h)', '5:Speed limit (80km/h)', '6:End of speed limit (80km/h)', '7:Speed limit (100km/h)', '8:Speed limit (120km/h)', '9:No passing', '10:No passing for vehicles over 3.5 metric tons', '11:Right-of-way at the next intersection', '12:Priority road', '13:Yield', '14:Stop', '15:No vehicles', '16:Vehicles over 3.5 metric tons prohibited', '17:No entry', '18:General caution', '19:Dangerous curve to the left', '20:Dangerous curve to the right', '21:Double curve', '22:Bumpy road', '23:Slippery road', '24:Road narrows on the right', '25:Road work', '26:Traffic signals', '27:Pedestrians', '28:Children crossing', '29:Bicycles crossing', '30:Beware of ice/snow', '31:Wild animals crossing', '32:End of all speed and passing limits', '33:Turn right ahead', '34:Turn left ahead', '35:Ahead only', '36:Go straight or right', '37:Go straight or left', '38:Keep right', '39:Keep left', '40:Roundabout mandatory', '41:End of no passing', '42:End of no passing by vehicles over 3.5 metric tons']
-    labels=['inference failed data x 10', 'validation data']
+    labels=['inference failed data x 10', 'training data']
     plt.hist([infer_failed10, y_train],
              range=(0, 43),
              rwidth=20,
@@ -454,10 +454,8 @@ with tf.Session() as sess:
              )
     plt.xticks(range(0,43), names, rotation=-90, fontsize="small")
     plt.legend(loc="best")
-    plt.savefig('fig/histgram_failed_samples_and_traingdata.png')
+    plt.savefig('fig/histgram_failed_samples_and_trainingdata.png')
     # plt.show()
-
-
 
 
     images = X_valid_org
@@ -468,17 +466,17 @@ with tf.Session() as sess:
     clslist = range(43)
 
     for cls in clslist:
-        wtile = 16
-        htile = 6
+        wtile = 10
+        htile = 5
         limit = wtile * htile
         no = 0
-        fig = plt.figure(figsize=(26,14))
+        fig = plt.figure(figsize=(26,15))
         plt.subplots_adjust(left=0.005, right=0.990, top=0.910, bottom=0.001, hspace=0.0, wspace=0.0)
-        fig.suptitle('class%02d: infered samples' % cls, fontsize=96)
+        fig.suptitle('class%02d: infered images' % cls, fontsize=96)
         for i in range(len(images)):
             if labels[i] == cls and correct_prediction[i] and no < limit:
                 ax = plt.subplot(htile, wtile, no + 1)
-                plt.title("%d" % no, fontsize=6)
+                plt.title("%d" % no, fontsize=16)
                 plt.axis("off")
                 plt.tick_params(labelbottom="off")
                 plt.tick_params(labelleft="off")
@@ -487,14 +485,17 @@ with tf.Session() as sess:
         plt.savefig('fig/class%02d_images_valid_infered.png' % cls)
         # plt.show()
         # 
+        wtile = 6
+        htile = 4
+        limit = wtile * htile
         no = 0
-        fig = plt.figure(figsize=(26,14))
+        fig = plt.figure(figsize=(20,15))
         plt.subplots_adjust(left=0.005, right=0.990, top=0.910, bottom=0.001, hspace=0.0, wspace=0.0)
-        fig.suptitle('class%02d: failed samples' % cls, fontsize=96)
+        fig.suptitle('class%02d: mis-infered images' % cls, fontsize=96)
         for i in range(len(images)):
             if labels[i] == cls and not correct_prediction[i] and no < limit:
                 ax = plt.subplot(htile, wtile, no + 1)
-                plt.title("%d" % no, fontsize=6)
+                plt.title("%d" % no, fontsize=16)
                 plt.axis("off")
                 plt.tick_params(labelbottom="off")
                 plt.tick_params(labelleft="off")

@@ -87,9 +87,9 @@ All class average images still have their own characteristic enough to recognize
 
 But some classes seem to have some troubles.
 
- 1. dark brightness: class 3, 5, 6, 7, 10, 20  
- 2. low chroma: class 6, 32, 41, 42  
- 3. background has unnecessary texture: class 16, 19, 20, 24, 30  
+ 1. low chroma: class 6, 32, 41, 42
+ 2. un-necessary background texture: class 16, 19, 20, 24, 30
+ 3. dark brightness: class 3, 5, 6, 7, 10, 20
 
 <!-- <img width=640 src="./fig/pixel_mean_stdv_vs_label.png"/> -->
 
@@ -146,11 +146,11 @@ To make training work better, following normalization types are possible.
 - Type1: normalize with mean and stdev of each images pixels
 - Type2: normalize with mean and stdev of RGB each image plane pixels
 
-Following figure shows pixel mean value and stdev distributions for each types.
+Following figures show distributions of pixel mean value and stdev for each types.
 
-<img width=300 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type0.png"/>
-<img width=300 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type1.png"/>
-<img width=300 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type2.png"/>
+<img width=240 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type0.png"/>
+<img width=240 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type1.png"/>
+<img width=240 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type2.png"/>
 
 
 After the normalization, the average images of each class are up as follow.
@@ -159,13 +159,9 @@ After the normalization, the average images of each class are up as follow.
 <img width=640 src="./fig/mean_images_in_X_train_type1_normalization.png"/>
 <img width=640 src="./fig/mean_images_in_X_train_type2_normalization.png"/>
 
-Relatively to the average images without normalization, describer above, the dark brightness issue is declined by type 1 and 2 normalizations.  
-But the training images still have chroma and background texture issues as following.
-
- 1. low chroma: class 6, 32, 41, 42
- 2. background has unnecessary texture: class 16, 19, 20, 24, 30
-
-The issues can be resolved by augmenting training data.
+Relatively to the average images without normalization, described above, the dark brightness issue is declined by type 1 and 2 normalizations.
+But the low chroma and background texture issues still remain in the normlaized images.  
+These issues can be resolved by augmenting training data.
 
 
 ####1.3 potential of "middle model" for the normalization type and color information use
@@ -193,32 +189,109 @@ After 200 epochs of training, every type obtained 93% over in validation accurac
 
 All of the input type seem to get more accuracy after more training.
 
-####1.4 selection of inpu data format
+####1.4 selection of input data format
 
-The feasibility test shows that gray scale got better accuracy than RGB input.  
-But I'd take RGB-type1 as the input format to study hereafter.
+I decided to **take RGB-type1** as the input format to study hereafter, however the feasibility test shows that **gray scale gets better accuracy than RGB input**.
 
-Because the all 7 input format types are already available to satisfy the 93% accuracy goal of the project, and RGB input may be useful to make sure what modification affects to the issues of the training dataset,  
-I can try to reduce chroma and background texture issues above.
+All the 7 input format types, include RGB format, already satisfy the 93% accuracy goal of the project.  
+So I can challenge something like that can solove the low-chroma and the background texture issues above.
 
-
-####1.5 inferences of "middle model" with RGB-type1 input
+The RGB input may be useful to make sure what modification affects to the issues of the training dataset.
 
 
-(array([ 1,  4,  3,  3,  0,  2,  4,  2,  1,  2,
-	     0,  0,  0,  2,  0,  0, 22,  0,  1,  1,
-		 7, 15,  3,  3,  5,  5,  0,  4,  0,  2,
-		 0,  1,  0,  0,  3,  0,  0,  0,  0,  0,
-		 10,  3, 0]), 
-		array([  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.,   9.,
-		10., 11.,  12.,  13.,  14.,  15.,  16.,  17.,  18.,  19.,
-		20.,  21., 22.,  23.,  24.,  25.,  26.,  27.,  28.,  29.,
-		30.,  31.,  32., 33.,  34.,  35.,  36.,  37.,  38.,  39.,
-		40.,  41.,  42.]))
+####1.5 an inferences of "middle model" with RGB-type1 input
 
+As "middle model" feasibility test, I got examples that this model could not work well on, as belows.  
+Some classes appear to have some problems, other than the known troublesome class, 
+
+<!-- (array([ 1,  4,  3,  3,  0,  2,  4,  2,  1,  2, -->
+<!-- 	      0,  0,  0,  2,  0,  0, 22,  0,  1,  1, -->
+<!-- 		  7, 15,  3,  3,  5,  5,  0,  4,  0,  2, -->
+<!-- 		  0,  1,  0,  0,  3,  0,  0,  0,  0,  0, -->
+<!-- 		 10,  3,  0]),  -->
 
 <img width=640 src="./fig/histgram_failed_samples.png"/>
-<img width=640 src="./fig/histgram_failed_samples_and_traingdata.png"/>
+
+Compare to numbers of training data, the failed classes don't seem to have enough training data.
+
+<img width=640 src="./fig/histgram_failed_samples_and_trainingdata.png"/>
+
+####1.6 quick looks of failed images at "middle model" with RGB-type1 input
+
+#####1.6.1 class 16
+
+This class validation data has very low-chroma images, but the training dataset for the class dosesn't have such images.
+
+<img width=250 src="./fig/class16_images_valid_failed.png"/>
+<img width=320 src="./fig/class16_images_valid_infered.png"/><br>
+<img width=640 src="./fig/class16_images_training.png"/>
+
+#####1.6.2 class 21
+
+This class validation data has low resolution images, but the training dataset for the class doesn't have such images.
+
+<img width=250 src="./fig/class21_images_valid_failed.png"/>
+<img width=320 src="./fig/class21_images_valid_infered.png"/><br>
+<img width=640 src="./fig/class21_images_training.png"/>
+
+#####1.6.3 class 40
+
+This class validation data has very dark and low contrast images, but the training dataset for the class doesn't have such images.
+
+<img width=250 src="./fig/class40_images_valid_failed.png"/>
+<img width=320 src="./fig/class40_images_valid_infered.png"/><br>
+<img width=640 src="./fig/class40_images_training.png"/>
+
+#####1.6.4 class 20
+
+This class validation data has small traffic sign images, but the training dataset for the class doesn't have such images.
+
+<img width=250 src="./fig/class20_images_valid_failed.png"/>
+<img width=320 src="./fig/class20_images_valid_infered.png"/><br>
+<img width=640 src="./fig/class20_images_training.png"/>
+
+#####1.6.5 class 24
+
+This class validation data has very dark and low contrast images, but the training dataset for the class doesn't have such images.
+
+<img width=250 src="./fig/class24_images_valid_failed.png"/>
+<img width=320 src="./fig/class24_images_valid_infered.png"/><br>
+<img width=640 src="./fig/class24_images_training.png"/>
+
+#####1.6.6 class 27
+
+This class validation data has high contrast background images, but the training dataset for the class doesn't have such images.
+
+<img width=250 src="./fig/class27_images_valid_failed.png"/>
+<img width=320 src="./fig/class27_images_valid_infered.png"/><br>
+<img width=640 src="./fig/class27_images_training.png"/>
+
+###2. Augmenting trainig images.
+
+####2.1 plans to augment the training data
+
+As I got 4 points of view about the trainig data issue as follows.
+
+ 1. low chroma: class 6, 32, 41, 42
+ 2. un-necessary background texture: class 16, 19, 20, 24, 30
+ 3. dark brightness: class 3, 5, 6, 7, 10, 20 (Normalization may solve)
+ 4. trainig data shortage: class 20, 21, 40 ...
+
+I take augmenting plans to resolve them as below.
+
+| method                 | porpose                           | target labels(class) |
+|:-----------------------|:----------------------------------|:---------------------|
+| enhance color			 | low-chroma expansion				 | 6, 32, 41, 42		|
+| add vivid images		 | low-chroma expansion				 | 6, 32, 41, 42		|
+| random value charge	 | back ground texture elimination	 | 16, 19, 20, 24, 30	|
+| random position shift	 | back ground texture elimination	 | 16, 19, 20, 24, 30	|
+| enhance brightness	 | dark brightness					 | 3, 5, 6, 7, 10, 20	|
+| add bright images		 | dark brightness					 | 3, 5, 6, 7, 10, 20	|
+| add various images	 | trainig data shortage			 | 20, 21, 40 ...		|
+
+####2.2 
+
+
 
 
 middleモデルの認識結果
@@ -233,40 +306,18 @@ middleモデルの認識結果
 
 
 ###2. pre-processing images
-
-
-妥当性確認
-
-
 ###3. CNN design for color image 
 ###4. augment training images
-
-
-So 
-
-
 ##各クラスの平均画像の変化
-
-
-
-###間違えられたクラスの頻度を見る
-
-
-
 ##間違えられたクラスの頻度を見る
 
-<img width=640 alt="histgram" src="./fig/histgram_of_dataset.png"/>
-
-
+<!-- <img width=640 alt="histgram" src="./fig/histgram_of_dataset.png"/> -->
 
 ## ダメな画像を見付ける
 
 After the 1st trial of LeNet-5 with above normalization
 
-<img width=640 src="./fig/histgram_failed_samples.png"/>
-<img width=640 src="./fig/histgram_failed_samples_and_trainigdata.png"/>
-
-
+<!--
 |class| failure facor|
 |:-:|:-|
 |16|valid data has low chromaticity
@@ -289,37 +340,7 @@ After the 1st trial of LeNet-5 with above normalization
 
 clslist = (16, 21, 20, 24, 25, 0, 5, 27, 8, 29, 23, 22)
 
-
-<img width=480 src="./fig/class16_images_valid_failed.png"/>
-<img width=480 src="./fig/class16_images_valid_infered.png"/><br>
-<img width=480 src="./fig/class21_images_valid_failed.png"/>
-<img width=480 src="./fig/class21_images_valid_infered.png"/><br>
-<img width=480 src="./fig/class20_images_valid_failed.png"/>
-<img width=480 src="./fig/class20_images_valid_infered.png"/><br>
-<img width=480 src="./fig/class24_images_valid_failed.png"/>
-<img width=480 src="./fig/class24_images_valid_infered.png"/><br>
-<img width=480 src="./fig/class25_images_valid_failed.png"/>
-<img width=480 src="./fig/class25_images_valid_infered.png"/><br>
-<img width=480 src="./fig/class00_images_valid_failed.png"/>
-<img width=480 src="./fig/class00_images_valid_infered.png"/><br>
-<img width=480 src="./fig/class05_images_valid_failed.png"/>
-<img width=480 src="./fig/class05_images_valid_infered.png"/><br>
-<img width=480 src="./fig/class27_images_valid_failed.png"/>
-<img width=480 src="./fig/class27_images_valid_infered.png"/><br>
-<img width=480 src="./fig/class08_images_valid_failed.png"/>
-<img width=480 src="./fig/class08_images_valid_infered.png"/><br>
-<img width=480 src="./fig/class29_images_valid_failed.png"/>
-<img width=480 src="./fig/class29_images_valid_infered.png"/><br>
-<img width=480 src="./fig/class23_images_valid_failed.png"/>
-<img width=480 src="./fig/class23_images_valid_infered.png"/><br>
-<img width=480 src="./fig/class22_images_valid_failed.png"/>
-<img width=480 src="./fig/class22_images_valid_infered.png"/><br>
-
-
-
-
-
-
+-->
 
 ##Design and Test a Model Architecture
 

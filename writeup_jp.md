@@ -183,6 +183,7 @@ After 200 epochs of training, every type obtained 93% over in validation accurac
 
 All of the input type seem to get more accuracy after more training.
 
+
 ###3.4 selection of pre-processing method for the input data format
 
 I decided to **take RGB-type1** as the input format to study hereafter, however the feasibility test shows that **gray scale gets better accuracy than RGB input**.
@@ -193,7 +194,7 @@ So I can challenge something like that can solove the low-chroma and the backgro
 The RGB input may be useful to make sure what modification affects to the issues of the training dataset.
 
 
-###3.5 an inferences of "middle model" with RGB-type1 input
+###3.5 a result of "middle model" with RGB-type1 input
 
 As "middle model" feasibility test, I got examples that this model could not work well on, as belows.  
 Some classes appear to have some problems, other than the known troublesome class, 
@@ -263,7 +264,40 @@ This class validation data has high contrast background images, but the training
 
 #4. Design and Test a Model Architecture
 
-##4.1 Model "large model"
+##4.1 "large model" Architecture
+
+The quick looks above seems to show that "middle model" isn' enough to express textures inside traffic signs other than the training dataset issue.  
+So I decided to enlargep the filter tap size of the first convolutional network and two fully networks.
+
+Therfore, I call the final model architecture "large model".
+
+| Layer         		|     Description	        					| 
+|:----------------------|:----------------------------------------------| 
+| Input         		| 32x32x3 RGB image								| 
+| Convolution 7x7     	| 1x1 stride, VALID padding, outputs 26x26x64 	|
+| Batch Normalization	|												|
+| RELU					|												|
+| Max pooling	      	| 2x2 stride, VALID padding, outputs 13x13x64	|
+| Convolution 5x5     	| 1x1 stride, VALID padding, outputs 9x9x84 	|
+| RELU					|												|
+| Max pooling	      	| 2x2 stride, SAME padding, outputs 5x5x84		|
+| flatten				| 5x5x84 => 2100 								|
+| Fully connected		| outputs 240  									|
+| RELU					|												|
+| Dropout				| keep prob. 0.5								|
+| Fully connected		| outputs 240  									|
+| RELU					|												|
+| Dropout				| keep prob. 0.5								|
+| Softmax				| outputs 43 (class number)						|
+
+##4.2 training parameters
+
+| Title         		|     Description	        					| 
+|:----------------------|:----------------------------------------------| 
+| Optimizer				| Adam
+| learning_rate			| 0.0002
+| batch size			| 100
+| EPOCH Number			| 200
 
 
 
@@ -273,12 +307,14 @@ This class validation data has high contrast background images, but the training
 
 
 
-From the feasibility test above, "middle model" doesn't seem to be enough to express textures inside traffic signs other than the training dataset issue.  
-So 
 
 
 
-###2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
+###2. Describe what your final model architecture 
+ 
+looks like including model type, layers, layer sizes, connectivity,
+etc.) Consider including a diagram and/or table describing the final
+model.
 
 My final model consisted of the following layers:
 

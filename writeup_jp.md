@@ -266,10 +266,22 @@ This class validation data has high contrast background images, but the training
 
 ##4.1 "large model" Architecture
 
-The quick looks above seems to show that "middle model" isn' enough to express textures inside traffic signs other than the training dataset issue.  
-So I decided to enlargep the filter tap size of the first convolutional network and two fully networks.
+The quick looks above show that "middle model" may not be enough to express textures inside traffic signs other than the training dataset issue.  
+So I decided to enlargep the filter tap size of the first convolutional networks and two fully networks.
 
-Therfore, I call the final model architecture "large model".
+The histgram function of the Tensorboard was really helpful for me to define unit numbers of the two fully connected layer.  
+The unit numbers were able to be set adequate value watching varying histgram on the way to train via the model architecture.  
+The size 240 of two fully connected are moderate values that can get smooth histgrams of their weights.
+
+The final model also has two way to prevent overfitting.  
+1. batch normalization: in every taining turns, it normalizes CNN weights to prevent its biased distribution
+2. dropout: 
+similar to "middle model".
+
+Thier effectiveness
+
+
+I call the final model architecture "large model".
 
 | Layer         		|     Description	        					| 
 |:----------------------|:----------------------------------------------| 
@@ -291,6 +303,9 @@ Therfore, I call the final model architecture "large model".
 | Softmax				| outputs 43 (class number)						|
 
 ##4.2 training parameters
+
+The training Hyperparameters are same as "middle model".  
+They are also defined for slow training to prevent overfitting.
 
 | Title         		|     Description	        					| 
 |:----------------------|:----------------------------------------------| 
@@ -318,16 +333,6 @@ model.
 
 My final model consisted of the following layers:
 
-| Layer         		|     Description	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| Input         		| 32x32x3 RGB image   							| 
-| Convolution 3x3     	| 1x1 stride, same padding, outputs 32x32x64 	|
-| RELU					|												|
-| Max pooling	      	| 2x2 stride,  outputs 16x16x64 				|
-| Convolution 3x3	    | etc.      									|
-| Fully connected		| etc.        									|
-| Softmax				| etc.        									|
-|						|		      									|
 
 ###3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 

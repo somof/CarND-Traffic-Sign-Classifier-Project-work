@@ -41,26 +41,28 @@ X_valid, y_valid = valid['features'], valid['labels']
 
 # extra traininig dataset
 
-print(X_train[50].shape)
-sample = X_train[50].reshape(32, 32, 3)
+from PIL import Image
+
+print(X_train[5060].shape)
+sample = X_train[5060].reshape(32, 32, 3)
 print(sample.shape)
 
-distorted_image = tf.random_crop(sample, [32, 32, 3])
-images = distorted_image
+Image.fromarray(np.uint8(sample)).save('./test_sample_org.jpg')
 
-with tf.Session() as sess:
-    img = sess.run(Images)
-    print(images.shape)
-
+cropped = tf.random_crop(sample, [32, 32, 3])
+result = tf.image.per_image_standardization(cropped)
 
 with tf.Session() as sess:
     coord = tf.train.Coordinator()
     threads = tf.train.start_queue_runners(coord=coord)
 
-    for i in range(4):
-        img = sess.run(cropped)
+    for i in range(10):
+        img = sess.run(result)
         print(img.shape)
-        Image.fromarray(np.uint8(img)).save('./img/img{}.jpg'.format(i))
+        Image.fromarray(np.uint8(img)).save('./test_cropped_img{}.jpg'.format(i))
+        
+exit(0)
+
 
 
 

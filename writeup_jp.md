@@ -1,14 +1,10 @@
 #**Traffic Sign Recognition** 
 
-TODO: 正規化の順を画像単位から、データセット全体に変更してみる  
-TODO: pandasで解析するように変更！  
-
-
 ---
 
 **Build a Traffic Sign Recognition Project**
 
-## Submissions
+#1. Submissions
 
 ---
 
@@ -30,9 +26,9 @@ TODO: pandasで解析するように変更！
 
 ---
 
-##Data Set Summary & Exploration
+#2. Data Set Summary & Exploration
 
-###1. a basic summary of the data set.
+##2.1. a basic summary of the data set.
 
 Here are summary statistics of the traffic signs data sets:
 
@@ -66,7 +62,7 @@ As explained above, the training dataset may have some issue to train like:
  2. low contrast(dark) images  
  3. low variance in some labels  
 
-###2. an exploratory visualization of the dataset.
+##2.2. an exploratory visualization of the dataset.
 
 Here is a quick look of typical images in the training dataset.
 
@@ -75,7 +71,7 @@ Here is a quick look of typical images in the training dataset.
 This Dataset has a lot of similar images that seem to be augmented via image processing techniques like changing brightness, contrast, chroma and cropping position.
 
 
-###3. averaged class images of the dataset.
+##2.3. averaged class images of the dataset.
 
 Here are class example images(the first class image in the training dataset) and class average images.
 
@@ -93,17 +89,15 @@ But some classes seem to have some troubles.
 
 <!-- <img width=640 src="./fig/pixel_mean_stdv_vs_label.png"/> -->
 
-##Design and Test a Model Architecture
+#3. Feasibility Test
 
-The training data images potentially have trouble factors as described above.  
-So methods for pre-processing, CNN design and augmenting image data have to choose in order to reduce the training data risk.
+The training dataset potentially has trouble factors as described above.  
+So I had feasibility tests before selecting methods for pre-processing, CNN design and augmenting image data in order to reduce the training data risk.
 
-###1. feasibility training test
-
-At the first, I had a feasibility test via a reasonable scale model.  
+At the first, I made a reasonable scale model for the feasibility tests.  
 This model is bigger than the LeNet-5 on lesson 8 and would be smaller than the final model, so I named it "middle model".
 
-####1.1 design of "middle model" and training parameters
+###3.1 design of "middle model" and training parameters
 
 Here are the specifications of the middle model and training parameters.
 
@@ -134,7 +128,7 @@ Here are the specifications of the middle model and training parameters.
 | EPOCH Number			| 200
 
 
-####1.2 original training image data overview
+###3.2 original training image data overview
 
 Following figure shows a pixel mean value and stdev distribution for each training images.
 
@@ -164,7 +158,7 @@ But the low chroma and background texture issues still remain in the normlaized 
 These issues can be resolved by augmenting training data.
 
 
-####1.3 potential of "middle model" for the normalization type and color information use
+###3.3 potential of "middle model" for the normalization type and color information use
 
 To check the potential of the middle mode, I examined 7 types of input data as follow.
 
@@ -189,7 +183,7 @@ After 200 epochs of training, every type obtained 93% over in validation accurac
 
 All of the input type seem to get more accuracy after more training.
 
-####1.4 selection of input data format
+###3.4 selection of pre-processing method for the input data format
 
 I decided to **take RGB-type1** as the input format to study hereafter, however the feasibility test shows that **gray scale gets better accuracy than RGB input**.
 
@@ -199,7 +193,7 @@ So I can challenge something like that can solove the low-chroma and the backgro
 The RGB input may be useful to make sure what modification affects to the issues of the training dataset.
 
 
-####1.5 an inferences of "middle model" with RGB-type1 input
+###3.5 an inferences of "middle model" with RGB-type1 input
 
 As "middle model" feasibility test, I got examples that this model could not work well on, as belows.  
 Some classes appear to have some problems, other than the known troublesome class, 
@@ -216,9 +210,9 @@ Compare to numbers of training data, the failed classes don't seem to have enoug
 
 <img width=640 src="./fig/histgram_failed_samples_and_trainingdata.png"/>
 
-####1.6 quick looks of failed images at "middle model" with RGB-type1 input
+###3.6 quick looks of failed images at "middle model" with RGB-type1 input
 
-#####1.6.1 class 16
+####3.6.1 class 16
 
 This class validation data has very low-chroma images, but the training dataset for the class dosesn't have such images.
 
@@ -226,7 +220,7 @@ This class validation data has very low-chroma images, but the training dataset 
 <img width=320 src="./fig/class16_images_valid_infered.png"/><br>
 <img width=640 src="./fig/class16_images_training.png"/>
 
-#####1.6.2 class 21
+####3.6.2 class 21
 
 This class validation data has low resolution images, but the training dataset for the class doesn't have such images.
 
@@ -234,7 +228,7 @@ This class validation data has low resolution images, but the training dataset f
 <img width=320 src="./fig/class21_images_valid_infered.png"/><br>
 <img width=640 src="./fig/class21_images_training.png"/>
 
-#####1.6.3 class 40
+####3.6.3 class 40
 
 This class validation data has very dark and low contrast images, but the training dataset for the class doesn't have such images.
 
@@ -242,7 +236,7 @@ This class validation data has very dark and low contrast images, but the traini
 <img width=320 src="./fig/class40_images_valid_infered.png"/><br>
 <img width=640 src="./fig/class40_images_training.png"/>
 
-#####1.6.4 class 20
+####3.6.4 class 20
 
 This class validation data has small traffic sign images, but the training dataset for the class doesn't have such images.
 
@@ -250,7 +244,7 @@ This class validation data has small traffic sign images, but the training datas
 <img width=320 src="./fig/class20_images_valid_infered.png"/><br>
 <img width=640 src="./fig/class20_images_training.png"/>
 
-#####1.6.5 class 24
+####3.6.5 class 24
 
 This class validation data has very dark and low contrast images, but the training dataset for the class doesn't have such images.
 
@@ -258,7 +252,7 @@ This class validation data has very dark and low contrast images, but the traini
 <img width=320 src="./fig/class24_images_valid_infered.png"/><br>
 <img width=640 src="./fig/class24_images_training.png"/>
 
-#####1.6.6 class 27
+####3.6.6 class 27
 
 This class validation data has high contrast background images, but the training dataset for the class doesn't have such images.
 
@@ -266,122 +260,22 @@ This class validation data has high contrast background images, but the training
 <img width=320 src="./fig/class27_images_valid_infered.png"/><br>
 <img width=640 src="./fig/class27_images_training.png"/>
 
-###2. Augmenting trainig images.
 
-####2.1 plans to augment the training data
+#4. Design and Test a Model Architecture
 
-As I got 4 points of view about the trainig data issue as follows.
-
- 1. low chroma: class 6, 32, 41, 42
- 2. un-necessary background texture: class 16, 19, 20, 24, 30
- 3. dark brightness: class 3, 5, 6, 7, 10, 20 (Normalization may solve)
- 4. trainig data shortage: class 20, 21, 40 ...
-
-I take augmenting plans to resolve them as below.
-
-| method                 | porpose                           | target labels(class) |
-|:-----------------------|:----------------------------------|:---------------------|
-| enhance color			 | low-chroma expansion				 | 6, 32, 41, 42		|
-| add vivid images		 | low-chroma expansion				 | 6, 32, 41, 42		|
-| random value charge	 | back ground texture elimination	 | 16, 19, 20, 24, 30	|
-| random position shift	 | back ground texture elimination	 | 16, 19, 20, 24, 30	|
-| enhance brightness	 | dark brightness					 | 3, 5, 6, 7, 10, 20	|
-| add bright images		 | dark brightness					 | 3, 5, 6, 7, 10, 20	|
-| add various images	 | trainig data shortage			 | 20, 21, 40 ...		|
-
-####2.2 
+##4.1 Model "large model"
 
 
 
-
-middleモデルの認識結果
-色々な正規化方法で比較する
-
-グラフ追加
-
-あたり付け結果
+ここから書く
 
 
 
 
 
-###2. pre-processing images
-###3. CNN design for color image 
-###4. augment training images
-##各クラスの平均画像の変化
-##間違えられたクラスの頻度を見る
+From the feasibility test above, "middle model" doesn't seem to be enough to express textures inside traffic signs other than the training dataset issue.  
+So 
 
-<!-- <img width=640 alt="histgram" src="./fig/histgram_of_dataset.png"/> -->
-
-## ダメな画像を見付ける
-
-After the 1st trial of LeNet-5 with above normalization
-
-<!--
-|class| failure facor|
-|:-:|:-|
-|16|valid data has low chromaticity
-|21|valid data has low resolution
-|  |background color is similar to other class
-|20|too small sign board
-|  |uncertain reason
-|24|uncertain reason(really dark images)
-|25|low contrast inside a sign board
-| 0|low contrast inside a sign board
-| 5|blur
-|  |unknown background color
-|  |uncertain reason
-|27|low contrast inside a sign board
-| 8|low contrast
-|29|uncertain reason
-|23|uncertain reason
-|22|uncertain reason
-
-
-clslist = (16, 21, 20, 24, 25, 0, 5, 27, 8, 29, 23, 22)
-
--->
-
-##Design and Test a Model Architecture
-
-###1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the "Stand Out Suggestions" part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)
-
-- Model Architecture
-    - アーキの特徴量とその品質
-        - モデルのタイプ
-        - 階層数
-        - 各層の大きさ
-    - 図示することを推奨する
-
-- Model Architectureの設計とテスト
-    - Model Training
-        - 学習方法: Optimizer batch size, epoch数, hyperparametersの値
-    - Solution Approach
-        - アプローチの内容
-        - Accuracy on the validation set is 0.93 or greater.
-
-
-<img width=640 alt="training data normalization" src="./fig/images_normalized_for_training.png"/>
-
-
-
-As a first step, I decided to convert the images to grayscale because ...
-
-Here is an example of a traffic sign image before and after grayscaling.
-
-![alt text][image2]
-
-As a last step, I normalized the image data because ...
-
-I decided to generate additional data because ... 
-
-To add more data to the the data set, I used the following techniques because ... 
-
-Here is an example of an original image and an augmented image:
-
-![alt text][image3]
-
-The difference between the original data set and the augmented data set is the following ... 
 
 
 ###2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.
@@ -397,10 +291,7 @@ My final model consisted of the following layers:
 | Convolution 3x3	    | etc.      									|
 | Fully connected		| etc.        									|
 | Softmax				| etc.        									|
-|						|												|
-|						|												|
- 
-
+|						|		      									|
 
 ###3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
 
@@ -424,16 +315,52 @@ If a well known architecture was chosen:
 * What architecture was chosen?
 * Why did you believe it would be relevant to the traffic sign application?
 * How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
- 
 
-##Test a Model on New Images
+
+
+largeモデルの認識結果
+
+- Model Architecture
+    - アーキの特徴量とその品質
+        - モデルのタイプ
+        - 階層数
+        - 各層の大きさ
+    - 図示することを推奨する
+
+- Model Architectureの設計とテスト
+    - Model Training
+        - 学習方法: Optimizer batch size, epoch数, hyperparametersの値
+    - Solution Approach
+        - アプローチの内容
+        - Accuracy on the validation set is 0.93 or greater.
+
+
+##4.2 pre-processing via RGB-type1
+
+Describe how you preprocessed the image data.
+ What techniques were chosen and why did you choose these techniques? 
+Consider including images showing the output of each preprocessing technique. 
+Pre-processing refers to techniques such as converting to grayscale, normalization, etc. 
+
+
+##4.3 Training result
+
+
+
+
+
+##4.4 Training result
+
+
+##4.5. Test a Model on New Images
+
+新たな画像５枚を選んで認識させる
 
 - Test a Model on New Images
     - Acquiring New Images: German Traffic signsから5つの画像を加え、図示し、分類が難しいかどうか論じる
     - Performance on New Images: キャプチャ画像をテストすつ時のモデルの性能
     - Performance on New Images: テストセットに対する、新しい画像に対する性能
     - Model Certainty - Softmax Probabilities:
-
 
 
 ###1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
@@ -457,13 +384,7 @@ Here are the results of the prediction:
 | 100 km/h	      		| Bumpy Road					 				|
 | Slippery Road			| Slippery Road      							|
 
-
 The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
-
-
-
-- 新たな画像５枚を選んで教師画像に加える
-
 
 ###3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 
@@ -482,8 +403,122 @@ For the first image, the model is relatively sure that this is a stop sign (prob
 
 For the second image ... 
 
+
+
+
+
+
+
+
+
+
+
+
+
+オプション
+
+#5. Augmenting trainig images.
+
+The difference between the original data set and the augmented data set is the following ... 
+
+
+OPTIONAL: 
+As described in the "Stand Out Suggestions" part of the rubric, 
+if you generated additional data for training, 
+describe why you decided to generate additional data, 
+how you generated the data, 
+and provide example images of the additional data. 
+Then describe the characteristics of the augmented training set like number of images in the set,
+number of images for each class, etc.
+
+
+##5.1 plans to augment the training data
+
+As I got 4 points of view about the trainig data issue as follows.
+
+
+ 1. low chroma: class 6, 32, 41, 42
+ 2. un-necessary background texture: class 16, 19, 20, 24, 30
+ 3. dark brightness: class 3, 5, 6, 7, 10, 20 (Normalization may solve)
+ 4. trainig data shortage: class 20, 21, 40 ...
+
+I take augmenting plans to resolve them as below.
+
+| method                 | porpose                           | target labels(class) |
+|:-----------------------|:----------------------------------|:---------------------|
+| enhance color			 | low-chroma expansion				 | 6, 32, 41, 42		|
+| add vivid images		 | low-chroma expansion				 | 6, 32, 41, 42		|
+| random value charge	 | back ground texture elimination	 | 16, 19, 20, 24, 30	|
+| random position shift	 | back ground texture elimination	 | 16, 19, 20, 24, 30	|
+| enhance brightness	 | dark brightness					 | 3, 5, 6, 7, 10, 20	|
+| add bright images		 | dark brightness					 | 3, 5, 6, 7, 10, 20	|
+| add various images	 | trainig data shortage			 | 20, 21, 40 ...		|
+| ノイズを加える
+
+##5.2 augmenting training dataset
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
 ###1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
+
+#6. Visualize the network's feature maps
+
+Step 4 (Optional): Visualize the Neural Network's State with Test Images
+This Section is not required to complete but acts as an additional excersise for understaning the output of a neural network's weights. While neural networks can be a great learning device they are often referred to as a black box. We can understand what the weights of a neural network look like better by plotting their feature maps. After successfully training your neural network you can see what it's feature maps look like by plotting the output of the network's weight layers in response to a test stimuli image. From these plotted feature maps, it's possible to see what characteristics of an image the network finds interesting. For a sign, maybe the inner network feature maps react with high activation to the sign's boundary outline or to the contrast in the sign's painted symbol.
+
+Provided for you below is the function code that allows you to get the visualization output of any tensorflow weight layer you want. The inputs to the function should be a stimuli image, one used during training or a new one you provided, and then the tensorflow variable name that represents the layer's state during the training process, for instance if you wanted to see what the LeNet lab's feature maps looked like for it's second convolutional layer you could enter conv2 as the tf_activation variable.
+
+For an example of what feature map outputs look like, check out NVIDIA's results in their paper End-to-End Deep Learning for Self-Driving Cars in the section Visualization of internal CNN State. NVIDIA was able to show that their network's inner weights had high activations to road boundary lines by comparing feature maps from an image with a clear path to one without. Try experimenting with a similar test to show that your trained network's weights are looking for interesting features, whether it's looking at differences in feature maps from images with or without a sign, or even what feature maps look like in a trained network vs a completely untrained one on the same sign image.
+
+### Visualize your network's feature maps here.
+### Feel free to use as many code cells as needed.
+
+# image_input: the test image being fed into the network to produce the feature maps
+# tf_activation: should be a tf variable name used during your training procedure that represents the calculated state of a specific weight layer
+# activation_min/max: can be used to view the activation contrast in more detail, by default matplot sets min and max to the actual min and max values of the output
+# plt_num: used to plot out multiple different weight feature map sets on the same block, just extend the plt number for each new feature map entry
+
+def outputFeatureMap(image_input, tf_activation, activation_min=-1, activation_max=-1 ,plt_num=1):
+    # Here make sure to preprocess your image_input in a way your network expects
+    # with size, normalization, ect if needed
+    # image_input =
+    # Note: x should be the same name as your network's tensorflow data placeholder variable
+    # If you get an error tf_activation is not defined it may be having trouble accessing the variable from inside a function
+    activation = tf_activation.eval(session=sess,feed_dict={x : image_input})
+    featuremaps = activation.shape[3]
+    plt.figure(plt_num, figsize=(15,15))
+    for featuremap in range(featuremaps):
+        plt.subplot(6,8, featuremap+1) # sets the number of feature maps to show on each row and column
+        plt.title('FeatureMap ' + str(featuremap)) # displays the feature map number
+        if activation_min != -1 & activation_max != -1:
+            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmin =activation_min, vmax=activation_max, cmap="gray")
+        elif activation_max != -1:
+            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmax=activation_max, cmap="gray")
+        elif activation_min !=-1:
+            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmin=activation_min, cmap="gray")
+        else:
+            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", cmap="gray")
+
+
+
+
+
+
+
+
+
 
 
 # TODO

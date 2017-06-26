@@ -101,60 +101,17 @@ print("Number of classes =", n_classes)
 # plt.savefig('fig/class%02d_images_valid.png' % clslist[0])
 # plt.show()
 
-from PIL import Image
-
 images = X_train
 labels = y_train
 title = 'X_train'
 
-imglist = (3240, 3241, 3242, 3243, 3244, 3245, 3246, 3247, 3248, 3250, 3251, 3253, 3257, 3260, 3261)
 
-for no in imglist:
-    pil_img = Image.fromarray(X_valid[no])
-    pil_img.save('examples/vdata_%05d.png' % no)
-    
-
-|No|input image|Inferenced sign|
-|:-:|:-:|:-|:-|
-|3240|![vdata3240](examples/vdata_03240.png)|<img width=32 src="examples/class12_00002_00013.png"/>|12:Priority road 
-|3241|![vdata3241](examples/vdata_03241.png)|<img width=32 src="examples/class26_00001_00015.png"/>|26:Traffic signals 
-|3242|![vdata3242](examples/vdata_03242.png)|<img width=32 src="examples/class26_00001_00015.png"/>|26:Traffic signals 
-|3243|![vdata3243](examples/vdata_03243.png)|<img width=32 src="examples/class29_00004_00019.png"/>|29:Bicycles crossing 
-|3244|![vdata3244](examples/vdata_03244.png)|<img width=32 src="examples/class31_00004_00015.png"/>|31:Wild animals crossing 
-|3245|![vdata3245](examples/vdata_03245.png)|<img width=32 src="examples/class23_00001_00015.png"/>|23:Slippery road 
-|3246|![vdata3246](examples/vdata_03246.png)|<img width=32 src="examples/class29_00004_00019.png"/>|29:Bicycles crossing 
-|3247|![vdata3247](examples/vdata_03247.png)|<img width=32 src="examples/class31_00004_00015.png"/>|31:Wild animals crossing 
-|3248|![vdata3248](examples/vdata_03248.png)|<img width=32 src="examples/class31_00004_00015.png"/>|31:Wild animals crossing 
-|3250|![vdata3250](examples/vdata_03250.png)|<img width=32 src="examples/class31_00004_00015.png"/>|31:Wild animals crossing 
-|3251|![vdata3251](examples/vdata_03251.png)|<img width=32 src="examples/class23_00001_00015.png"/>|23:Slippery road 
-|3253|![vdata3253](examples/vdata_03253.png)|<img width=32 src="examples/class31_00004_00015.png"/>|31:Wild animals crossing 
-|3257|![vdata3257](examples/vdata_03257.png)|<img width=32 src="examples/class23_00001_00015.png"/>|23:Slippery road 
-|3260|![vdata3260](examples/vdata_03260.png)|<img width=32 src="examples/class31_00004_00015.png"/>|31:Wild animals crossing 
-|3261|![vdata3261](examples/vdata_03261.png)|<img width=32 src="examples/class31_00004_00015.png"/>|31:Wild animals crossing 
-
-
-
-|No|image|Inferenced sign|
-|:-:|:-:|:-|:-|
-|3240|![vdata3240](examples/vdata_03240.png)|![class12](examples/class12_00002_00013.png)|12:Priority road 
-|3241|![vdata3241](examples/vdata_03241.png)|![class26](examples/class26_00001_00015.png)|26:Traffic signals 
-|3242|![vdata3242](examples/vdata_03242.png)|![class26](examples/class26_00001_00015.png)|26:Traffic signals 
-|3243|![vdata3243](examples/vdata_03243.png)|![class29](examples/class29_00004_00019.png)|29:Bicycles crossing 
-|3244|![vdata3244](examples/vdata_03244.png)|![class31](examples/class31_00004_00015.png)|31:Wild animals crossing 
-|3245|![vdata3245](examples/vdata_03245.png)|![class23](examples/class23_00001_00015.png)|23:Slippery road 
-|3246|![vdata3246](examples/vdata_03246.png)|![class29](examples/class29_00004_00019.png)|29:Bicycles crossing 
-|3247|![vdata3247](examples/vdata_03247.png)|![class31](examples/class31_00004_00015.png)|31:Wild animals crossing 
-|3248|![vdata3248](examples/vdata_03248.png)|![class31](examples/class31_00004_00015.png)|31:Wild animals crossing 
-|3250|![vdata3250](examples/vdata_03250.png)|![class31](examples/class31_00004_00015.png)|31:Wild animals crossing 
-|3251|![vdata3251](examples/vdata_03251.png)|![class23](examples/class23_00001_00015.png)|23:Slippery road 
-|3253|![vdata3253](examples/vdata_03253.png)|![class31](examples/class31_00004_00015.png)|31:Wild animals crossing 
-|3257|![vdata3257](examples/vdata_03257.png)|![class23](examples/class23_00001_00015.png)|23:Slippery road 
-|3260|![vdata3260](examples/vdata_03260.png)|![class31](examples/class31_00004_00015.png)|31:Wild animals crossing 
-|3261|![vdata3261](examples/vdata_03261.png)|![class31](examples/class31_00004_00015.png)|31:Wild animals crossing 
-
-
-
-exit(0)
+# from PIL import Image
+# imglist = (3240, 3241, 3242, 3243, 3244, 3245, 3246, 3247, 3248, 3250, 3251, 3253, 3257, 3260, 3261)
+# for no in imglist:
+#     pil_img = Image.fromarray(X_valid[no])
+#     pil_img.save('examples/vdata_%05d.png' % no)
+# exit(0)
 
 
 
@@ -174,7 +131,7 @@ for cls in clslist:
     for i in range(len(images)):
         if labels[i] == cls and no < limit:
             ax = plt.subplot(htile, wtile, no + 1)
-            plt.title("%d" % no, fontsize=12)
+            plt.title("%d" % i, fontsize=12)
             plt.axis("off")
             plt.tick_params(labelbottom="off")
             plt.tick_params(labelleft="off")
@@ -183,6 +140,7 @@ for cls in clslist:
     plt.savefig('fig/class%02d_images_training.png' % cls)
     # plt.show()
 
+exit(0)
 
 clslist = range(43)
 for cls in clslist:

@@ -302,11 +302,9 @@ pre {
 <body>
   <div class="md2html-container">
 <h1 id="traffic-sign-recognition"><strong>Traffic Sign Recognition</strong></h1>
-<p>TODO: 正規化の順を画像単位から、データセット全体に変更してみる<br />
-TODO: pandasで解析するように変更！</p>
 <hr />
 <p><strong>Build a Traffic Sign Recognition Project</strong></p>
-<h2 id="submissions">Submissions</h2>
+<h1 id="submissions">1. Submissions</h1>
 <hr />
 <ul>
 <li><a href="https://github.com/somof/CarND-Traffic-Sign-Classifier-Project-work/blob/master/Traffic_Sign_Classifier.ipynb">Code</a></li>
@@ -314,8 +312,8 @@ TODO: pandasで解析するように変更！</p>
 </ul>
 <!-- [image1]: ./examples/visualization.jpg "Visualization" -->
 <hr />
-<h2 id="data-set-summary-exploration">Data Set Summary &amp; Exploration</h2>
-<h3 id="a-basic-summary-of-the-data-set.">1. a basic summary of the data set.</h3>
+<h1 id="data-set-summary-exploration">2. Data Set Summary &amp; Exploration</h1>
+<h2 id="a-basic-summary-of-the-data-set.">2.1. a basic summary of the data set.</h2>
 <p>Here are summary statistics of the traffic signs data sets:</p>
 <ul>
 <li>The size of training set is 34799</li>
@@ -339,11 +337,11 @@ It shows labels 6, 21, 27, 21 and others have low deviation among same label sam
 1. sample number shortage in some lables<br />
 2. low contrast(dark) images<br />
 3. low variance in some labels</p>
-<h3 id="an-exploratory-visualization-of-the-dataset.">2. an exploratory visualization of the dataset.</h3>
+<h2 id="an-exploratory-visualization-of-the-dataset.">2.2. an exploratory visualization of the dataset.</h2>
 <p>Here is a quick look of typical images in the training dataset.</p>
 <p><img width=640 alt="image data" src="./fig/AllTrainingImage_skip28.png"/></p>
 <p>This Dataset has a lot of similar images that seem to be augmented via image processing techniques like changing brightness, contrast, chroma and cropping position.</p>
-<h3 id="averaged-class-images-of-the-dataset.">3. averaged class images of the dataset.</h3>
+<h2 id="averaged-class-images-of-the-dataset.">2.3. averaged class images of the dataset.</h2>
 <p>Here are class example images(the first class image in the training dataset) and class average images.</p>
 <p><img width=800 src="./fig/sampled_43_images_in_X_train.png"/></p>
 <p><img width=800 src="./fig/mean_images_in_X_train_wo_normalization.png"/></p>
@@ -355,13 +353,12 @@ It shows labels 6, 21, 27, 21 and others have low deviation among same label sam
 <li>dark brightness: class 3, 5, 6, 7, 10, 20</li>
 </ol>
 <!-- <img width=640 src="./fig/pixel_mean_stdv_vs_label.png"/> -->
-<h2 id="design-and-test-a-model-architecture">Design and Test a Model Architecture</h2>
-<p>The training data images potentially have trouble factors as described above.<br />
-So methods for pre-processing, CNN design and augmenting image data have to choose in order to reduce the training data risk.</p>
-<h3 id="feasibility-training-test">1. feasibility training test</h3>
-<p>At the first, I had a feasibility test via a reasonable scale model.<br />
+<h1 id="feasibility-test">3. Feasibility Test</h1>
+<p>The training dataset potentially has trouble factors as described above.<br />
+So I had feasibility tests before selecting methods for pre-processing, CNN design and augmenting image data in order to reduce the training data risk.</p>
+<p>At the first, I made a reasonable scale model for the feasibility tests.<br />
 This model is bigger than the LeNet-5 on lesson 8 and would be smaller than the final model, so I named it &quot;middle model&quot;.</p>
-<h4 id="design-of-middle-model-and-training-parameters">1.1 design of &quot;middle model&quot; and training parameters</h4>
+<h3 id="design-of-middle-model-and-training-parameters">3.1 design of &quot;middle model&quot; and training parameters</h3>
 <p>Here are the specifications of the middle model and training parameters.</p>
 <table>
 <thead>
@@ -463,7 +460,7 @@ This model is bigger than the LeNet-5 on lesson 8 and would be smaller than the 
 </tr>
 </tbody>
 </table>
-<h4 id="original-training-image-data-overview">1.2 original training image data overview</h4>
+<h3 id="original-training-image-data-overview">3.2 original training image data overview</h3>
 <p>Following figure shows a pixel mean value and stdev distribution for each training images.</p>
 <p><img width=400 src="./fig/pixel_mean_vs_stdv_in_X_train_each.png"/></p>
 <p>To make training work better, following normalization types are possible.</p>
@@ -478,7 +475,7 @@ This model is bigger than the LeNet-5 on lesson 8 and would be smaller than the 
 <p><img width=640 src="./fig/mean_images_in_X_train_type0_normalization.png"/> <img width=640 src="./fig/mean_images_in_X_train_type1_normalization.png"/> <img width=640 src="./fig/mean_images_in_X_train_type2_normalization.png"/></p>
 <p>Relatively to the average images without normalization, described above, the dark brightness issue is declined by type 1 and 2 normalizations. But the low chroma and background texture issues still remain in the normlaized images.<br />
 These issues can be resolved by augmenting training data.</p>
-<h4 id="potential-of-middle-model-for-the-normalization-type-and-color-information-use">1.3 potential of &quot;middle model&quot; for the normalization type and color information use</h4>
+<h3 id="potential-of-middle-model-for-the-normalization-type-and-color-information-use">3.3 potential of &quot;middle model&quot; for the normalization type and color information use</h3>
 <p>To check the potential of the middle mode, I examined 7 types of input data as follow.</p>
 <table>
 <thead>
@@ -539,12 +536,12 @@ These issues can be resolved by augmenting training data.</p>
 <p>After 200 epochs of training, every type obtained 93% over in validation accuracy as below.</p>
 <p><img width=320 src="./fig/middle_model_feasibility_Test.png"/> <img width=320 src="./fig/middle_model_feasibility_Test_overfitting.png"/></p>
 <p>All of the input type seem to get more accuracy after more training.</p>
-<h4 id="selection-of-input-data-format">1.4 selection of input data format</h4>
+<h3 id="selection-of-pre-processing-method-for-the-input-data-format">3.4 selection of pre-processing method for the input data format</h3>
 <p>I decided to <strong>take RGB-type1</strong> as the input format to study hereafter, however the feasibility test shows that <strong>gray scale gets better accuracy than RGB input</strong>.</p>
 <p>All the 7 input format types, include RGB format, already satisfy the 93% accuracy goal of the project.<br />
 So I can challenge something like that can solove the low-chroma and the background texture issues above.</p>
 <p>The RGB input may be useful to make sure what modification affects to the issues of the training dataset.</p>
-<h4 id="an-inferences-of-middle-model-with-rgb-type1-input">1.5 an inferences of &quot;middle model&quot; with RGB-type1 input</h4>
+<h3 id="an-inferences-of-middle-model-with-rgb-type1-input">3.5 an inferences of &quot;middle model&quot; with RGB-type1 input</h3>
 <p>As &quot;middle model&quot; feasibility test, I got examples that this model could not work well on, as belows.<br />
 Some classes appear to have some problems, other than the known troublesome class,</p>
 <!-- (array([ 1,  4,  3,  3,  0,  2,  4,  2,  1,  2, -->
@@ -555,27 +552,144 @@ Some classes appear to have some problems, other than the known troublesome clas
 <p><img width=640 src="./fig/histgram_failed_samples.png"/></p>
 <p>Compare to numbers of training data, the failed classes don't seem to have enough training data.</p>
 <p><img width=640 src="./fig/histgram_failed_samples_and_trainingdata.png"/></p>
-<h4 id="quick-looks-of-failed-images-at-middle-model-with-rgb-type1-input">1.6 quick looks of failed images at &quot;middle model&quot; with RGB-type1 input</h4>
-<h5 id="class-16">1.6.1 class 16</h5>
+<h3 id="quick-looks-of-failed-images-at-middle-model-with-rgb-type1-input">3.6 quick looks of failed images at &quot;middle model&quot; with RGB-type1 input</h3>
+<h4 id="class-16">3.6.1 class 16</h4>
 <p>This class validation data has very low-chroma images, but the training dataset for the class dosesn't have such images.</p>
 <p><img width=250 src="./fig/class16_images_valid_failed.png"/> <img width=320 src="./fig/class16_images_valid_infered.png"/><br> <img width=640 src="./fig/class16_images_training.png"/></p>
-<h5 id="class-21">1.6.2 class 21</h5>
+<h4 id="class-21">3.6.2 class 21</h4>
 <p>This class validation data has low resolution images, but the training dataset for the class doesn't have such images.</p>
 <p><img width=250 src="./fig/class21_images_valid_failed.png"/> <img width=320 src="./fig/class21_images_valid_infered.png"/><br> <img width=640 src="./fig/class21_images_training.png"/></p>
-<h5 id="class-40">1.6.3 class 40</h5>
+<h4 id="class-40">3.6.3 class 40</h4>
 <p>This class validation data has very dark and low contrast images, but the training dataset for the class doesn't have such images.</p>
 <p><img width=250 src="./fig/class40_images_valid_failed.png"/> <img width=320 src="./fig/class40_images_valid_infered.png"/><br> <img width=640 src="./fig/class40_images_training.png"/></p>
-<h5 id="class-20">1.6.4 class 20</h5>
+<h4 id="class-20">3.6.4 class 20</h4>
 <p>This class validation data has small traffic sign images, but the training dataset for the class doesn't have such images.</p>
 <p><img width=250 src="./fig/class20_images_valid_failed.png"/> <img width=320 src="./fig/class20_images_valid_infered.png"/><br> <img width=640 src="./fig/class20_images_training.png"/></p>
-<h5 id="class-24">1.6.5 class 24</h5>
+<h4 id="class-24">3.6.5 class 24</h4>
 <p>This class validation data has very dark and low contrast images, but the training dataset for the class doesn't have such images.</p>
 <p><img width=250 src="./fig/class24_images_valid_failed.png"/> <img width=320 src="./fig/class24_images_valid_infered.png"/><br> <img width=640 src="./fig/class24_images_training.png"/></p>
-<h5 id="class-27">1.6.6 class 27</h5>
+<h4 id="class-27">3.6.6 class 27</h4>
 <p>This class validation data has high contrast background images, but the training dataset for the class doesn't have such images.</p>
 <p><img width=250 src="./fig/class27_images_valid_failed.png"/> <img width=320 src="./fig/class27_images_valid_infered.png"/><br> <img width=640 src="./fig/class27_images_training.png"/></p>
-<h3 id="augmenting-trainig-images.">2. Augmenting trainig images.</h3>
-<h4 id="plans-to-augment-the-training-data">2.1 plans to augment the training data</h4>
+<h1 id="design-and-test-a-model-architecture">4. Design and Test a Model Architecture</h1>
+<h2 id="model-large-model">4.1 Model &quot;large model&quot;</h2>
+<p>From the feasibility test above, &quot;middle model&quot; doesn't seem to be enough to express textures inside traffic signs other than the training dataset issue.<br />
+So</p>
+<p>largeモデルの認識結果</p>
+<ul>
+<li>Model Architecture
+<ul>
+<li>アーキの特徴量とその品質
+<ul>
+<li>モデルのタイプ</li>
+<li>階層数</li>
+<li>各層の大きさ</li>
+</ul></li>
+<li>図示することを推奨する</li>
+</ul></li>
+<li>Model Architectureの設計とテスト
+<ul>
+<li>Model Training
+<ul>
+<li>学習方法: Optimizer batch size, epoch数, hyperparametersの値</li>
+</ul></li>
+<li>Solution Approach
+<ul>
+<li>アプローチの内容</li>
+<li>Accuracy on the validation set is 0.93 or greater.</li>
+</ul></li>
+</ul></li>
+</ul>
+<h2 id="pre-processing-via-rgb-type1">4.2 pre-processing via RGB-type1</h2>
+<p>Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc.</p>
+<h2 id="training-result">4.3 Training result</h2>
+<h2 id="training-result-1">4.4 Training result</h2>
+<h2 id="test-a-model-on-new-images">4.5. Test a Model on New Images</h2>
+<p>新たな画像５枚を選んで認識させる</p>
+<ul>
+<li>Test a Model on New Images
+<ul>
+<li>Acquiring New Images: German Traffic signsから5つの画像を加え、図示し、分類が難しいかどうか論じる</li>
+<li>Performance on New Images: キャプチャ画像をテストすつ時のモデルの性能</li>
+<li>Performance on New Images: テストセットに対する、新しい画像に対する性能</li>
+<li>Model Certainty - Softmax Probabilities:</li>
+</ul></li>
+</ul>
+<h3 id="choose-five-german-traffic-signs-found-on-the-web-and-provide-them-in-the-report.-for-each-image-discuss-what-quality-or-qualities-might-be-difficult-to-classify.">1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.</h3>
+<p>Here are five German traffic signs that I found on the web:</p>
+<p><img src="./examples/placeholder.png" title="Traffic Sign 1" alt="alt text" /> <img src="./examples/placeholder.png" title="Traffic Sign 2" alt="alt text" /> <img src="./examples/placeholder.png" title="Traffic Sign 3" alt="alt text" /> <img src="./examples/placeholder.png" title="Traffic Sign 4" alt="alt text" /> <img src="./examples/placeholder.png" title="Traffic Sign 5" alt="alt text" /></p>
+<p>The first image might be difficult to classify because ...</p>
+<h3 id="discuss-the-models-predictions-on-these-new-traffic-signs-and-compare-the-results-to-predicting-on-the-test-set.-at-a-minimum-discuss-what-the-predictions-were-the-accuracy-on-these-new-predictions-and-compare-the-accuracy-to-the-accuracy-on-the-test-set-optional-discuss-the-results-in-more-detail-as-described-in-the-stand-out-suggestions-part-of-the-rubric.">2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the &quot;Stand Out Suggestions&quot; part of the rubric).</h3>
+<p>Here are the results of the prediction:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Image</th>
+<th align="center">Prediction</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Stop Sign</td>
+<td align="center">Stop sign</td>
+</tr>
+<tr class="even">
+<td align="center">U-turn</td>
+<td align="center">U-turn</td>
+</tr>
+<tr class="odd">
+<td align="center">Yield</td>
+<td align="center">Yield</td>
+</tr>
+<tr class="even">
+<td align="center">100 km/h</td>
+<td align="center">Bumpy Road</td>
+</tr>
+<tr class="odd">
+<td align="center">Slippery Road</td>
+<td align="center">Slippery Road</td>
+</tr>
+</tbody>
+</table>
+<p>The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...</p>
+<h3 id="describe-how-certain-the-model-is-when-predicting-on-each-of-the-five-new-images-by-looking-at-the-softmax-probabilities-for-each-prediction.-provide-the-top-5-softmax-probabilities-for-each-image-along-with-the-sign-type-of-each-probability.-optional-as-described-in-the-stand-out-suggestions-part-of-the-rubric-visualizations-can-also-be-provided-such-as-bar-charts">3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the &quot;Stand Out Suggestions&quot; part of the rubric, visualizations can also be provided such as bar charts)</h3>
+<p>The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.</p>
+<p>For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Probability</th>
+<th align="center">Prediction</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">.60</td>
+<td align="center">Stop sign</td>
+</tr>
+<tr class="even">
+<td align="center">.20</td>
+<td align="center">U-turn</td>
+</tr>
+<tr class="odd">
+<td align="center">.05</td>
+<td align="center">Yield</td>
+</tr>
+<tr class="even">
+<td align="center">.04</td>
+<td align="center">Bumpy Road</td>
+</tr>
+<tr class="odd">
+<td align="center">.01</td>
+<td align="center">Slippery Road</td>
+</tr>
+</tbody>
+</table>
+<p>For the second image ...</p>
+<p>オプション</p>
+<h1 id="augmenting-trainig-images.">5. Augmenting trainig images.</h1>
+<p>OPTIONAL: As described in the &quot;Stand Out Suggestions&quot; part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.</p>
+<h2 id="plans-to-augment-the-training-data">5.1 plans to augment the training data</h2>
 <p>As I got 4 points of view about the trainig data issue as follows.</p>
 <ol style="list-style-type: decimal">
 <li>low chroma: class 6, 32, 41, 42</li>
@@ -628,12 +742,12 @@ Some classes appear to have some problems, other than the known troublesome clas
 <td align="left">trainig data shortage</td>
 <td align="left">20, 21, 40 ...</td>
 </tr>
+<tr class="even">
+<td align="left">ノイズを加える</td>
+</tr>
 </tbody>
 </table>
-<h4 id="section">2.2</h4>
-<p>middleモデルの認識結果 色々な正規化方法で比較する</p>
-<p>グラフ追加</p>
-<p>あたり付け結果</p>
+<h2 id="augmenting-training-dataset">5.2 augmenting training dataset</h2>
 <h3 id="pre-processing-images">2. pre-processing images</h3>
 <h3 id="cnn-design-for-color-image">3. CNN design for color image</h3>
 <h3 id="augment-training-images">4. augment training images</h3>
@@ -667,140 +781,59 @@ clslist = (16, 21, 20, 24, 25, 0, 5, 27, 8, 29, 23, 22)
 
 -->
 <h2 id="design-and-test-a-model-architecture-1">Design and Test a Model Architecture</h2>
-<h3 id="describe-how-you-preprocessed-the-image-data.-what-techniques-were-chosen-and-why-did-you-choose-these-techniques-consider-including-images-showing-the-output-of-each-preprocessing-technique.-pre-processing-refers-to-techniques-such-as-converting-to-grayscale-normalization-etc.-optional-as-described-in-the-stand-out-suggestions-part-of-the-rubric-if-you-generated-additional-data-for-training-describe-why-you-decided-to-generate-additional-data-how-you-generated-the-data-and-provide-example-images-of-the-additional-data.-then-describe-the-characteristics-of-the-augmented-training-set-like-number-of-images-in-the-set-number-of-images-for-each-class-etc.">1. Describe how you preprocessed the image data. What techniques were chosen and why did you choose these techniques? Consider including images showing the output of each preprocessing technique. Pre-processing refers to techniques such as converting to grayscale, normalization, etc. (OPTIONAL: As described in the &quot;Stand Out Suggestions&quot; part of the rubric, if you generated additional data for training, describe why you decided to generate additional data, how you generated the data, and provide example images of the additional data. Then describe the characteristics of the augmented training set like number of images in the set, number of images for each class, etc.)</h3>
-<ul>
-<li>Model Architecture
-<ul>
-<li>アーキの特徴量とその品質
-<ul>
-<li>モデルのタイプ</li>
-<li>階層数</li>
-<li>各層の大きさ</li>
-</ul></li>
-<li>図示することを推奨する</li>
-</ul></li>
-<li>Model Architectureの設計とテスト
-<ul>
-<li>Model Training
-<ul>
-<li>学習方法: Optimizer batch size, epoch数, hyperparametersの値</li>
-</ul></li>
-<li>Solution Approach
-<ul>
-<li>アプローチの内容</li>
-<li>Accuracy on the validation set is 0.93 or greater.</li>
-</ul></li>
-</ul></li>
-</ul>
-<p><img width=640 alt="training data normalization" src="./fig/images_normalized_for_training.png"/></p>
-<p>As a first step, I decided to convert the images to grayscale because ...</p>
-<p>Here is an example of a traffic sign image before and after grayscaling.</p>
-<div class="figure">
-<img src="./examples/grayscale.jpg" title="Grayscaling" alt="alt text" />
-<p class="caption">alt text</p>
-</div>
-<p>As a last step, I normalized the image data because ...</p>
-<p>I decided to generate additional data because ...</p>
-<p>To add more data to the the data set, I used the following techniques because ...</p>
-<p>Here is an example of an original image and an augmented image:</p>
-<div class="figure">
-<img src="./examples/random_noise.jpg" title="Random Noise" alt="alt text" />
-<p class="caption">alt text</p>
-</div>
+<h3 id="section">1.</h3>
+<!-- <img width=640 alt="training data normalization" src="./fig/images_normalized_for_training.png"/> -->
 <p>The difference between the original data set and the augmented data set is the following ...</p>
 <h3 id="describe-what-your-final-model-architecture-looks-like-including-model-type-layers-layer-sizes-connectivity-etc.-consider-including-a-diagram-andor-table-describing-the-final-model.">2. Describe what your final model architecture looks like including model type, layers, layer sizes, connectivity, etc.) Consider including a diagram and/or table describing the final model.</h3>
 <p>My final model consisted of the following layers:</p>
-<p>| Layer | Description | |:---------------------:|:---------------------------------------------:| | Input | 32x32x3 RGB image | | Convolution 3x3 | 1x1 stride, same padding, outputs 32x32x64 | | RELU | | | Max pooling | 2x2 stride, outputs 16x16x64 | | Convolution 3x3 | etc. | | Fully connected | etc. | | Softmax | etc. | | | | | | |</p>
+<table>
+<thead>
+<tr class="header">
+<th align="center">Layer</th>
+<th align="center">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">Input</td>
+<td align="center">32x32x3 RGB image</td>
+</tr>
+<tr class="even">
+<td align="center">Convolution 3x3</td>
+<td align="center">1x1 stride, same padding, outputs 32x32x64</td>
+</tr>
+<tr class="odd">
+<td align="center">RELU</td>
+<td align="center"></td>
+</tr>
+<tr class="even">
+<td align="center">Max pooling</td>
+<td align="center">2x2 stride, outputs 16x16x64</td>
+</tr>
+<tr class="odd">
+<td align="center">Convolution 3x3</td>
+<td align="center">etc.</td>
+</tr>
+<tr class="even">
+<td align="center">Fully connected</td>
+<td align="center">etc.</td>
+</tr>
+<tr class="odd">
+<td align="center">Softmax</td>
+<td align="center">etc.</td>
+</tr>
+<tr class="even">
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody>
+</table>
 <h3 id="describe-how-you-trained-your-model.-the-discussion-can-include-the-type-of-optimizer-the-batch-size-number-of-epochs-and-any-hyperparameters-such-as-learning-rate.">3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.</h3>
 <p>To train the model, I used an ....</p>
 <h3 id="describe-the-approach-taken-for-finding-a-solution-and-getting-the-validation-set-accuracy-to-be-at-least-0.93.-include-in-the-discussion-the-results-on-the-training-validation-and-test-sets-and-where-in-the-code-these-were-calculated.-your-approach-may-have-been-an-iterative-process-in-which-case-outline-the-steps-you-took-to-get-to-the-final-solution-and-why-you-chose-those-steps.-perhaps-your-solution-involved-an-already-well-known-implementation-or-architecture.-in-this-case-discuss-why-you-think-the-architecture-is-suitable-for-the-current-problem.">4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.</h3>
 <p>My final model results were: * training set accuracy of ? * validation set accuracy of ? * test set accuracy of ?</p>
 <p>If an iterative approach was chosen: * What was the first architecture that was tried and why was it chosen? * What were some problems with the initial architecture? * How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to overfitting or underfitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting. * Which parameters were tuned? How were they adjusted and why? * What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?</p>
 <p>If a well known architecture was chosen: * What architecture was chosen? * Why did you believe it would be relevant to the traffic sign application? * How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?</p>
-<h2 id="test-a-model-on-new-images">Test a Model on New Images</h2>
-<ul>
-<li>Test a Model on New Images
-<ul>
-<li>Acquiring New Images: German Traffic signsから5つの画像を加え、図示し、分類が難しいかどうか論じる</li>
-<li>Performance on New Images: キャプチャ画像をテストすつ時のモデルの性能</li>
-<li>Performance on New Images: テストセットに対する、新しい画像に対する性能</li>
-<li>Model Certainty - Softmax Probabilities:</li>
-</ul></li>
-</ul>
-<h3 id="choose-five-german-traffic-signs-found-on-the-web-and-provide-them-in-the-report.-for-each-image-discuss-what-quality-or-qualities-might-be-difficult-to-classify.">1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.</h3>
-<p>Here are five German traffic signs that I found on the web:</p>
-<p><img src="./examples/placeholder.png" title="Traffic Sign 1" alt="alt text" /> <img src="./examples/placeholder.png" title="Traffic Sign 2" alt="alt text" /> <img src="./examples/placeholder.png" title="Traffic Sign 3" alt="alt text" /> <img src="./examples/placeholder.png" title="Traffic Sign 4" alt="alt text" /> <img src="./examples/placeholder.png" title="Traffic Sign 5" alt="alt text" /></p>
-<p>The first image might be difficult to classify because ...</p>
-<h3 id="discuss-the-models-predictions-on-these-new-traffic-signs-and-compare-the-results-to-predicting-on-the-test-set.-at-a-minimum-discuss-what-the-predictions-were-the-accuracy-on-these-new-predictions-and-compare-the-accuracy-to-the-accuracy-on-the-test-set-optional-discuss-the-results-in-more-detail-as-described-in-the-stand-out-suggestions-part-of-the-rubric.">2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the &quot;Stand Out Suggestions&quot; part of the rubric).</h3>
-<p>Here are the results of the prediction:</p>
-<table>
-<thead>
-<tr class="header">
-<th align="center">Image</th>
-<th align="center">Prediction</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">Stop Sign</td>
-<td align="center">Stop sign</td>
-</tr>
-<tr class="even">
-<td align="center">U-turn</td>
-<td align="center">U-turn</td>
-</tr>
-<tr class="odd">
-<td align="center">Yield</td>
-<td align="center">Yield</td>
-</tr>
-<tr class="even">
-<td align="center">100 km/h</td>
-<td align="center">Bumpy Road</td>
-</tr>
-<tr class="odd">
-<td align="center">Slippery Road</td>
-<td align="center">Slippery Road</td>
-</tr>
-</tbody>
-</table>
-<p>The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...</p>
-<ul>
-<li>新たな画像５枚を選んで教師画像に加える</li>
-</ul>
-<h3 id="describe-how-certain-the-model-is-when-predicting-on-each-of-the-five-new-images-by-looking-at-the-softmax-probabilities-for-each-prediction.-provide-the-top-5-softmax-probabilities-for-each-image-along-with-the-sign-type-of-each-probability.-optional-as-described-in-the-stand-out-suggestions-part-of-the-rubric-visualizations-can-also-be-provided-such-as-bar-charts">3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the &quot;Stand Out Suggestions&quot; part of the rubric, visualizations can also be provided such as bar charts)</h3>
-<p>The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.</p>
-<p>For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were</p>
-<table>
-<thead>
-<tr class="header">
-<th align="center">Probability</th>
-<th align="center">Prediction</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td align="center">.60</td>
-<td align="center">Stop sign</td>
-</tr>
-<tr class="even">
-<td align="center">.20</td>
-<td align="center">U-turn</td>
-</tr>
-<tr class="odd">
-<td align="center">.05</td>
-<td align="center">Yield</td>
-</tr>
-<tr class="even">
-<td align="center">.04</td>
-<td align="center">Bumpy Road</td>
-</tr>
-<tr class="odd">
-<td align="center">.01</td>
-<td align="center">Slippery Road</td>
-</tr>
-</tbody>
-</table>
-<p>For the second image ...</p>
 <h2 id="optional-visualizing-the-neural-network-see-step-4-of-the-ipython-notebook-for-more-details">(Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)</h2>
 <h3 id="discuss-the-visual-output-of-your-trained-networks-feature-maps.-what-characteristics-did-the-neural-network-use-to-make-classifications">1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?</h3>
 <h1 id="todo">TODO</h1>

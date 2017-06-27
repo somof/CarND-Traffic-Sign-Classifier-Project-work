@@ -62,6 +62,8 @@ As explained above, the training dataset may have some issue to train like:
  2. low contrast(dark) images  
  3. low variance in some labels  
 
+
+
 ##2.2. an exploratory visualization of the dataset.
 
 Here is a quick look of typical images in the training dataset.
@@ -69,6 +71,7 @@ Here is a quick look of typical images in the training dataset.
 <img width=640 alt="image data" src="./fig/AllTrainingImage_skip28.png"/>
 
 This Dataset has a lot of similar images that seem to be augmented via image processing techniques like changing brightness, contrast, chroma and cropping position.
+
 
 
 ##2.3. averaged class images of the dataset.
@@ -89,6 +92,9 @@ But some classes seem to have some troubles.
 
 <!-- <img width=640 src="./fig/pixel_mean_stdv_vs_label.png"/> -->
 
+
+
+
 #3. Feasibility Test
 
 The training dataset potentially has trouble factors as described above.  
@@ -96,6 +102,8 @@ So I had feasibility tests before selecting methods for pre-processing, CNN desi
 
 At the first, I made a reasonable scale model for the feasibility tests.  
 This model is bigger than the LeNet-5 on lesson 8 and would be smaller than the final model, so I named it "middle model".
+
+
 
 ###3.1 design of "middle model" and training parameters
 
@@ -128,6 +136,7 @@ Here are the specifications of the middle model and training parameters.
 | EPOCH Number			| 200
 
 
+
 ###3.2 original training image data overview
 
 Following figure shows a pixel mean value and stdev distribution for each training images.
@@ -158,6 +167,7 @@ But the low chroma and background texture issues still remain in the normlaized 
 These issues can be resolved by augmenting training data.
 
 
+
 ###3.3 potential of "middle model" for the normalization type and color information use
 
 To check the potential of the middle mode, I examined 7 types of input data as follow.
@@ -184,6 +194,7 @@ After 200 epochs of training, every type obtained 93% over in validation accurac
 All of the input type seem to get more accuracy after more training.
 
 
+
 ###3.4 selection of pre-processing method for the input data format
 
 I decided to **take RGB-type1** as the input format to study hereafter, however the feasibility test shows that **gray scale gets better accuracy than RGB input**.
@@ -192,6 +203,7 @@ All the 7 input format types, include RGB format, already satisfy the 93% accura
 So I can challenge something like that can solove the low-chroma and the background texture issues above.
 
 The RGB input may be useful to make sure what modification affects to the issues of the training dataset.
+
 
 
 ###3.5 a result of "middle model" with RGB-type1 input
@@ -210,6 +222,9 @@ Some classes appear to have some problems, other than the known troublesome clas
 Compare to numbers of training data, the failed classes don't seem to have enough training data.
 
 <img width=640 src="./fig/histgram_failed_samples_and_trainingdata.png"/>
+
+
+
 
 ###3.6 quick looks of failed images at "middle model" with RGB-type1 input
 
@@ -262,38 +277,49 @@ This class validation data has high contrast background images, but the training
 <img width=640 src="./fig/class27_images_training.png"/>
 
 
+
+
+###3.7 7x7 CNN trial
+
+I tried to enlargep the filter tap size of the first convolutional networks, because the quick looks above showed that "middle model" may not be enough to express textures inside traffic signs.
+
+Following figure shows 4 model architecture's accuracy curve for each epoch.  
+"5x5" or "7x7" means CNN's tap size, and "0bn" or "1bn" means usage of batch normalization. ("0bn" is No batch normalization model)
+
+<img width=480 src="./examples/large_mode_architectures.png"/>
+
+
+No-batch-normalization models reached near their peak accuracy about at epoch 500.  
+Batch-normalization models had a low accuracy level, at least, before epoch 1000, though they have possibility of more high accuracy at over 1000 epochs.
+
+It might be better for batch normalization models to take more high training-rate than no-batch-normalization models.  
+Here, to compare under eauql conditions, all the 4 models use 0.0002 as the training-rate.
+
+
+
+
 #4. Design and Test a Model Architecture
 
 ##4.1 "large model" Architecture
 
-The quick looks above show that "middle model" may not be enough to express textures inside traffic signs other than the training dataset issue.  
-So I decided to enlargep the filter tap size of the first convolutional networks and two fully networks.
-
-The histgram function of the Tensorboard was really helpful for me to define unit numbers of the two fully connected layer.  
-The unit numbers were able to be set adequate value watching varying histgram on the way to train via the model architecture.  
-The size 240 of two fully connected are moderate values that can get smooth histgrams of their weights.
-
-The final model also has two way to prevent overfitting.  
-1. batch normalization: in every taining turns, it normalizes CNN weights to prevent its biased distribution
-2. dropout: 
-similar to "middle model".
-
-Thier effectiveness
-
-
+As the feasibility test, I chose the final model as below.  
 I call the final model architecture "large model".
+
+The unit numbers were set adequate value, watching varying histgram on the Tensorboard. (It's a fantastic tool!)  
+CNN's filter size 64 / 84 and FC's unit size 240 are moderate values that can get smooth histgrams of their weights.
+
+The final model has two dropout to prevent overfitting.
 
 | Layer         		|     Description	        					| 
 |:----------------------|:----------------------------------------------| 
 | Input         		| 32x32x3 RGB image								| 
-| Convolution 7x7     	| 1x1 stride, VALID padding, outputs 26x26x64 	|
-| Batch Normalization	|												|
+| Convolution 5x5     	| 1x1 stride, VALID padding, outputs 28x28x64	|
 | RELU					|												|
-| Max pooling	      	| 2x2 stride, VALID padding, outputs 13x13x64	|
-| Convolution 5x5     	| 1x1 stride, VALID padding, outputs 9x9x84 	|
+| Max pooling	      	| 2x2 stride, VALID padding, outputs 14x14x64	|
+| Convolution 5x5     	| 1x1 stride, VALID padding, outputs 10x10x84 	|
 | RELU					|												|
-| Max pooling	      	| 2x2 stride, SAME padding, outputs 5x5x84		|
-| flatten				| 5x5x84 => 2100 								|
+| Max pooling	      	| 2x2 stride, VALID padding, outputs 5x5x84		|
+| flatten				| 5x5x48 => 2100 								|
 | Fully connected		| outputs 240  									|
 | RELU					|												|
 | Dropout				| keep prob. 0.5								|
@@ -301,6 +327,8 @@ I call the final model architecture "large model".
 | RELU					|												|
 | Dropout				| keep prob. 0.5								|
 | Softmax				| outputs 43 (class number)						|
+
+
 
 ##4.2 training parameters
 
@@ -312,51 +340,36 @@ They are also defined for slow training to prevent overfitting.
 | Optimizer				| Adam
 | learning_rate			| 0.0002
 | batch size			| 100
-| EPOCH Number			| 200
+| EPOCH Number			| 1000
 
+
+
+##4.3 pre-processing via RGB-type1
+
+Describe how you preprocessed the image data.
+ What techniques were chosen and why did you choose these techniques? 
+Consider including images showing the output of each preprocessing technique. 
+Pre-processing refers to techniques such as converting to grayscale, normalization, etc. 
+
+
+
+
+
+
+##4.4 training result
+
+ただいま再計算中
+後で jupyter と合わせる
+
+My final model results were:  
+- training set accuracy of 0.99983  
+- validation set accuracy of 0.98209  
+- test set accuracy of 0.96017  
+
+<img width=480 src="examples/training_result.png"/>
 
 
 ここから書く
-
-
-
-
-
-
-
-
-###2. Describe what your final model architecture 
- 
-looks like including model type, layers, layer sizes, connectivity,
-etc.) Consider including a diagram and/or table describing the final
-model.
-
-My final model consisted of the following layers:
-
-
-###3. Describe how you trained your model. The discussion can include the type of optimizer, the batch size, number of epochs and any hyperparameters such as learning rate.
-
-To train the model, I used an ....
-
-###4. Describe the approach taken for finding a solution and getting the validation set accuracy to be at least 0.93. Include in the discussion the results on the training, validation and test sets and where in the code these were calculated. Your approach may have been an iterative process, in which case, outline the steps you took to get to the final solution and why you chose those steps. Perhaps your solution involved an already well known implementation or architecture. In this case, discuss why you think the architecture is suitable for the current problem.
-
-My final model results were:
-* training set accuracy of ?
-* validation set accuracy of ? 
-* test set accuracy of ?
-
-If an iterative approach was chosen:
-* What was the first architecture that was tried and why was it chosen?
-* What were some problems with the initial architecture?
-* How was the architecture adjusted and why was it adjusted? Typical adjustments could include choosing a different model architecture, adding or taking away layers (pooling, dropout, convolution, etc), using an activation function or changing the activation function. One common justification for adjusting an architecture would be due to overfitting or underfitting. A high accuracy on the training set but low accuracy on the validation set indicates over fitting; a low accuracy on both sets indicates under fitting.
-* Which parameters were tuned? How were they adjusted and why?
-* What are some of the important design choices and why were they chosen? For example, why might a convolution layer work well with this problem? How might a dropout layer help with creating a successful model?
-
-If a well known architecture was chosen:
-* What architecture was chosen?
-* Why did you believe it would be relevant to the traffic sign application?
-* How does the final model's accuracy on the training, validation and test set provide evidence that the model is working well?
-
 
 
 largeモデルの認識結果
@@ -376,23 +389,6 @@ largeモデルの認識結果
         - Accuracy on the validation set is 0.93 or greater.
 
 
-##4.2 pre-processing via RGB-type1
-
-Describe how you preprocessed the image data.
- What techniques were chosen and why did you choose these techniques? 
-Consider including images showing the output of each preprocessing technique. 
-Pre-processing refers to techniques such as converting to grayscale, normalization, etc. 
-
-
-##4.3 Training result
-
-
-
-
-
-##4.4 Training result
-
-
 ##4.5. Test a Model on New Images
 
 新たな画像５枚を選んで認識させる
@@ -404,12 +400,75 @@ Pre-processing refers to techniques such as converting to grayscale, normalizati
     - Model Certainty - Softmax Probabilities:
 
 
+| |input image                                               | answer | inference    |
+|:-|:-------------------------------------------------------:|:------:|:-------------|
+|O|<img width=64 src="inputimages/c04_speedlimit70.jpg"/>|4 | 4 : Speed limit (70km/h)
+|O|<img width=64 src="inputimages/c13_yield_2.jpg"/>|13 | 13 : Yield
+|X|<img width=64 src="inputimages/c17_no_entry_2.jpg"/>|17 | 3 : Speed limit (60km/h)
+|O|<img width=64 src="inputimages/c33_turn_right.jpg"/>|33 | 33 : Turn right ahead
+|O|<img width=64 src="inputimages/c40_roundabout.jpg"/>|40 | 40 : Roundabout mandatory
+
+
+<!--
+ClassId,SignName
+0,Speed limit (20km/h)
+1,Speed limit (30km/h)
+2,Speed limit (50km/h)
+3,Speed limit (60km/h)
+4,Speed limit (70km/h)
+5,Speed limit (80km/h)
+6,End of speed limit (80km/h)
+7,Speed limit (100km/h)
+8,Speed limit (120km/h)
+9,No passing
+10,No passing for vehicles over 3.5 metric tons
+11,Right-of-way at the next intersection
+12,Priority road
+13,Yield
+14,Stop
+15,No vehicles
+16,Vehicles over 3.5 metric tons prohibited
+17,No entry
+18,General caution
+19,Dangerous curve to the left
+20,Dangerous curve to the right
+21,Double curve
+22,Bumpy road
+23,Slippery road
+24,Road narrows on the right
+25,Road work
+26,Traffic signals
+27,Pedestrians
+28,Children crossing
+29,Bicycles crossing
+30,Beware of ice/snow
+31,Wild animals crossing
+32,End of all speed and passing limits
+33,Turn right ahead
+34,Turn left ahead
+35,Ahead only
+36,Go straight or right
+37,Go straight or left
+38,Keep right
+39,Keep left
+40,Roundabout mandatory
+41,End of no passing
+42,End of no passing by vehicles over 3.5 metric tons
+-->
+
+
+
+
 ###1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
 
 Here are five German traffic signs that I found on the web:
 
 ![alt text][image4] ![alt text][image5] ![alt text][image6] 
 ![alt text][image7] ![alt text][image8]
+
+
+
+
 
 The first image might be difficult to classify because ...
 
@@ -426,6 +485,9 @@ Here are the results of the prediction:
 | Slippery Road			| Slippery Road      							|
 
 The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
+
+
+
 
 ###3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
 

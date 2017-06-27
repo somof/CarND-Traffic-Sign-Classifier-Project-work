@@ -17,6 +17,10 @@ vis:
 	#$(PYTHONC) Visualize_Dataset_distribution_labels.py
 	#$(PYTHONC) Visualize_Dataset_Images.py
 
+
+test5:
+	$(PYTHONC) Traffic_Sign_Classifier_5images.py
+
 weight:
 	$(PYTHONC) Visualize_Weights.py
 

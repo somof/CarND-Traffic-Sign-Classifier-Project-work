@@ -198,12 +198,12 @@ last_validation_accuracy = 0.94422
 # Color EPOCH 396 Validation Accuracy = 0.95215
 
 # Large Model
-# FILTER1_NUM =  64
-# FILTER2_NUM =  84
-# FRC1_NUM    = 240
-# FRC2_NUM    = 240
-# netdir = 'lenet-large'
-# last_validation_accuracy = 0.98163
+FILTER1_NUM =  64
+FILTER2_NUM =  84
+FRC1_NUM    = 240
+FRC2_NUM    = 240
+netdir = 'lenet-large'
+last_validation_accuracy = 0.98163
 
 # netdir = 'lenet-large-rep'
 # last_validation_accuracy = 0.97324
@@ -216,7 +216,7 @@ last_validation_accuracy = 0.94422
 # Color EPOCH 374 Validation Accuracy = 0.96621
 
 netdir = 'dummy-to-renew'
-last_validation_accuracy = 0.195
+last_validation_accuracy = 0.93
 
 
 CLASS_NUM   =  43
@@ -239,23 +239,26 @@ def LeNet(x):
     with tf.name_scope('conv1'):
         # Layer 1: Convolutional. Input = 32x32x1. Output = 28x28xFILTER1_NUM.
         conv1_w = tf.Variable(tf.truncated_normal(shape=(5, 5, 3, FILTER1_NUM), mean=MU, stddev=SIGMA))
-        # conv1_b = tf.Variable(tf.truncated_normal(shape=(FILTER1_NUM,), mean=MU, stddev=SIGMA))
-        # conv1 = tf.nn.conv2d(x, conv1_w, strides=[1, 1, 1, 1], padding='VALID') + conv1_b
+        conv1_b = tf.Variable(tf.truncated_normal(shape=(FILTER1_NUM,), mean=MU, stddev=SIGMA))
+        conv1 = tf.nn.conv2d(x, conv1_w, strides=[1, 1, 1, 1], padding='VALID') + conv1_b
         # batch Normalization
-        conv1 = tf.nn.conv2d(x, conv1_w, strides=[1, 1, 1, 1], padding='VALID')
-        conv1 = batch_normalization(conv1)
+        # conv1 = tf.nn.conv2d(x, conv1_w, strides=[1, 1, 1, 1], padding='VALID')
+        # conv1 = batch_normalization(conv1)
         conv1 = tf.nn.relu(conv1)
         # Pooling. Input = 28x28xFILTER1_NUM. Output = 14x14xFILTER1_NUM.
         conv1 = tf.nn.max_pool(conv1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
         # Tensorboard
         conv1_w_hist = tf.summary.histogram("conv1_w", conv1_w)
-        # conv1_b_hist = tf.summary.histogram("conv1_b", conv1_b)
+        conv1_b_hist = tf.summary.histogram("conv1_b", conv1_b)
 
     with tf.name_scope('conv2'):
         # Layer 2: Convolutional. put = 14x14xFILTER1_NUM. Output = 10x10xFILTER2_NUM.
         conv2_w = tf.Variable(tf.truncated_normal(shape=(5, 5, FILTER1_NUM, FILTER2_NUM), mean=MU, stddev=SIGMA))
         conv2_b = tf.Variable(tf.truncated_normal(shape=(FILTER2_NUM,), mean=MU, stddev=SIGMA))
         conv2 = tf.nn.conv2d(conv1, conv2_w, strides=[1, 1, 1, 1], padding='VALID') + conv2_b
+        # batch Normalization
+        # conv2 = tf.nn.conv2d(conv1, conv2_w, strides=[1, 1, 1, 1], padding='VALID')
+        # conv2 = batch_normalization(conv2)
         conv2 = tf.nn.relu(conv2)
         # Pooling. Input = 10x10xFILTER2_NUM. Output = 5x5xFILTER2_NUM.
         conv2 = tf.nn.max_pool(conv2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
@@ -323,7 +326,7 @@ with tf.name_scope('loss'):
 ### the accuracy on the test set should be calculated and reported as well.
 ### Feel free to use as many code cells as needed.
 
-EPOCHS      = 200
+EPOCHS      = 2000
 BATCH_SIZE  = 100
 
 rate = 0.0010  # good for pre learning

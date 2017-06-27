@@ -1,0 +1,10 @@
+
+# Large Model
+FILTER1_NUM =  64  # 32
+FILTER2_NUM =  84
+FRC1_NUM    = 240
+FRC2_NUM    = 240
+
+=========================================
+Validation Accuracy = 0.98027
+Validation Accuracy = 0.98163

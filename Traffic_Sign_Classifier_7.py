@@ -211,23 +211,26 @@ def LeNet(x):
     with tf.name_scope('conv1'):
         # Layer 1: Convolutional. Input = 32x32x3. Output = 26x26xFILTER1_NUM.
         conv1_w = tf.Variable(tf.truncated_normal(shape=(7, 7, 3, FILTER1_NUM), mean=MU, stddev=SIGMA))
-        # conv1_b = tf.Variable(tf.truncated_normal(shape=(FILTER1_NUM,), mean=MU, stddev=SIGMA))
-        # conv1 = tf.nn.conv2d(x, conv1_w, strides=[1, 1, 1, 1], padding='VALID') + conv1_b
+        conv1_b = tf.Variable(tf.truncated_normal(shape=(FILTER1_NUM,), mean=MU, stddev=SIGMA))
+        conv1 = tf.nn.conv2d(x, conv1_w, strides=[1, 1, 1, 1], padding='VALID') + conv1_b
         # batch Normalization
-        conv1 = tf.nn.conv2d(x, conv1_w, strides=[1, 1, 1, 1], padding='VALID')
-        conv1 = batch_normalization(conv1)
+        # conv1 = tf.nn.conv2d(x, conv1_w, strides=[1, 1, 1, 1], padding='VALID')
+        # conv1 = batch_normalization(conv1)
         conv1 = tf.nn.relu(conv1)
         # Pooling. Input = 26x26xFILTER1_NUM. Output = 13x13xFILTER1_NUM.
         conv1 = tf.nn.max_pool(conv1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='VALID')
         # Tensorboard
         conv1_w_hist = tf.summary.histogram("conv1_w", conv1_w)
-        # conv1_b_hist = tf.summary.histogram("conv1_b", conv1_b)
+        conv1_b_hist = tf.summary.histogram("conv1_b", conv1_b)
 
     with tf.name_scope('conv2'):
         # Layer 2: Convolutional. put = 13x13xFILTER1_NUM. Output = 9x9xFILTER2_NUM.
         conv2_w = tf.Variable(tf.truncated_normal(shape=(5, 5, FILTER1_NUM, FILTER2_NUM), mean=MU, stddev=SIGMA))
         conv2_b = tf.Variable(tf.truncated_normal(shape=(FILTER2_NUM,), mean=MU, stddev=SIGMA))
         conv2 = tf.nn.conv2d(conv1, conv2_w, strides=[1, 1, 1, 1], padding='VALID') + conv2_b
+        # batch Normalization
+        # conv2 = tf.nn.conv2d(conv1, conv2_w, strides=[1, 1, 1, 1], padding='VALID')
+        # conv2 = batch_normalization(conv2)
         conv2 = tf.nn.relu(conv2)
         # Pooling. Input = 9x9xFILTER2_NUM. Output = 5x5xFILTER2_NUM.
         conv2 = tf.nn.max_pool(conv2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')

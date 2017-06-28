@@ -38,76 +38,78 @@ Here are summary statistics of the traffic signs data sets:
 * The shape of a traffic sign image is (32, 32, 3)
 * The number of unique classes/labels in the data set is 43
 
-As follow, the each datasets have different distributions of frequency.
+  
+
+Each datasets have the different frequency distribution of the traffic signs as follows.  
+In the training dataset, some classes have only two hundreds images, and may cause a shortage to adequately train.  
+And there is near ten times difference among 43 classes that is possible to unfair train and to infer at low qualities.  
 
 <img width=640 src="./fig/histgram_of_dataset_all.png"/>
 
-In the training dataset, there is near ten times difference among 43 labels(classes).  
-Therefore it is possible that training under this dataset can not be equal condition for each labels.
 
-Moreover, some labels may have shortage of sample number to adequately train.
 
-The followings is each label's mean of pixel mean value.   
-It shows labels 6, 20, 10 and 8 have very dark images, less than about 50 pixel value.
+The following shows each class's mean value of its image's pixel mean values.  
+Some classes, like 6, 20, 10 and 8, have very dark images that may mean low contrast dataset.
 
 <img width=640 src="./fig/pixel_mean_vs_label.png"/>
 
-The followings is each label's stdev of pixel mean value.   
-It shows labels 6, 21, 27, 21 and others have low deviation among same label sample images.
+
+
+The following is each class's standard deviation(stdev) of its images's pixel mean value.   
+Some classs, like 6, 21, 27, 21 and others, have very low deviation compared to other classes that also can cause unfair training.
 
 <img width=640 src="./fig/pixel_stdv_vs_label.png"/>
+
 
 As explained above, the training dataset may have some issue to train like:  
  1. sample number shortage in some lables  
  2. low contrast(dark) images  
- 3. low variance in some labels  
+ 3. low variance in some classess  
 
 
 
 ##2.2. an exploratory visualization of the dataset.
 
-Here is a quick look of typical images in the training dataset.
+Here is a quick look that shows images sampled from the training dataset.  
+The dataset has a lot of similar images that seem to be augmented via image processing techniques like changing brightness, contrast, chroma and cropping position.
 
 <img width=640 alt="image data" src="./fig/AllTrainingImage_skip28.png"/>
-
-This Dataset has a lot of similar images that seem to be augmented via image processing techniques like changing brightness, contrast, chroma and cropping position.
 
 
 
 ##2.3. averaged class images of the dataset.
 
-Here are class example images(the first class image in the training dataset) and class average images.
+Here are the typical class images(the first image of the class in the training dataset)  and class averaged images.
 
 <img width=800 src="./fig/sampled_43_images_in_X_train.png"/>
 
 <img width=800 src="./fig/mean_images_in_X_train_wo_normalization.png"/>
 
-All class average images still have their own characteristic enough to recognize as traffic signs.
+All class averaged images still keep their own characteristic enough to recognize as traffic signs.  
+But some classes seem to have troubles as follow.
 
-But some classes seem to have some troubles.
-
- 1. low chroma: class 6, 32, 41, 42
- 2. un-necessary background texture: class 16, 19, 20, 24, 30
- 3. dark brightness: class 3, 5, 6, 7, 10, 20
+ 1. low chroma at class 6, 32, 41, 42
+ 2. un-necessary background texture at class 16, 19, 20, 24, 30
+ 3. dark brightness at class 3, 5, 6, 7, 10, 20
 
 <!-- <img width=640 src="./fig/pixel_mean_stdv_vs_label.png"/> -->
 
 
 
 
-#3. Feasibility Test
+#3. Feasibility Study
 
-The training dataset potentially has trouble factors as described above.  
-So I had feasibility tests before selecting methods for pre-processing, CNN design and augmenting image data in order to reduce the training data risk.
+As described above, the training dataset potentially has trouble factors.  
+So I had a feasibility study before selecting methods for pre-processing, CNN design and augmenting image data in order to reduce the training data risk.
 
-At the first, I made a reasonable scale model for the feasibility tests.  
+At the first, I made a reasonable scale model for the feasibility study.  
 This model is bigger than the LeNet-5 on lesson 8 and would be smaller than the final model, so I named it "middle model".
 
 
 
 ###3.1 design of "middle model" and training parameters
 
-Here are the specifications of the middle model and training parameters.
+Here is the specification of "middle model" and training parameters.
 
 | Layer         		|     Description	        					| 
 |:----------------------|:----------------------------------------------| 
@@ -137,40 +139,51 @@ Here are the specifications of the middle model and training parameters.
 
 
 
-###3.2 original training image data overview
+###3.2 normalization methods for pre-processing
 
-Following figure shows a pixel mean value and stdev distribution for each training images.
+
+
+
+ここを修正
+
+
+
+
+Following figure shows a pixel mean and stdev distribution for each training images.  
+It means the training dataset is not normalized yet.
 
 <img width=400 src="./fig/pixel_mean_vs_stdv_in_X_train_each.png"/>
 
-To make training work better, following normalization types are possible.
+To make training work better, following normalization types are possible at first.
 
-- Type0: normalize with mean and stdev of all pixels in the training data
-- Type1: normalize with mean and stdev of each images pixels
-- Type2: normalize with mean and stdev of RGB each image plane pixels
+- Type0: normalize for all images in the training data
+- Type1: normalize for each images
+- Type2: normalize for each image planes (like RGB each normalization)
 
-Following figures show distributions of pixel mean value and stdev for each types.
+Following figures show distributions of pixel mean value and stdev for each normalization types.  
+As the types, the distribution spread after the normalization can be controled as follow.
 
 <img width=240 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type0.png"/>
 <img width=240 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type1.png"/>
 <img width=240 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type2.png"/>
 
 
-After the normalization, the average images of each class are up as follow.
+
+Average images of each class express a part of the effect of the normalization as follows.  
+Relatively to the average images without normalization, the dark brightness issue is declined by type 1 and 2 normalization.
+But the low chroma and background texture issues still remain in the normlaized images.  
+These issues can be resolved by another techniques
 
 <img width=640 src="./fig/mean_images_in_X_train_type0_normalization.png"/>
 <img width=640 src="./fig/mean_images_in_X_train_type1_normalization.png"/>
 <img width=640 src="./fig/mean_images_in_X_train_type2_normalization.png"/>
 
-Relatively to the average images without normalization, described above, the dark brightness issue is declined by type 1 and 2 normalizations.
-But the low chroma and background texture issues still remain in the normlaized images.  
-These issues can be resolved by augmenting training data.
 
 
 
 ###3.3 potential of "middle model" for the normalization type and color information use
 
-To check the potential of the middle mode, I examined 7 types of input data as follow.
+To check the potential of the middle mode, I examined 7 types of input data as follows.
 
 | No | Title      | image type | Normalization type									| 
 |:---|:-----------|:-----------|:---------------------------------------------------| 
@@ -197,7 +210,7 @@ All of the input type seem to get more accuracy after more training.
 
 ###3.4 selection of pre-processing method for the input data format
 
-I decided to **take RGB-type1** as the input format to study hereafter, however the feasibility test shows that **gray scale gets better accuracy than RGB input**.
+I decided to **take RGB-type1** as the input format to study hereafter, however the feasibility study shows that **gray scale gets better accuracy than RGB input**.
 
 All the 7 input format types, include RGB format, already satisfy the 93% accuracy goal of the project.  
 So I can challenge something like that can solove the low-chroma and the background texture issues above.
@@ -208,7 +221,7 @@ The RGB input may be useful to make sure what modification affects to the issues
 
 ###3.5 a result of "middle model" with RGB-type1 input
 
-As "middle model" feasibility test, I got examples that this model could not work well on, as belows.  
+As "middle model" feasibility study, I got examples that this model could not work well on, as belows.  
 Some classes appear to have some problems, other than the known troublesome class, 
 
 <!-- (array([ 1,  4,  3,  3,  0,  2,  4,  2,  1,  2, -->
@@ -302,7 +315,7 @@ Here, to compare under eauql conditions, all the 4 models use 0.0002 as the trai
 
 ##4.1 "large model" Architecture
 
-As the feasibility test, I chose the final model as below.  
+As the feasibility study, I chose the final model as below.  
 I call the final model architecture "large model".
 
 The unit numbers were set adequate value, watching varying histgram on the Tensorboard. (It's a fantastic tool!)  
@@ -540,14 +553,14 @@ number of images for each class, etc.
 As I got 4 points of view about the trainig data issue as follows.
 
 
- 1. low chroma: class 6, 32, 41, 42
- 2. un-necessary background texture: class 16, 19, 20, 24, 30
- 3. dark brightness: class 3, 5, 6, 7, 10, 20 (Normalization may solve)
- 4. trainig data shortage: class 20, 21, 40 ...
+ 1. low chroma at class 6, 32, 41, 42
+ 2. un-necessary background texture at class 16, 19, 20, 24, 30
+ 3. dark brightness at class 3, 5, 6, 7, 10, 20 (Normalization may solve)
+ 4. trainig data shortage at class 20, 21, 40 ...
 
 I take augmenting plans to resolve them as below.
 
-| method                 | porpose                           | target labels(class) |
+| method                 | porpose                           | target class         |
 |:-----------------------|:----------------------------------|:---------------------|
 | enhance color			 | low-chroma expansion				 | 6, 32, 41, 42		|
 | add vivid images		 | low-chroma expansion				 | 6, 32, 41, 42		|

@@ -113,26 +113,28 @@ with open('signnames.csv', mode='r') as infile:
     next(reader, infile)
     sign_name = [rows[1] for rows in reader]
 
-# imagefiles = ('inputimages/c03_speedlimit60.jpg', 
-#               'inputimages/c04_speedlimit70.jpg', 
-#               'inputimages/c11_right_of_way.jpg', 
-#               'inputimages/c13_yield_1.jpg', 
+# imagefiles = ('inputimages/c03_speedlimit60.jpg',
+#               'inputimages/c04_speedlimit70.jpg',
+#               'inputimages/c11_right_of_way.jpg',
+#               'inputimages/c13_yield_1.jpg',
 #               'inputimages/c13_yield_2.jpg', 
-#               'inputimages/c17_no_entry.jpg', 
-#               'inputimages/c17_no_entry_2.jpg', 
-#               'inputimages/c18_caution_1.jpg', 
-#               'inputimages/c18_caution_2.jpg', 
-#               'inputimages/c33_turn_right.jpg', 
-#               'inputimages/c25_road_work.jpg', 
+#               'inputimages/c17_no_entry.jpg',
+#               'inputimages/c17_no_entry_2.jpg',
+#               'inputimages/c18_caution_1.jpg',
+#               'inputimages/c18_caution_2.jpg',
+#               'inputimages/c33_turn_right.jpg',
+#               'inputimages/c25_road_work.jpg',
 #               'inputimages/c40_roundabout.jpg')
 # answer = (3, 4, 11, 13, 13, 17, 17, 18, 18, 33, 25, 40)
 
-imagefiles = ('inputimages/c04_speedlimit70.jpg', 
-              'inputimages/c13_yield_2.jpg', 
-              'inputimages/c17_no_entry_2.jpg', 
-              'inputimages/c33_turn_right.jpg', 
-              'inputimages/c40_roundabout.jpg')
-answer = (4, 13, 17, 33, 40)
+imagefiles = ('inputimages/c04_speedlimit70.jpg',
+              'inputimages/c13_yield_2.jpg',
+              'inputimages/c17_no_entry_2.jpg',
+              'inputimages/c33_turn_right.jpg',
+              'inputimages/c40_roundabout.jpg',
+              'inputimages/c17_no_entry.jpg',
+              'inputimages/c17_no_entry_2-3.jpg',)
+answer = (4, 13, 17, 33, 40, 17, 17)
 
 # for ans, file in zip(answer, imagefiles):
 #     img = Image.open(file).resize((128, 128), Image.LANCZOS)
@@ -150,7 +152,7 @@ with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     saver.restore(sess, tf.train.latest_checkpoint(netdir))
 
-    for no, ans, file in zip(range(5), answer, imagefiles):
+    for no, ans, file in zip(range(7), answer, imagefiles):
         # load images
         img = Image.open(file).resize((32, 32), Image.LANCZOS)
         img = np.asarray(img)
@@ -191,7 +193,7 @@ with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     saver.restore(sess, tf.train.latest_checkpoint(netdir))
 
-    for no, ans, file in zip(range(5), answer, imagefiles):
+    for no, ans, file in zip(range(7), answer, imagefiles):
         # load images
         img = Image.open(file).resize((32, 32), Image.LANCZOS)
         img = np.asarray(img)
@@ -212,7 +214,7 @@ with tf.Session() as sess:
         # print('    image  : ', file)
         print('    answer : ', ans)
         print('    inference:')
-        for no, i, v in zip(range(5), indices[0], values[0]):
+        for no, i, v in zip(range(7), indices[0], values[0]):
             print('      ', no, ': class {:2d}'.format(i), ':{:6.2f}% '.format(v * 100), sign_name[i])
         print('    ')
 

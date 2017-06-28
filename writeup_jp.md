@@ -107,7 +107,7 @@ This model is bigger than the LeNet-5(lesson 8) and would be smaller than the fi
 
 
 
-###3.1 design of "middle model" and training parameters
+###3.1 design of "middle model" and training hyperparameters
 
 Here is the specification of "middle model" and training parameters.
 
@@ -310,7 +310,7 @@ Here, to compare under eauql conditions, all the 4 models use 0.0002 as the trai
 
 #4. Design and Test a Model Architecture
 
-##4.1 "large model" Architecture
+##4.1 "large model" architecture
 
 As the feasibility study, I chose the final model as below.
 I call the final model architecture "large model".
@@ -340,7 +340,7 @@ The final model has two dropout to prevent overfitting.
 
 
 
-##4.2 training parameters
+##4.2 training hyperparameters
 
 The training Hyperparameters are same to "middle model".  
 They are also defined for slow training to prevent overfitting.
@@ -376,25 +376,54 @@ Following is the accuracy curves for the datasets.
 
 
 
+
+
 #5. Test a Model on New Images
 
-I newly got 5 traffic sign images from the web, and infered via "large modes" trained above.  
+I newly got 5 traffic sign images from the web, and made some analysis for the inferences via "large model".
 
-#4.1 a summary of the inference to new images
+#5.1 5 new images
 
-The final model works well but occasionally mis-infered on some images as follows.
+At first, I got 12 new images searched by "german traffic sign" keywords with licence free opton,  
+then selected 5 images in the point of view as follows.
 
-|No | score |input image                                               | answer | inference    |
-|:-:|:-:|:-------------------------------------------------------:|:------:|:-------------|
-|0|O|<img width=64 src="inputimages/c04_speedlimit70.jpg"/>|4 | 4 : Speed limit (70km/h)
-|1|O|<img width=64 src="inputimages/c13_yield_2.jpg"/>|13 | 13 : Yield
-|2|X|<img width=64 src="inputimages/c17_no_entry_2.jpg"/>|17 | 3 : Speed limit (60km/h)
-|3|O|<img width=64 src="inputimages/c33_turn_right.jpg"/>|33 | 33 : Turn right ahead
-|4|O|<img width=64 src="inputimages/c40_roundabout.jpg"/>|40 | 40 : Roundabout mandatory
+|No |input image                                              | image size       | view point                                |
+|:-:|:-------------------------------------------------------:|:-----------------|:------------------------------------------|
+| 0 | <img width=200 src="inputimages/c04_speedlimit70.jpg"/> | 105 x 106, 96dpi | newly background textures 
+| 1 | <img width=200 src="inputimages/c13_yield_2.jpg"/>      | 299 x 168, 72dpi | a slant sign board
+| 2 | <img width=200 src="inputimages/c17_no_entry_2.jpg"/>   | 188 x 141, 72dpi | extra texures on the sign board
+| 3 | <img width=200 src="inputimages/c33_turn_right.jpg"/>   | 369 x 349, 96dpi | no background texture, but uniformly blue
+| 4 | <img width=200 src="inputimages/c40_roundabout.jpg"/>   | 259 x 194, 72dpi | extra texures on the sign board
 
-#4.2 the probability of the softmax
 
-The inference for "c17_no_entry_2.jpg" was completely confused with class 3 "Speed limit (60km/h)".
+
+#5.2 a summary of the inference to new images
+
+Following table is the inference result for the 5 images via "large model".  
+In spite of unkindness in the images, 4 images were correctly infered and the second probability level were very low.  
+No.2 image, having a scissors illustration, became error.
+
+No.5 is an example image that is correctly infered as class "17: No entry" for comparison to No.2 image.
+
+|No | score |input image                                              | answer | inference                 |
+|:-:|:-----:|:-------------------------------------------------------:|:------:|:--------------------------|
+| 0 | O     |<img width=64 src="inputimages/c04_speedlimit70.jpg"/>   | 4      | 4 : Speed limit (70km/h)
+| 1 | O     |<img width=64 src="inputimages/c13_yield_2.jpg"/>        | 13     | 13 : Yield
+| 2 | X     |<img width=64 src="inputimages/c17_no_entry_2.jpg"/>     | 17     | 3 : Speed limit (60km/h)
+| 3 | O     |<img width=64 src="inputimages/c33_turn_right.jpg"/>     | 33     | 33 : Turn right ahead
+| 4 | O     |<img width=64 src="inputimages/c40_roundabout.jpg"/>     | 40     | 40 : Roundabout mandatory
+| 5 | O     |<img width=64 src="inputimages/c17_no_entry.jpg"/>       | 17     | 17 : No entry
+
+
+#5.3 the probability of the softmax
+
+Following text shows the probabilities of the softmax value for each input images.  
+Other than No.2 image, "large model" exactly infered its answer.
+
+No.2 image was completely confused with class 3 "Speed limit (60km/h)" and the second probability was only 0.01% though the second inference correctly showed class 17.  
+
+No.5 image was rightly infered but all the second to fourth probability showed Speed Limit sign board.  
+It means the class 17 potentially has charactoristics similar to Speed Limit signs.
 
     No     :  0
     answer :  4
@@ -440,70 +469,16 @@ The inference for "c17_no_entry_2.jpg" was completely confused with class 3 "Spe
        2 : class 18 :  0.00%  General caution
        3 : class 16 :  0.00%  Vehicles over 3.5 metric tons prohibited
        4 : class 37 :  0.00%  Go straight or left
+    
+    No     :  5
+    answer :  17
+    inference:
+       0 : class 17 :100.00%  No entry
+       1 : class  0 :  0.00%  Speed limit (20km/h)
+       2 : class  1 :  0.00%  Speed limit (30km/h)
+       3 : class  2 :  0.00%  Speed limit (50km/h)
+       4 : class  3 :  0.00%  Speed limit (60km/h)
 
-
-#4.2 analyze
-
-
-- Test a Model on New Images
-    - Acquiring New Images: German Traffic signsから5つの画像を加え、図示し、分類が難しいかどうか論じる
-    - Performance on New Images: キャプチャ画像をテストすつ時のモデルの性能
-    - Performance on New Images: テストセットに対する、新しい画像に対する性能
-    - Model Certainty - Softmax Probabilities:
-
-
-
-
-
-The first image might be difficult to classify because ...
-
-###2. Discuss the model's predictions on these new traffic signs and compare the results to predicting on the test set. At a minimum, discuss what the predictions were, the accuracy on these new predictions, and compare the accuracy to the accuracy on the test set (OPTIONAL: Discuss the results in more detail as described in the "Stand Out Suggestions" part of the rubric).
-
-Here are the results of the prediction:
-
-| Image			        |     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| Stop Sign      		| Stop sign   									| 
-| U-turn     			| U-turn 										|
-| Yield					| Yield											|
-| 100 km/h	      		| Bumpy Road					 				|
-| Slippery Road			| Slippery Road      							|
-
-The model was able to correctly guess 4 of the 5 traffic signs, which gives an accuracy of 80%. This compares favorably to the accuracy on the test set of ...
-
-
-
-
-###3. Describe how certain the model is when predicting on each of the five new images by looking at the softmax probabilities for each prediction. Provide the top 5 softmax probabilities for each image along with the sign type of each probability. (OPTIONAL: as described in the "Stand Out Suggestions" part of the rubric, visualizations can also be provided such as bar charts)
-
-The code for making predictions on my final model is located in the 11th cell of the Ipython notebook.
-
-For the first image, the model is relatively sure that this is a stop sign (probability of 0.6), and the image does contain a stop sign. The top five soft max probabilities were
-
-| Probability         	|     Prediction	        					| 
-|:---------------------:|:---------------------------------------------:| 
-| .60         			| Stop sign   									| 
-| .20     				| U-turn 										|
-| .05					| Yield											|
-| .04	      			| Bumpy Road					 				|
-| .01				    | Slippery Road      							|
-
-
-For the second image ... 
-
-
-
-
-
-
-
-
-
-
-
-
-
-オプション
 
 #5. Augmenting trainig images.
 

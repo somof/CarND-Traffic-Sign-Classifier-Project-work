@@ -19,7 +19,7 @@ vis:
 
 
 test5:
-	$(PYTHONG) Traffic_Sign_Classifier_5images.py
+	$(PYTHONC) Traffic_Sign_Classifier_5images.py
 
 weight:
 	$(PYTHONC) Visualize_Weights.py

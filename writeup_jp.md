@@ -384,16 +384,65 @@ I newly got 5 traffic sign images from the web, and infered via "large modes" tr
 
 The final model works well but occasionally mis-infered on some images as follows.
 
-|score |input image                                               | answer | inference    |
-|:-:|:-------------------------------------------------------:|:------:|:-------------|
-|O|<img width=64 src="inputimages/c04_speedlimit70.jpg"/>|4 | 4 : Speed limit (70km/h)
-|O|<img width=64 src="inputimages/c13_yield_2.jpg"/>|13 | 13 : Yield
-|X|<img width=64 src="inputimages/c17_no_entry_2.jpg"/>|17 | 3 : Speed limit (60km/h)
-|O|<img width=64 src="inputimages/c33_turn_right.jpg"/>|33 | 33 : Turn right ahead
-|O|<img width=64 src="inputimages/c40_roundabout.jpg"/>|40 | 40 : Roundabout mandatory
+|No | score |input image                                               | answer | inference    |
+|:-:|:-:|:-------------------------------------------------------:|:------:|:-------------|
+|0|O|<img width=64 src="inputimages/c04_speedlimit70.jpg"/>|4 | 4 : Speed limit (70km/h)
+|1|O|<img width=64 src="inputimages/c13_yield_2.jpg"/>|13 | 13 : Yield
+|2|X|<img width=64 src="inputimages/c17_no_entry_2.jpg"/>|17 | 3 : Speed limit (60km/h)
+|3|O|<img width=64 src="inputimages/c33_turn_right.jpg"/>|33 | 33 : Turn right ahead
+|4|O|<img width=64 src="inputimages/c40_roundabout.jpg"/>|40 | 40 : Roundabout mandatory
+
+#4.2 the probability of the softmax
+
+The inference for "c17_no_entry_2.jpg" was completely confused with class 3 "Speed limit (60km/h)".
+
+    No     :  0
+    answer :  4
+    inference:
+       0 : class  4 :100.00%  Speed limit (70km/h)
+       1 : class  0 :  0.00%  Speed limit (20km/h)
+       2 : class  1 :  0.00%  Speed limit (30km/h)
+       3 : class  2 :  0.00%  Speed limit (50km/h)
+       4 : class  3 :  0.00%  Speed limit (60km/h)
+    
+    No     :  1
+    answer :  13
+    inference:
+       0 : class 13 :100.00%  Yield
+       1 : class 38 :  0.00%  Keep right
+       2 : class  0 :  0.00%  Speed limit (20km/h)
+       3 : class  1 :  0.00%  Speed limit (30km/h)
+       4 : class  2 :  0.00%  Speed limit (50km/h)
+    
+    No     :  2
+    answer :  17
+    inference:
+       0 : class  3 : 99.99%  Speed limit (60km/h)
+       1 : class 17 :  0.01%  No entry
+       2 : class  9 :  0.00%  No passing
+       3 : class 14 :  0.00%  Stop
+       4 : class 32 :  0.00%  End of all speed and passing limits
+    
+    No     :  3
+    answer :  33
+    inference:
+       0 : class 33 :100.00%  Turn right ahead
+       1 : class 25 :  0.00%  Road work
+       2 : class  0 :  0.00%  Speed limit (20km/h)
+       3 : class  1 :  0.00%  Speed limit (30km/h)
+       4 : class  2 :  0.00%  Speed limit (50km/h)
+    
+    No     :  4
+    answer :  40
+    inference:
+       0 : class 40 : 99.97%  Roundabout mandatory
+       1 : class 11 :  0.02%  Right-of-way at the next intersection
+       2 : class 18 :  0.00%  General caution
+       3 : class 16 :  0.00%  Vehicles over 3.5 metric tons prohibited
+       4 : class 37 :  0.00%  Go straight or left
+
 
 #4.2 analyze
-probability
 
 
 - Test a Model on New Images

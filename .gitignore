@@ -13,4 +13,3 @@ traffic-signs-data/
 /log/
 mnist_with_summaries.py
 /trash/
-fig/class*_images_training.png

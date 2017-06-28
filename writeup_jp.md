@@ -102,8 +102,8 @@ But some classes seem to have troubles as follow.
 As described above, the training dataset potentially has trouble factors.  
 So I had a feasibility study before selecting methods for pre-processing, CNN design and augmenting image data in order to reduce the training data risk.
 
-At the first, I made a reasonable scale model for the feasibility study.  
-This model is bigger than the LeNet-5 on lesson 8 and would be smaller than the final model, so I named it "middle model".
+For the feasibility study, I made a reasonable scale model.  
+This model is bigger than the LeNet-5(lesson 8) and would be smaller than the final model, so I named it "middle model".
 
 
 
@@ -141,41 +141,34 @@ Here is the specification of "middle model" and training parameters.
 
 ###3.2 normalization methods for pre-processing
 
-
-
-
-ここを修正
-
-
-
-
-Following figure shows a pixel mean and stdev distribution for each training images.  
-It means the training dataset is not normalized yet.
+Following figure is a pixel mean and stdev distribution for each images in the training dataset.  
+It shows the dataset is not normalized yet.
 
 <img width=400 src="./fig/pixel_mean_vs_stdv_in_X_train_each.png"/>
 
 To make training work better, following normalization types are possible at first.
 
-- Type0: normalize for all images in the training data
-- Type1: normalize for each images
-- Type2: normalize for each image planes (like RGB each normalization)
+ - Type0: normalize for all images in the training data
+ - Type1: normalize for each images
+ - Type2: normalize for each image planes (like RGB each normalization)
 
-Following figures show distributions of pixel mean value and stdev for each normalization types.  
-As the types, the distribution spread after the normalization can be controled as follow.
+Following figures are the distributions of the each normalization types.  
+The normalization types can control the distribution spread as below.
 
 <img width=240 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type0.png"/>
 <img width=240 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type1.png"/>
 <img width=240 src="./fig/pixel_mean_vs_stdv_in_X_train_normalized_type2.png"/>
 
 
-
-Average images of each class express a part of the effect of the normalization as follows.  
-Relatively to the average images without normalization, the dark brightness issue is declined by type 1 and 2 normalization.
-But the low chroma and background texture issues still remain in the normlaized images.  
-These issues can be resolved by another techniques
+Following images are averaged class images of each normalization type.  
+The average images express a part of the effect of the normalization.
+Relatively to the average images without normalization, the dark brightness issue is declined by type 1 and 2 normalization method.
+But the low chroma and background texture issues still remain in the normlaized images.
 
 <img width=640 src="./fig/mean_images_in_X_train_type0_normalization.png"/>
+
 <img width=640 src="./fig/mean_images_in_X_train_type1_normalization.png"/>
+
 <img width=640 src="./fig/mean_images_in_X_train_type2_normalization.png"/>
 
 
@@ -199,21 +192,22 @@ Normalization is executed by a follwing equation.
 
     normalized_image = (org_image - mean) / (2.0 * stdev)
 
-After 200 epochs of training, every type obtained 93% over in validation accuracy as below.
+Following figures are accuracy curves and the last accuracies for the 3 dataset.  
+After 200 epochs, every types obtained 93% accuracy of the validation dataset and seem to have possibility to get more accuracy as below .  
+Gray-scale inputs got more validation accuracy, but less test data accuracy than RGB input.
 
 <img width=320 src="./fig/middle_model_feasibility_Test.png"/>
 <img width=320 src="./fig/middle_model_feasibility_Test_overfitting.png"/>
 
-All of the input type seem to get more accuracy after more training.
 
 
 
 ###3.4 selection of pre-processing method for the input data format
 
-I decided to **take RGB-type1** as the input format to study hereafter, however the feasibility study shows that **gray scale gets better accuracy than RGB input**.
+I take **take RGB-type1** as the input format to study hereafter, though the feasibility study shows that **gray scale gets better validation accuracy than RGB input**.
 
-All the 7 input format types, include RGB format, already satisfy the 93% accuracy goal of the project.  
-So I can challenge something like that can solove the low-chroma and the background texture issues above.
+All the 7 input format types, include RGB format, will satisfy the 93% accuracy goal of the project.  
+So I decided to challenge something like that can solove the low-chroma and the background texture issues above.
 
 The RGB input may be useful to make sure what modification affects to the issues of the training dataset.
 
@@ -221,8 +215,8 @@ The RGB input may be useful to make sure what modification affects to the issues
 
 ###3.5 a result of "middle model" with RGB-type1 input
 
-As "middle model" feasibility study, I got examples that this model could not work well on, as belows.  
-Some classes appear to have some problems, other than the known troublesome class, 
+Using "middle model" with RGB input image after the type1-normalization, I got the frequency of the failure of it as below.  
+This means there may be new trouble other than dataset issue described above.
 
 <!-- (array([ 1,  4,  3,  3,  0,  2,  4,  2,  1,  2, -->
 <!-- 	      0,  0,  0,  2,  0,  0, 22,  0,  1,  1, -->
@@ -232,7 +226,7 @@ Some classes appear to have some problems, other than the known troublesome clas
 
 <img width=640 src="./fig/histgram_failed_samples.png"/>
 
-Compare to numbers of training data, the failed classes don't seem to have enough training data.
+Compare to the numbers of the training data, classes that have many failure don't seem to have enough training data as below.
 
 <img width=640 src="./fig/histgram_failed_samples_and_trainingdata.png"/>
 
@@ -243,7 +237,7 @@ Compare to numbers of training data, the failed classes don't seem to have enoug
 
 ####3.6.1 class 16
 
-This class validation data has very low-chroma images, but the training dataset for the class dosesn't have such images.
+All of the failure images have very low-chroma images, and the training dataset for the class dosesn't have such images.
 
 <img width=250 src="./fig/class16_images_valid_failed.png"/>
 <img width=320 src="./fig/class16_images_valid_infered.png"/><br>
@@ -251,7 +245,8 @@ This class validation data has very low-chroma images, but the training dataset 
 
 ####3.6.2 class 21
 
-This class validation data has low resolution images, but the training dataset for the class doesn't have such images.
+About half of the failure images have very low resolution like that mostly human also may mis-understand.  
+But the rest of the failure, I can not specify its factor to cause the mis-inferences.
 
 <img width=250 src="./fig/class21_images_valid_failed.png"/>
 <img width=320 src="./fig/class21_images_valid_infered.png"/><br>
@@ -259,7 +254,7 @@ This class validation data has low resolution images, but the training dataset f
 
 ####3.6.3 class 40
 
-This class validation data has very dark and low contrast images, but the training dataset for the class doesn't have such images.
+Almost of all the failure images have very dark brightness like that I can not recognaize without something like image enhancements.  
 
 <img width=250 src="./fig/class40_images_valid_failed.png"/>
 <img width=320 src="./fig/class40_images_valid_infered.png"/><br>
@@ -267,7 +262,7 @@ This class validation data has very dark and low contrast images, but the traini
 
 ####3.6.4 class 20
 
-This class validation data has small traffic sign images, but the training dataset for the class doesn't have such images.
+All of the failure images have small traffic sign in its scope.
 
 <img width=250 src="./fig/class20_images_valid_failed.png"/>
 <img width=320 src="./fig/class20_images_valid_infered.png"/><br>
@@ -275,7 +270,8 @@ This class validation data has small traffic sign images, but the training datas
 
 ####3.6.5 class 24
 
-This class validation data has very dark and low contrast images, but the training dataset for the class doesn't have such images.
+All of the failure images have very dark and low-contrast.
+But I can not specify the difference to the images successful infered.
 
 <img width=250 src="./fig/class24_images_valid_failed.png"/>
 <img width=320 src="./fig/class24_images_valid_infered.png"/><br>
@@ -283,7 +279,8 @@ This class validation data has very dark and low contrast images, but the traini
 
 ####3.6.6 class 27
 
-This class validation data has high contrast background images, but the training dataset for the class doesn't have such images.
+All of the failure images have high contrast background.
+The normalization method may not work well on such images.
 
 <img width=250 src="./fig/class27_images_valid_failed.png"/>
 <img width=320 src="./fig/class27_images_valid_infered.png"/><br>
@@ -294,7 +291,7 @@ This class validation data has high contrast background images, but the training
 
 ###3.7 7x7 CNN trial
 
-I tried to enlargep the filter tap size of the first convolutional networks, because the quick looks above showed that "middle model" may not be enough to express textures inside traffic signs.
+I tried to enlargep the filter tap size of the first convolutional networks, because the quick looks above showed that "middle model" may not be enough to express the charactoristics of the each classes.
 
 Following figure shows 4 model architecture's accuracy curve for each epoch.  
 "5x5" or "7x7" means CNN's tap size, and "0bn" or "1bn" means usage of batch normalization. ("0bn" is No batch normalization model)
@@ -315,7 +312,7 @@ Here, to compare under eauql conditions, all the 4 models use 0.0002 as the trai
 
 ##4.1 "large model" Architecture
 
-As the feasibility study, I chose the final model as below.  
+As the feasibility study, I chose the final model as below.
 I call the final model architecture "large model".
 
 The unit numbers were set adequate value, watching varying histgram on the Tensorboard. (It's a fantastic tool!)  
@@ -345,7 +342,7 @@ The final model has two dropout to prevent overfitting.
 
 ##4.2 training parameters
 
-The training Hyperparameters are same as "middle model".  
+The training Hyperparameters are same to "middle model".  
 They are also defined for slow training to prevent overfitting.
 
 | Title         		|     Description	        					| 
@@ -359,125 +356,51 @@ They are also defined for slow training to prevent overfitting.
 
 ##4.3 pre-processing via RGB-type1
 
-Describe how you preprocessed the image data.
- What techniques were chosen and why did you choose these techniques? 
-Consider including images showing the output of each preprocessing technique. 
-Pre-processing refers to techniques such as converting to grayscale, normalization, etc. 
-
-
-
+Input images were kept color planes and pre-processed via type 1 normalization described above.  
+This method is not the best way to get the highest accuracy, but valuable to study enforcing the model architecture.
 
 
 
 ##4.4 training result
 
-ただいま再計算中
-後で jupyter と合わせる
+After training on the jupyter notebook, I got the result after 307 epochs as below,
+though "large model" can get over 0.98 validation accuracy with more epochs.
 
-My final model results were:  
-- training set accuracy of 0.99983  
-- validation set accuracy of 0.98209  
-- test set accuracy of 0.96017  
+  - training set accuracy of 0.99966
+  - validation set accuracy of 0.97528
+  - test set accuracy of 0.96207
+
+Following is the accuracy curves for the datasets.
 
 <img width=480 src="examples/training_result.png"/>
 
 
-ここから書く
 
+#5. Test a Model on New Images
 
-largeモデルの認識結果
+I newly got 5 traffic sign images from the web, and infered via "large modes" trained above.  
 
-- Model Architecture
-    - アーキの特徴量とその品質
-        - モデルのタイプ
-        - 階層数
-        - 各層の大きさ
-    - 図示することを推奨する
+#4.1 a summary of the inference to new images
 
-- Model Architectureの設計とテスト
-    - Model Training
-        - 学習方法: Optimizer batch size, epoch数, hyperparametersの値
-    - Solution Approach
-        - アプローチの内容
-        - Accuracy on the validation set is 0.93 or greater.
+The final model works well but occasionally mis-infered on some images as follows.
 
-
-##4.5. Test a Model on New Images
-
-新たな画像５枚を選んで認識させる
-
-- Test a Model on New Images
-    - Acquiring New Images: German Traffic signsから5つの画像を加え、図示し、分類が難しいかどうか論じる
-    - Performance on New Images: キャプチャ画像をテストすつ時のモデルの性能
-    - Performance on New Images: テストセットに対する、新しい画像に対する性能
-    - Model Certainty - Softmax Probabilities:
-
-
-| |input image                                               | answer | inference    |
-|:-|:-------------------------------------------------------:|:------:|:-------------|
+|score |input image                                               | answer | inference    |
+|:-:|:-------------------------------------------------------:|:------:|:-------------|
 |O|<img width=64 src="inputimages/c04_speedlimit70.jpg"/>|4 | 4 : Speed limit (70km/h)
 |O|<img width=64 src="inputimages/c13_yield_2.jpg"/>|13 | 13 : Yield
 |X|<img width=64 src="inputimages/c17_no_entry_2.jpg"/>|17 | 3 : Speed limit (60km/h)
 |O|<img width=64 src="inputimages/c33_turn_right.jpg"/>|33 | 33 : Turn right ahead
 |O|<img width=64 src="inputimages/c40_roundabout.jpg"/>|40 | 40 : Roundabout mandatory
 
-
-<!--
-ClassId,SignName
-0,Speed limit (20km/h)
-1,Speed limit (30km/h)
-2,Speed limit (50km/h)
-3,Speed limit (60km/h)
-4,Speed limit (70km/h)
-5,Speed limit (80km/h)
-6,End of speed limit (80km/h)
-7,Speed limit (100km/h)
-8,Speed limit (120km/h)
-9,No passing
-10,No passing for vehicles over 3.5 metric tons
-11,Right-of-way at the next intersection
-12,Priority road
-13,Yield
-14,Stop
-15,No vehicles
-16,Vehicles over 3.5 metric tons prohibited
-17,No entry
-18,General caution
-19,Dangerous curve to the left
-20,Dangerous curve to the right
-21,Double curve
-22,Bumpy road
-23,Slippery road
-24,Road narrows on the right
-25,Road work
-26,Traffic signals
-27,Pedestrians
-28,Children crossing
-29,Bicycles crossing
-30,Beware of ice/snow
-31,Wild animals crossing
-32,End of all speed and passing limits
-33,Turn right ahead
-34,Turn left ahead
-35,Ahead only
-36,Go straight or right
-37,Go straight or left
-38,Keep right
-39,Keep left
-40,Roundabout mandatory
-41,End of no passing
-42,End of no passing by vehicles over 3.5 metric tons
--->
+#4.2 analyze
+probability
 
 
-
-
-###1. Choose five German traffic signs found on the web and provide them in the report. For each image, discuss what quality or qualities might be difficult to classify.
-
-Here are five German traffic signs that I found on the web:
-
-![alt text][image4] ![alt text][image5] ![alt text][image6] 
-![alt text][image7] ![alt text][image8]
+- Test a Model on New Images
+    - Acquiring New Images: German Traffic signsから5つの画像を加え、図示し、分類が難しいかどうか論じる
+    - Performance on New Images: キャプチャ画像をテストすつ時のモデルの性能
+    - Performance on New Images: テストセットに対する、新しい画像に対する性能
+    - Model Certainty - Softmax Probabilities:
 
 
 
@@ -571,7 +494,9 @@ I take augmenting plans to resolve them as below.
 | add various images	 | trainig data shortage			 | 20, 21, 40 ...		|
 | ノイズを加える
 
-##5.2 augmenting training dataset
+##5.2 augmented training dataset
+
+##5.2 training result
 
 
 
@@ -639,16 +564,16 @@ def outputFeatureMap(image_input, tf_activation, activation_min=-1, activation_m
 
 # TODO
 * [X] Load the data set (see below for links to the project data set)
-* [ ] Explore, summarize and visualize the data set
-* [ ] Design, train and test a model architecture
-* [ ] Preprocessing: preprocessing techniques used
-* [ ] Preprocessing: and why these techniques were chosen.
-* [ ] Model Architecture: the type of model used, the number of layers, the size of each layer. 
+* [x] Explore, summarize and visualize the data set
+* [x] Design, train and test a model architecture
+* [x] Preprocessing: preprocessing techniques used
+* [x] Preprocessing: and why these techniques were chosen.
+* [x] Model Architecture: the type of model used, the number of layers, the size of each layer. 
 * [ ] Model Architecture: Visualizations emphasizing particular qualities of the architecture
 * [ ] Model Training: how the model was trained by discussing, what optimizer was used/batch size/number of epochs/values for hyperparameters.
-* [ ] Solution Approach: the approach to finding a solution. 
-* [ ] Solution Approach: Accuracy on the validation set is 0.93 or greater.
-* [ ] Acquiring New Images: five new German Traffic signs found on the web, and the images are visualized. 
+* [x] Solution Approach: the approach to finding a solution. 
+* [x] Solution Approach: Accuracy on the validation set is 0.93 or greater.
+* [x] Acquiring New Images: five new German Traffic signs found on the web, and the images are visualized. 
 * [ ] Acquiring New Images: Discussion is made as to particular qualities of the images or traffic signs in the images that are of interest, 
 * [ ] Acquiring New Images: such as whether they would be difficult for the model to classify.
 * [ ] Performance on New Images: the performance of the model when tested on the captured images. 
@@ -656,28 +581,6 @@ def outputFeatureMap(image_input, tf_activation, activation_min=-1, activation_m
 * [ ] Model Certainty - Softmax Probabilities: The top five softmax probabilities of the predictions on the captured images are outputted.
 * [ ] Model Certainty - Softmax Probabilities: discusses how certain or uncertain the model is of its predictions.
 * [ ] Notebookを提出する際に、HTML版のファイル名を report.html にすること
-
----
-
-- Datasetの探索、サマリ、図示
-- Model Architectureの設計とテスト
-    - 前処理の説明と、その理由
-    - Model Architecture
-        - アーキの特徴量とその品質
-            - モデルのタイプ
-            - 階層数
-            - 各層の大きさ
-        - 図示することを推奨する
-    - Model Training
-        - 学習方法: Optimizer batch size, epoch数, hyperparametersの値
-    - Solution Approach
-        - アプローチの内容
-        - Accuracy on the validation set is 0.93 or greater.
-- Test a Model on New Images
-    - Acquiring New Images: German Traffic signsから5つの画像を加え、図示し、分類が難しいかどうか論じる
-    - Performance on New Images: キャプチャ画像をテストすつ時のモデルの性能
-    - Performance on New Images: テストセットに対する、新しい画像に対する性能
-    - Model Certainty - Softmax Probabilities:
 
 ---
 

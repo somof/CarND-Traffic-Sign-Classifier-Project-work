@@ -154,26 +154,33 @@ sign_name = {
     42: 'End of no passing by vehicles over 3.5 metric tons',
 }
 
-imagefiles = (#'inputimages/c03_speedlimit60.jpg', 
-              'inputimages/c04_speedlimit70.jpg', 
-              #'inputimages/c11_right_of_way.jpg', 
-              #'inputimages/c13_yield_1.jpg', 
+# imagefiles = ('inputimages/c03_speedlimit60.jpg', 
+#               'inputimages/c04_speedlimit70.jpg', 
+#               'inputimages/c11_right_of_way.jpg', 
+#               'inputimages/c13_yield_1.jpg', 
+#               'inputimages/c13_yield_2.jpg', 
+#               'inputimages/c17_no_entry.jpg', 
+#               'inputimages/c17_no_entry_2.jpg', 
+#               'inputimages/c18_caution_1.jpg', 
+#               'inputimages/c18_caution_2.jpg', 
+#               'inputimages/c33_turn_right.jpg', 
+#               'inputimages/c25_road_work.jpg', 
+#               'inputimages/c40_roundabout.jpg')
+# answer = (3, 4, 11, 13, 13, 17, 17, 18, 18, 33, 25, 40)
+
+imagefiles = ('inputimages/c04_speedlimit70.jpg', 
               'inputimages/c13_yield_2.jpg', 
-              #'inputimages/c17_no_entry.jpg', 
               'inputimages/c17_no_entry_2.jpg', 
-              #'inputimages/c18_caution_1.jpg', 
-              #'inputimages/c18_caution_2.jpg', 
               'inputimages/c33_turn_right.jpg', 
-              #'inputimages/c25_road_work.jpg', 
               'inputimages/c40_roundabout.jpg')
-#answer = (3, 4, 11, 13, 13, 17, 17, 18, 18, 33, 25, 40)
 answer = (4, 13, 17, 33, 40)
 
+for ans, file in zip(answer, imagefiles):
+    img = Image.open(file).resize((128, 128), Image.LANCZOS)
+    plt.imshow(img)
+    plt.show()
 
-
-
-
-
+exit(0)
 
 
 
@@ -185,18 +192,22 @@ with tf.Session() as sess:
     saver.restore(sess, tf.train.latest_checkpoint(netdir))
 
     for ans, file in zip(answer, imagefiles):
+        # load images
         img = Image.open(file).resize((32, 32), Image.LANCZOS)
         img = np.asarray(img)
         img = img.astype(np.float32) / 255.0
 
+        # normalization
         mean = np.mean(img[:, :, :])
         stdv = np.std(img[:, :, :])
         for c in range(3):
             img[:, :, c] = img[:, :, c] - mean
             img[:, :, c] = img[:, :, c] / (stdv * 2.0)
 
+        # inference
         cls = sess.run(tf.argmax(logits, 1), feed_dict={x: [img]})
 
+        # output
         if cls == ans:
             print('|O|', end='')
         else:
@@ -204,7 +215,3 @@ with tf.Session() as sess:
 
         print('<img width=64 src="{:s}"/>|'.format(file), end='')
         print(ans, '|', cls[0], ':', sign_name[cls[0]])
-
-        # plt.imshow(img)
-        # plt.show()
-

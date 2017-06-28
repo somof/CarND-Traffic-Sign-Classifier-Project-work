@@ -520,95 +520,6 @@ I take augmenting plans to resolve them as below.
 
 ##5.2 augmented training dataset
 
-##5.2 training result
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
-###1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
-
-#6. Visualize the network's feature maps
-
-Step 4 (Optional): Visualize the Neural Network's State with Test Images
-This Section is not required to complete but acts as an additional excersise for understaning the output of a neural network's weights. While neural networks can be a great learning device they are often referred to as a black box. We can understand what the weights of a neural network look like better by plotting their feature maps. After successfully training your neural network you can see what it's feature maps look like by plotting the output of the network's weight layers in response to a test stimuli image. From these plotted feature maps, it's possible to see what characteristics of an image the network finds interesting. For a sign, maybe the inner network feature maps react with high activation to the sign's boundary outline or to the contrast in the sign's painted symbol.
-
-Provided for you below is the function code that allows you to get the visualization output of any tensorflow weight layer you want. The inputs to the function should be a stimuli image, one used during training or a new one you provided, and then the tensorflow variable name that represents the layer's state during the training process, for instance if you wanted to see what the LeNet lab's feature maps looked like for it's second convolutional layer you could enter conv2 as the tf_activation variable.
-
-For an example of what feature map outputs look like, check out NVIDIA's results in their paper End-to-End Deep Learning for Self-Driving Cars in the section Visualization of internal CNN State. NVIDIA was able to show that their network's inner weights had high activations to road boundary lines by comparing feature maps from an image with a clear path to one without. Try experimenting with a similar test to show that your trained network's weights are looking for interesting features, whether it's looking at differences in feature maps from images with or without a sign, or even what feature maps look like in a trained network vs a completely untrained one on the same sign image.
-
-### Visualize your network's feature maps here.
-### Feel free to use as many code cells as needed.
-
-# image_input: the test image being fed into the network to produce the feature maps
-# tf_activation: should be a tf variable name used during your training procedure that represents the calculated state of a specific weight layer
-# activation_min/max: can be used to view the activation contrast in more detail, by default matplot sets min and max to the actual min and max values of the output
-# plt_num: used to plot out multiple different weight feature map sets on the same block, just extend the plt number for each new feature map entry
-
-def outputFeatureMap(image_input, tf_activation, activation_min=-1, activation_max=-1 ,plt_num=1):
-    # Here make sure to preprocess your image_input in a way your network expects
-    # with size, normalization, ect if needed
-    # image_input =
-    # Note: x should be the same name as your network's tensorflow data placeholder variable
-    # If you get an error tf_activation is not defined it may be having trouble accessing the variable from inside a function
-    activation = tf_activation.eval(session=sess,feed_dict={x : image_input})
-    featuremaps = activation.shape[3]
-    plt.figure(plt_num, figsize=(15,15))
-    for featuremap in range(featuremaps):
-        plt.subplot(6,8, featuremap+1) # sets the number of feature maps to show on each row and column
-        plt.title('FeatureMap ' + str(featuremap)) # displays the feature map number
-        if activation_min != -1 & activation_max != -1:
-            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmin =activation_min, vmax=activation_max, cmap="gray")
-        elif activation_max != -1:
-            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmax=activation_max, cmap="gray")
-        elif activation_min !=-1:
-            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmin=activation_min, cmap="gray")
-        else:
-            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", cmap="gray")
-
-
-
-
-
-
-
-
-
-
-
-# TODO
-* [X] Load the data set (see below for links to the project data set)
-* [x] Explore, summarize and visualize the data set
-* [x] Design, train and test a model architecture
-* [x] Preprocessing: preprocessing techniques used
-* [x] Preprocessing: and why these techniques were chosen.
-* [x] Model Architecture: the type of model used, the number of layers, the size of each layer. 
-* [ ] Model Architecture: Visualizations emphasizing particular qualities of the architecture
-* [ ] Model Training: how the model was trained by discussing, what optimizer was used/batch size/number of epochs/values for hyperparameters.
-* [x] Solution Approach: the approach to finding a solution. 
-* [x] Solution Approach: Accuracy on the validation set is 0.93 or greater.
-* [x] Acquiring New Images: five new German Traffic signs found on the web, and the images are visualized. 
-* [ ] Acquiring New Images: Discussion is made as to particular qualities of the images or traffic signs in the images that are of interest, 
-* [ ] Acquiring New Images: such as whether they would be difficult for the model to classify.
-* [ ] Performance on New Images: the performance of the model when tested on the captured images. 
-* [ ] Performance on New Images: The performance on the new images is compared to the accuracy results of the test set.
-* [ ] Model Certainty - Softmax Probabilities: The top five softmax probabilities of the predictions on the captured images are outputted.
-* [ ] Model Certainty - Softmax Probabilities: discusses how certain or uncertain the model is of its predictions.
-* [ ] Notebookを提出する際に、HTML版のファイル名を report.html にすること
-
----
-
-更に
 
 - トレーニング画像セットの強化
     - 回転、移動、拡大、反転、色混同
@@ -642,3 +553,88 @@ http://qiita.com/Hironsan/items/e20d0c01c95cb2e08b94
   
   - Subtract off the mean and divide by the variance of the pixels.
   float_image = tf.image.per_image_whitening(distorted_image)
+
+
+##5.2 training result
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
+###1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
+
+#6. Visualize the network's feature maps
+
+# image_input: the test image being fed into the network to produce the feature maps
+# tf_activation: should be a tf variable name used during your training procedure that represents the calculated state of a specific weight layer
+# activation_min/max: can be used to view the activation contrast in more detail, by default matplot sets min and max to the actual min and max values of the output
+# plt_num: used to plot out multiple different weight feature map sets on the same block, just extend the plt number for each new feature map entry
+
+def outputFeatureMap(image_input, tf_activation, activation_min=-1, activation_max=-1 ,plt_num=1):
+    # Here make sure to preprocess your image_input in a way your network expects
+    # with size, normalization, ect if needed
+    # image_input =
+    # Note: x should be the same name as your network's tensorflow data placeholder variable
+    # If you get an error tf_activation is not defined it may be having trouble accessing the variable from inside a function
+    activation = tf_activation.eval(session=sess,feed_dict={x : image_input})
+    featuremaps = activation.shape[3]
+    plt.figure(plt_num, figsize=(15,15))
+    for featuremap in range(featuremaps):
+        plt.subplot(6,8, featuremap+1) # sets the number of feature maps to show on each row and column
+        plt.title('FeatureMap ' + str(featuremap)) # displays the feature map number
+        if activation_min != -1 & activation_max != -1:
+            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmin =activation_min, vmax=activation_max, cmap="gray")
+        elif activation_max != -1:
+            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmax=activation_max, cmap="gray")
+        elif activation_min !=-1:
+            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmin=activation_min, cmap="gray")
+        else:
+            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", cmap="gray")
+
+
+I managed to use outputFeatureMap() to see the output of any operation in the graph.
+Step 1 is to direct TF to assign the name you want to the operation, 
+e.g.: conv_layer = tf.nn.conv2d(input=input_layer, filter=filter_weights, strides=[1, 1, 1, 1], padding='VALID', name='convolution2') 
+Then let's say you have restored a session reading the checkpoint from disk,
+ and you have the image of interest in X (already pre-processed); you can do: with tf.Session() as sess: # Restore the train
+
+
+
+
+
+
+
+
+# TODO
+* [X] Load the data set (see below for links to the project data set)
+* [x] Explore, summarize and visualize the data set
+* [x] Design, train and test a model architecture
+* [x] Preprocessing: preprocessing techniques used
+* [x] Preprocessing: and why these techniques were chosen.
+* [x] Model Architecture: the type of model used, the number of layers, the size of each layer. 
+* [ ] Model Architecture: Visualizations emphasizing particular qualities of the architecture
+* [ ] Model Training: how the model was trained by discussing, what optimizer was used/batch size/number of epochs/values for hyperparameters.
+* [x] Solution Approach: the approach to finding a solution. 
+* [x] Solution Approach: Accuracy on the validation set is 0.93 or greater.
+* [x] Acquiring New Images: five new German Traffic signs found on the web, and the images are visualized. 
+* [x] Acquiring New Images: Discussion is made as to particular qualities of the images or traffic signs in the images that are of interest, 
+* [x] Acquiring New Images: such as whether they would be difficult for the model to classify.
+* [x] Performance on New Images: the performance of the model when tested on the captured images. 
+* [x] Performance on New Images: The performance on the new images is compared to the accuracy results of the test set.
+* [x] Model Certainty - Softmax Probabilities: The top five softmax probabilities of the predictions on the captured images are outputted.
+* [x] Model Certainty - Softmax Probabilities: discusses how certain or uncertain the model is of its predictions.
+* [ ] Notebookを提出する際に、HTML版のファイル名を report.html にすること
+
+---
+
+更に

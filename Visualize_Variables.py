@@ -24,7 +24,7 @@ SIGMA       = 0.1
 
 def LeNet(x):
 
-    with tf.name_scope('conv1'):
+    with tf.name_scope('conv1') as scope_conv1:
         # Layer 1: Convolutional. Input = 32x32x1. Output = 28x28xFILTER1_NUM.
         conv1_w = tf.Variable(tf.truncated_normal(shape=(5, 5, 3, FILTER1_NUM), mean=MU, stddev=SIGMA))
         conv1_b = tf.Variable(tf.truncated_normal(shape=(FILTER1_NUM,), mean=MU, stddev=SIGMA))
@@ -102,7 +102,12 @@ logits = LeNet(x)
 #         loss_operation = tf.reduce_mean(cross_entropy)
 
 
-
+print(logits)
+# with tf.name_scope(scope_conv1):
+with tf.name_scope('conv1'):
+    conv1 = tf.get_variable('conv1/conv1')
+    print(conv1_w)
+exit(0)
 
 
 imagefiles = ('inputimages/c04_speedlimit70.jpg', 
@@ -137,6 +142,7 @@ def outputFeatureMap(image_input, tf_activation, activation_min=-1, activation_m
         else:
             plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", cmap="gray")
 
+
 with tf.Session() as sess:
     # Initialize & Train
     sess.run(tf.global_variables_initializer())
@@ -156,7 +162,7 @@ with tf.Session() as sess:
             img[:, :, c] = img[:, :, c] / (stdv * 2.0)
 
 
-        outputFeatureMap(img, conv1)
+        outputFeatureMap([img], conv1)
 
 
 exit(0)

@@ -105,7 +105,7 @@ logits = LeNet(x)
 
 
 
-# infer input images
+# input images
 import csv
 sign_name = [''] * 43
 with open('signnames.csv', mode='r') as infile:

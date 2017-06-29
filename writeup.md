@@ -512,7 +512,74 @@ I take augmenting plans to resolve them as below.
 | add various images	 | trainig data shortage			 | 20, 21, 40 ...		|
 | ノイズを加える
 
+
+
 ##5.2 augmented training dataset
+
+
+
+## augment class16
+
+    extra_num = 0
+    for ans, org in zip(y_train, X_train):
+    
+        if 16 == ans:
+            img = np.zeros((32, 32, 3)).astype(np.float32)
+            img = org.astype(np.float32) / 255.0
+            Vnoise = np.random.randn(32, 32) * 0.01
+            hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+    
+            hsv[:, :, 0] = hsv[:, :, 0] + 30
+            hsv[:, :, 1] = hsv[:, :, 1] * 0.4
+            hsv[:, :, 1] = hsv[:, :, 1].clip(.05, 0.95)
+            hsv[:, :, 2] = hsv[:, :, 2] + Vnoise + 0.1
+            hsv[:, :, 2] = hsv[:, :, 2].clip(.05, 0.95)
+    
+            img = cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
+    
+            X_train = np.append(X_train, img)
+            y_train = np.append(y_train, ans)
+            extra_num += 1
+    
+        elif 21 == ans:
+        
+            img = np.zeros((32, 32, 3)).astype(np.float32)
+            img = org.astype(np.float32) / 255.0
+            Vnoise = np.random.randn(32, 32) * 0.08
+            hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+    
+            hsv[:, :, 2] = hsv[:, :, 2] + Vnoise
+            hsv[:, :, 2] = hsv[:, :, 2].clip(.05, 0.95)
+    
+            img = cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
+    
+            X_train = np.append(X_train, img)
+            y_train = np.append(y_train, ans)
+            extra_num += 1
+    
+        elif 40 == ans or 24 == ans:
+        
+            img = np.zeros((32, 32, 3)).astype(np.float32)
+            img = org.astype(np.float32) / 255.0
+            Vnoise = np.random.randn(32, 32) * 0.01
+            hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+    
+            hsv[:, :, 2] = hsv[:, :, 2] * 0.2
+            hsv[:, :, 2] = hsv[:, :, 2].clip(.05, 0.95)
+    
+            img = cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
+    
+            X_train = np.append(X_train, img)
+            y_train = np.append(y_train, ans)
+            extra_num += 1
+    
+    print('X_train augmented')
+    X_train = X_train.reshape(n_train + extra_num, 32, 32, 3)
+    n_train = len(X_train)
+    print("Number of training examples    =", n_train)
+    
+
+
 
 
 - トレーニング画像セットの強化
@@ -551,8 +618,12 @@ http://qiita.com/Hironsan/items/e20d0c01c95cb2e08b94
 
 ##5.2 training result
 
+あとで差し替え
+<img width=480 src="./examples/large_mode_aurgmentation.png"/>
 
 
+
+epoch 1000
 
 
 

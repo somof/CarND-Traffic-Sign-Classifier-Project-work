@@ -397,6 +397,7 @@ with tf.name_scope('loss'):
 ### Feel free to use as many code cells as needed.
 
 EPOCHS      = 500
+EPOCHS      = 10000
 BATCH_SIZE  = 100
 
 rate = 0.0010  # good for pre learning

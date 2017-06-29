@@ -181,10 +181,12 @@ with tf.Session() as sess:
         print('<img width=64 src="{:s}"/>|'.format(file), end='')
         print(ans, '|', cls[0], ':', sign_name[cls[0]])
 
+
 result = np.array(result)
 print(result)
-print(result[result == True])
-print('The accuracy fot the 5 images is ', 100 * len(result[result == True]) / len(result), '%')
+print('The accuracy for the 5 images is ', 100 * len(result[result == True]) / len(result), '%')
+print()
+
 
 top_k_op = tf.nn.top_k(tf.nn.softmax(logits), k=5)
 
@@ -210,16 +212,8 @@ with tf.Session() as sess:
         # cls = sess.run(tf.argmax(logits, 1), feed_dict={x: [img]})
         values, indices = sess.run(top_k_op, feed_dict={x: [img]})
 
-        print('    No     : ', no)
-        # print('    image  : ', file)
-        print('    answer : ', ans)
-        print('    inference:')
+        print('    No.{0}: {1}'.format(no, file))
+        print('    answer:              {0:2d}: {1}'.format(ans, sign_name[ans]))
         for no, i, v in zip(range(7), indices[0], values[0]):
-            print('      ', no, ': class {:2d}'.format(i), ':{:6.2f}% '.format(v * 100), sign_name[i])
+            print('      Top{0}:{1:6.2f}% class {2:2d}: {3}'.format(no, v * 100, i, sign_name[i]))
         print('    ')
-
-        # prob0 = sess.run(tf.nn.top_k(logits, k=5))
-        # print(prob0)
-        # prob.append(prob0)
-
-

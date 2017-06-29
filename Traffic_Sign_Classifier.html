@@ -11802,7 +11802,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Load pickled data</span>
@@ -11860,7 +11860,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Replace each question mark with the appropriate value. </span>
@@ -16770,7 +16770,7 @@ BEEQBEHoJ0RcC4IgCIIgCEI/IeJaEARBEARBEPqJ/w+CWaECjsk2GwAAAABJRU5ErkJggg==
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Preprocess the data here. It is required to normalize the data. Other preprocessing steps could include </span>
@@ -18259,7 +18259,7 @@ ntonSR3BGyQlSZKkgnhlW5IkSSqIwbYkSZJUEINtSZIkqSAG25IkSVJBDLYlSZKkghhsS5IkSQUx
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Large Model</span>
@@ -18276,7 +18276,7 @@ ntonSR3BGyQlSZKkgnhlW5IkSSqIwbYkSZJUEINtSZIkqSAG25IkSVJBDLYlSZKkghhsS5IkSQUx
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Define your architecture here.</span>
@@ -19743,7 +19743,7 @@ BeAiIiIiIkmkAFxEREREJIkUgIuIiIiIJJECcBERERGRJPp/cS93iEKJA+cAAAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Load the images and plot them here.</span>
@@ -22251,7 +22251,7 @@ AAAASUVORK5CYII=
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="prompt input_prompt">In&nbsp;[57]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Run the predictions here and use the model to output the prediction for each image.</span>
@@ -22295,7 +22295,7 @@ AAAASUVORK5CYII=
 
 
 <span class="n">goal</span> <span class="o">=</span> <span class="mf">0.95</span>
-<span class="n">netdir</span> <span class="o">=</span> <span class="s1">&#39;./notebook/&#39;</span>
+<span class="n">netdir</span> <span class="o">=</span> <span class="s1">&#39;./notebook1/&#39;</span>
 <span class="n">saver</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Saver</span><span class="p">()</span>
 <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
 
@@ -22378,27 +22378,30 @@ AAAASUVORK5CYII=
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>load ./notebook/lenet
-input image: inputimages/c04_speedlimit70.jpg
-  answer class:  4
-  inference   :  4
-Succsess
-input image: inputimages/c13_yield_2.jpg
-  answer class:  13
-  inference   :  13
-Succsess
-input image: inputimages/c17_no_entry_2.jpg
-  answer class:  17
-  inference   :  3
-Fail
-input image: inputimages/c33_turn_right.jpg
-  answer class:  33
-  inference   :  33
-Succsess
-input image: inputimages/c40_roundabout.jpg
-  answer class:  40
-  inference   :  1
-Fail
+<pre>Training...
+
+  FILTER1_NUM =  64
+  FILTER2_NUM =  84
+  FRC1_NUM    =  240
+  FRC2_NUM    =  240
+
+EPOCH   1: Validation Accuracy = 0.53197, 
+EPOCH  10: Validation Accuracy = 0.92063, 
+EPOCH  20: Validation Accuracy = 0.94240, 
+EPOCH  24: Validation Accuracy = 0.95261, , update
+EPOCH  27: Validation Accuracy = 0.95896, , update
+EPOCH  30: Validation Accuracy = 0.95556, 
+EPOCH  40: Validation Accuracy = 0.95351, 
+EPOCH  43: Validation Accuracy = 0.96077, , update
+EPOCH  50: Validation Accuracy = 0.96100, , update
+EPOCH  51: Validation Accuracy = 0.96327, , update
+EPOCH  60: Validation Accuracy = 0.95601, 
+EPOCH  63: Validation Accuracy = 0.96599, , update
+EPOCH  70: Validation Accuracy = 0.95329, 
+EPOCH  80: Validation Accuracy = 0.95669, 
+EPOCH  90: Validation Accuracy = 0.96077, 
+EPOCH  92: Validation Accuracy = 0.96735, , update
+EPOCH 100: Validation Accuracy = 0.95828, 
 </pre>
 </div>
 </div>
@@ -22409,7 +22412,7 @@ Fail
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[47]:</div>
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
@@ -22474,7 +22477,7 @@ Fail
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>[True, True, True, True, True]
+<pre>[True, True, False, True, True]
 </pre>
 </div>
 </div>
@@ -22494,7 +22497,7 @@ Fail
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[48]:</div>
+<div class="prompt input_prompt">In&nbsp;[24]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Calculate the accuracy for these 5 new images. </span>
@@ -22518,7 +22521,7 @@ Fail
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>The accuracy fot the 5 images is  100.0 %
+<pre>The accuracy fot the 5 images is  80.0 %
 </pre>
 </div>
 </div>
@@ -22575,7 +22578,7 @@ a = np.array([[ 0.24879643,  0.07032244,  0.12641572,  0.34763842,  0.07893497,
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[52]:</div>
+<div class="prompt input_prompt">In&nbsp;[26]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">### Print out the top five softmax probabilities for the predictions on the German traffic sign images found on the web. </span>
@@ -22592,7 +22595,7 @@ a = np.array([[ 0.24879643,  0.07032244,  0.12641572,  0.34763842,  0.07893497,
     <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
     <span class="n">saver</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">latest_checkpoint</span><span class="p">(</span><span class="n">netdir</span><span class="p">))</span>
 
-    <span class="k">for</span> <span class="n">ans</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">answer</span><span class="p">,</span> <span class="n">imagefiles</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">no</span><span class="p">,</span> <span class="n">ans</span><span class="p">,</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">answer</span><span class="p">,</span> <span class="n">imagefiles</span><span class="p">):</span>
         <span class="c1"># load images</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span> <span class="n">Image</span><span class="o">.</span><span class="n">LANCZOS</span><span class="p">)</span>
         <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
@@ -22609,12 +22612,11 @@ a = np.array([[ 0.24879643,  0.07032244,  0.12641572,  0.34763842,  0.07893497,
         <span class="c1"># cls = sess.run(tf.argmax(logits, 1), feed_dict={x: [img]})</span>
         <span class="n">values</span><span class="p">,</span> <span class="n">indices</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">top_k_op</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="n">img</span><span class="p">]})</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;image: &#39;</span><span class="p">,</span> <span class="n">file</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ans  :                 </span><span class="si">{:2d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ans</span><span class="p">),</span> <span class="n">sign_name</span><span class="p">[</span><span class="n">ans</span><span class="p">])</span>
-        <span class="c1"># print(&#39;infer: &#39;, cls[0])</span>
-        <span class="k">for</span> <span class="n">no</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span> <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  &#39;</span><span class="p">,</span> <span class="n">no</span><span class="p">,</span> <span class="s1">&#39;:</span><span class="si">{:6.2f}</span><span class="s1">% &#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="mi">100</span><span class="p">),</span> <span class="s1">&#39;: class </span><span class="si">{:2d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">sign_name</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-        <span class="nb">print</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;    No.</span><span class="si">{0}</span><span class="s1">: </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">no</span><span class="p">,</span> <span class="n">file</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;    answer:              </span><span class="si">{0:2d}</span><span class="s1">: </span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ans</span><span class="p">,</span> <span class="n">sign_name</span><span class="p">[</span><span class="n">ans</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">no</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">),</span> <span class="n">indices</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;      Top</span><span class="si">{0}</span><span class="s1">:</span><span class="si">{1:6.2f}% c</span><span class="s1">lass </span><span class="si">{2:2d}</span><span class="s1">: </span><span class="si">{3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">no</span><span class="p">,</span> <span class="n">v</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">sign_name</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;    &#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -22629,46 +22631,46 @@ a = np.array([[ 0.24879643,  0.07032244,  0.12641572,  0.34763842,  0.07893497,
 <div class="prompt"></div>
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>image:  inputimages/c04_speedlimit70.jpg
-ans  :                  4 Speed limit (70km/h)
-   0 :100.00%  : class  4 Speed limit (70km/h)
-   1 :  0.00%  : class  0 Speed limit (20km/h)
-   2 :  0.00%  : class  1 Speed limit (30km/h)
-   3 :  0.00%  : class  2 Speed limit (50km/h)
-   4 :  0.00%  : class  3 Speed limit (60km/h)
-
-image:  inputimages/c13_yield_2.jpg
-ans  :                 13 Yield
-   0 :100.00%  : class 13 Yield
-   1 :  0.00%  : class 38 Keep right
-   2 :  0.00%  : class 36 Go straight or right
-   3 :  0.00%  : class 17 No entry
-   4 :  0.00%  : class  5 Speed limit (80km/h)
-
-image:  inputimages/c17_no_entry_2.jpg
-ans  :                 17 No entry
-   0 :100.00%  : class 17 No entry
-   1 :  0.00%  : class  3 Speed limit (60km/h)
-   2 :  0.00%  : class 32 End of all speed and passing limits
-   3 :  0.00%  : class 36 Go straight or right
-   4 :  0.00%  : class 38 Keep right
-
-image:  inputimages/c33_turn_right.jpg
-ans  :                 33 Turn right ahead
-   0 :100.00%  : class 33 Turn right ahead
-   1 :  0.00%  : class  0 Speed limit (20km/h)
-   2 :  0.00%  : class  1 Speed limit (30km/h)
-   3 :  0.00%  : class  2 Speed limit (50km/h)
-   4 :  0.00%  : class  3 Speed limit (60km/h)
-
-image:  inputimages/c40_roundabout.jpg
-ans  :                 40 Roundabout mandatory
-   0 : 99.99%  : class 40 Roundabout mandatory
-   1 :  0.01%  : class  2 Speed limit (50km/h)
-   2 :  0.00%  : class 27 Pedestrians
-   3 :  0.00%  : class  8 Speed limit (120km/h)
-   4 :  0.00%  : class 11 Right-of-way at the next intersection
-
+<pre>    No.0: inputimages/c04_speedlimit70.jpg
+    answer:               4: Speed limit (70km/h)
+      Top0:100.00% class  4: Speed limit (70km/h)
+      Top1:  0.00% class  0: Speed limit (20km/h)
+      Top2:  0.00% class  1: Speed limit (30km/h)
+      Top3:  0.00% class  2: Speed limit (50km/h)
+      Top4:  0.00% class  3: Speed limit (60km/h)
+    
+    No.1: inputimages/c13_yield_2.jpg
+    answer:              13: Yield
+      Top0:100.00% class 13: Yield
+      Top1:  0.00% class 38: Keep right
+      Top2:  0.00% class  0: Speed limit (20km/h)
+      Top3:  0.00% class  1: Speed limit (30km/h)
+      Top4:  0.00% class  2: Speed limit (50km/h)
+    
+    No.2: inputimages/c17_no_entry_2.jpg
+    answer:              17: No entry
+      Top0: 99.99% class  3: Speed limit (60km/h)
+      Top1:  0.01% class 17: No entry
+      Top2:  0.00% class  9: No passing
+      Top3:  0.00% class 14: Stop
+      Top4:  0.00% class 32: End of all speed and passing limits
+    
+    No.3: inputimages/c33_turn_right.jpg
+    answer:              33: Turn right ahead
+      Top0:100.00% class 33: Turn right ahead
+      Top1:  0.00% class 25: Road work
+      Top2:  0.00% class  0: Speed limit (20km/h)
+      Top3:  0.00% class  1: Speed limit (30km/h)
+      Top4:  0.00% class  2: Speed limit (50km/h)
+    
+    No.4: inputimages/c40_roundabout.jpg
+    answer:              40: Roundabout mandatory
+      Top0: 99.97% class 40: Roundabout mandatory
+      Top1:  0.02% class 11: Right-of-way at the next intersection
+      Top2:  0.00% class 18: General caution
+      Top3:  0.00% class 16: Vehicles over 3.5 metric tons prohibited
+      Top4:  0.00% class 37: Go straight or left
+    
 </pre>
 </div>
 </div>

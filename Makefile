@@ -13,8 +13,8 @@ endif
 all: vis
 
 vis:
-	$(PYTHONC) Visualize_Variables.py
-	#$(PYTHONC) Visualize_Dataset_extra.py
+	#$(PYTHONC) Visualize_Variables.py
+	$(PYTHONC) Visualize_Dataset_extra.py
 	#$(PYTHONC) Visualize_Dataset_distribution_labels.py
 	#$(PYTHONC) Visualize_Dataset_Images.py
 
@@ -29,7 +29,8 @@ tb:
 	$(PYTHONG) Traffic_Sign_Classifier_TensorBoard.py
 
 train:
-	$(PYTHONG) Traffic_Sign_Classifier.py
+	$(PYTHONG) Traffic_Sign_Classifier_extra.py
+	#$(PYTHONG) Traffic_Sign_Classifier.py
 
 train7:
 	$(PYTHONG) Traffic_Sign_Classifier_7.py

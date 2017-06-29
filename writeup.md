@@ -425,59 +425,53 @@ No.2 image was completely confused with class 3 "Speed limit (60km/h)" and the s
 No.5 image was rightly infered but all the second to fourth probability showed Speed Limit sign board.  
 It means the class 17 potentially has charactoristics similar to Speed Limit signs.
 
-    No     :  0
-    answer :  4
-    inference:
-       0 : class  4 :100.00%  Speed limit (70km/h)
-       1 : class  0 :  0.00%  Speed limit (20km/h)
-       2 : class  1 :  0.00%  Speed limit (30km/h)
-       3 : class  2 :  0.00%  Speed limit (50km/h)
-       4 : class  3 :  0.00%  Speed limit (60km/h)
+    No.0: inputimages/c04_speedlimit70.jpg
+    answer:               4: Speed limit (70km/h)
+      Top0:100.00% class  4: Speed limit (70km/h)
+      Top1:  0.00% class  0: Speed limit (20km/h)
+      Top2:  0.00% class  1: Speed limit (30km/h)
+      Top3:  0.00% class  2: Speed limit (50km/h)
+      Top4:  0.00% class  3: Speed limit (60km/h)
     
-    No     :  1
-    answer :  13
-    inference:
-       0 : class 13 :100.00%  Yield
-       1 : class 38 :  0.00%  Keep right
-       2 : class  0 :  0.00%  Speed limit (20km/h)
-       3 : class  1 :  0.00%  Speed limit (30km/h)
-       4 : class  2 :  0.00%  Speed limit (50km/h)
+    No.1: inputimages/c13_yield_2.jpg
+    answer:              13: Yield
+      Top0:100.00% class 13: Yield
+      Top1:  0.00% class 38: Keep right
+      Top2:  0.00% class  0: Speed limit (20km/h)
+      Top3:  0.00% class  1: Speed limit (30km/h)
+      Top4:  0.00% class  2: Speed limit (50km/h)
     
-    No     :  2
-    answer :  17
-    inference:
-       0 : class  3 : 99.99%  Speed limit (60km/h)
-       1 : class 17 :  0.01%  No entry
-       2 : class  9 :  0.00%  No passing
-       3 : class 14 :  0.00%  Stop
-       4 : class 32 :  0.00%  End of all speed and passing limits
+    No.2: inputimages/c17_no_entry_2.jpg
+    answer:              17: No entry
+      Top0: 99.99% class  3: Speed limit (60km/h)
+      Top1:  0.01% class 17: No entry
+      Top2:  0.00% class  9: No passing
+      Top3:  0.00% class 14: Stop
+      Top4:  0.00% class 32: End of all speed and passing limits
     
-    No     :  3
-    answer :  33
-    inference:
-       0 : class 33 :100.00%  Turn right ahead
-       1 : class 25 :  0.00%  Road work
-       2 : class  0 :  0.00%  Speed limit (20km/h)
-       3 : class  1 :  0.00%  Speed limit (30km/h)
-       4 : class  2 :  0.00%  Speed limit (50km/h)
+    No.3: inputimages/c33_turn_right.jpg
+    answer:              33: Turn right ahead
+      Top0:100.00% class 33: Turn right ahead
+      Top1:  0.00% class 25: Road work
+      Top2:  0.00% class  0: Speed limit (20km/h)
+      Top3:  0.00% class  1: Speed limit (30km/h)
+      Top4:  0.00% class  2: Speed limit (50km/h)
     
-    No     :  4
-    answer :  40
-    inference:
-       0 : class 40 : 99.97%  Roundabout mandatory
-       1 : class 11 :  0.02%  Right-of-way at the next intersection
-       2 : class 18 :  0.00%  General caution
-       3 : class 16 :  0.00%  Vehicles over 3.5 metric tons prohibited
-       4 : class 37 :  0.00%  Go straight or left
+    No.4: inputimages/c40_roundabout.jpg
+    answer:              40: Roundabout mandatory
+      Top0: 99.97% class 40: Roundabout mandatory
+      Top1:  0.02% class 11: Right-of-way at the next intersection
+      Top2:  0.00% class 18: General caution
+      Top3:  0.00% class 16: Vehicles over 3.5 metric tons prohibited
+      Top4:  0.00% class 37: Go straight or left
     
-    No     :  5
-    answer :  17
-    inference:
-       0 : class 17 :100.00%  No entry
-       1 : class  0 :  0.00%  Speed limit (20km/h)
-       2 : class  1 :  0.00%  Speed limit (30km/h)
-       3 : class  2 :  0.00%  Speed limit (50km/h)
-       4 : class  3 :  0.00%  Speed limit (60km/h)
+    No.5: inputimages/c17_no_entry.jpg
+    answer:              17: No entry
+      Top0:100.00% class 17: No entry
+      Top1:  0.00% class  0: Speed limit (20km/h)
+      Top2:  0.00% class  1: Speed limit (30km/h)
+      Top3:  0.00% class  2: Speed limit (50km/h)
+      Top4:  0.00% class  3: Speed limit (60km/h)
 
 
 #5. Augmenting trainig images.
@@ -502,7 +496,7 @@ As I got 4 points of view about the trainig data issue as follows.
 
  1. low chroma at class 6, 32, 41, 42
  2. un-necessary background texture at class 16, 19, 20, 24, 30
- 3. dark brightness at class 3, 5, 6, 7, 10, 20 (Normalization may solve)
+ 3. dark brightness at class 3, 5, 6, 7, 10, 20 (Normalization may solve it)
  4. trainig data shortage at class 20, 21, 40 ...
 
 I take augmenting plans to resolve them as below.

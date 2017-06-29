@@ -39,34 +39,213 @@ X_valid, y_valid = valid['features'], valid['labels']
 # 'coords'   : タプルのリスト [(x1, y1, x2, y2), ...]  bounding box の位置
 
 
+X_train = X_train.astype(np.float32)
+num_train = len(X_train)
+print(len(X_train))
+print(X_train.shape)
+
 # extra traininig dataset
 
 from PIL import Image
+import cv2
 
-print(X_train[5060].shape)
-sample = X_train[5060].reshape(32, 32, 3)
-print(sample.shape)
+# class16
+orgimages = [X_train[5010].reshape(32, 32, 3),
+             X_train[5030].reshape(32, 32, 3),
+             X_train[5112].reshape(32, 32, 3),
+             X_train[5130].reshape(32, 32, 3),]
 
-Image.fromarray(np.uint8(sample)).save('./test_sample_org.jpg')
+# low chroma on red
+# for org in orgimages:
 
-cropped = tf.random_crop(sample, [32, 32, 3])
-result = tf.image.per_image_standardization(cropped)
+extra_num = 0
+for ans, org in zip(y_train, X_train):
 
-with tf.Session() as sess:
-    coord = tf.train.Coordinator()
-    threads = tf.train.start_queue_runners(coord=coord)
+    if False and 16 == ans:
+        # まずRGBの確認 0:R, 1:G, 2:B
+        img = np.zeros((32, 32, 3)).astype(np.float32)
+        img = org.astype(np.float32) / 255.0
+        Vnoise = np.random.randn(32, 32) * 0.01
+        hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
 
-    for i in range(10):
-        img = sess.run(result)
-        print(img.shape)
-        Image.fromarray(np.uint8(img)).save('./test_cropped_img{}.jpg'.format(i))
-        
+        # print('org min / max = ', np.min(org), np.max(org))
+        # print('img min / max = ', np.min(img), np.max(img))
+        # print('noise min / max = ', np.min(Vnoise), np.max(Vnoise))
+        # print('  H min / max = ', np.min(hsv[:, :, 0]), np.max(hsv[:, :, 0]))
+        # print('  S min / max = ', np.min(hsv[:, :, 1]), np.max(hsv[:, :, 1]))
+        # print('  V min / max = ', np.min(hsv[:, :, 2]), np.max(hsv[:, :, 2]))
+
+        hsv[:, :, 0] = hsv[:, :, 0] + 30
+        hsv[:, :, 1] = hsv[:, :, 1] * 0.4
+        hsv[:, :, 1] = hsv[:, :, 1].clip(.05, 0.95)
+        hsv[:, :, 2] = hsv[:, :, 2] + Vnoise + 0.1
+        hsv[:, :, 2] = hsv[:, :, 2].clip(.05, 0.95)
+
+        img = cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
+
+        # plt.imshow(img)
+        # plt.show()
+
+        X_train = np.append(X_train, img)
+        y_train = np.append(y_train, ans)
+        extra_num += 1
+
+    elif False and 21 == ans:
+    
+        img = np.zeros((32, 32, 3)).astype(np.float32)
+        img = org.astype(np.float32) / 255.0
+        Vnoise = np.random.randn(32, 32) * 0.08
+        hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+
+        print('org min / max = ', np.min(org), np.max(org))
+        print('img min / max = ', np.min(img), np.max(img))
+        print('noise min / max = ', np.min(Vnoise), np.max(Vnoise))
+        print('  H min / max = ', np.min(hsv[:, :, 0]), np.max(hsv[:, :, 0]))
+        print('  S min / max = ', np.min(hsv[:, :, 1]), np.max(hsv[:, :, 1]))
+        print('  V min / max = ', np.min(hsv[:, :, 2]), np.max(hsv[:, :, 2]))
+
+        # hsv[:, :, 0] = hsv[:, :, 0] + 30
+        # hsv[:, :, 1] = hsv[:, :, 1] * 0.4
+        # hsv[:, :, 1] = hsv[:, :, 1].clip(.05, 0.95)
+        hsv[:, :, 2] = hsv[:, :, 2] + Vnoise
+        hsv[:, :, 2] = hsv[:, :, 2].clip(.05, 0.95)
+
+        img = cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
+
+        plt.imshow(img)
+        plt.show()
+
+        X_train = np.append(X_train, img)
+        y_train = np.append(y_train, ans)
+        extra_num += 1
+
+    elif 40 == ans:
+    
+        img = np.zeros((32, 32, 3)).astype(np.float32)
+        img = org.astype(np.float32) / 255.0
+        Vnoise = np.random.randn(32, 32) * 0.08
+        hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+
+        print('org min / max = ', np.min(org), np.max(org))
+        print('img min / max = ', np.min(img), np.max(img))
+        print('noise min / max = ', np.min(Vnoise), np.max(Vnoise))
+        print('  H min / max = ', np.min(hsv[:, :, 0]), np.max(hsv[:, :, 0]))
+        print('  S min / max = ', np.min(hsv[:, :, 1]), np.max(hsv[:, :, 1]))
+        print('  V min / max = ', np.min(hsv[:, :, 2]), np.max(hsv[:, :, 2]))
+
+        # hsv[:, :, 0] = hsv[:, :, 0] + 30
+        # hsv[:, :, 1] = hsv[:, :, 1] * 0.4
+        # hsv[:, :, 1] = hsv[:, :, 1].clip(.05, 0.95)
+        hsv[:, :, 2] = hsv[:, :, 2] * 0.2
+        hsv[:, :, 2] = hsv[:, :, 2].clip(.05, 0.95)
+
+        img = cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
+
+        plt.imshow(img)
+        plt.show()
+
+        X_train = np.append(X_train, img)
+        y_train = np.append(y_train, ans)
+        extra_num += 1
+
+
+print('X_train augmented')
+X_train = X_train.reshape(num_train + extra_num, 32, 32, 3)
+print(len(X_train))
+print(X_train.shape)
+print("Number of training examples    =", n_train)
+
+
+
+
+
+
+
+
+
+
+
 exit(0)
 
 
+# following is trial to augment
 
 
-print(images.shape)
+
+# print(X_train[5060].shape)
+sample = X_train[5060].reshape(32, 32, 3)
+#print(sample.shape)
+#sample = sample.clip(0, 255)
+#sample = sample * 2
+print('original: ')
+isample = np.uint8(sample)
+print(isample.shape)
+sample = sample / 255.0
+Image.fromarray(isample).save('./test_sample_org.jpg')
+
+inputimg = tf.placeholder(tf.float32, shape=[32, 32, 3])
+extra_cropped = tf.random_crop(inputimg, [30, 30, 3])
+extra_brightness = tf.image.random_brightness(inputimg, max_delta=0.3)
+extra_contrast = tf.image.random_contrast(inputimg, lower=0.1, upper=0.7)
+
+
+funcs = [extra_brightness]
+funcs = [extra_cropped]
+funcs = [extra_contrast, extra_brightness, extra_cropped]
+random_num = 1
+extra_num = len(funcs) * random_num
+print(extra_num)
+
+print('sample')
+print(sample)
+dataset = sample
+with tf.Session() as sess:
+    for func in funcs:
+        for i in range(random_num):
+            nimg = sess.run(func, feed_dict={inputimg: sample})
+            img = Image.fromarray(np.uint8(nimg * 255))
+            img = img.resize((32, 32), Image.LANCZOS)
+            img = np.array(img).astype(np.float32)
+            img = -1.0 * img
+            # plt.imshow(img)
+            # plt.show()
+
+            # print('img')
+            # print(img)
+            dataset = np.concatenate((dataset, img), axis=0)
+            # dataset = np.concatenate((dataset, sample), axis=0)
+
+            # dataset = np.append(dataset, img)
+            # dataset = np.array((dataset, img))
+            X_train = np.append(X_train, img)
+
+
+print('X_train')
+X_train = X_train.reshape(num_train + extra_num, 32, 32, 3)
+print(len(X_train))
+print(X_train.shape)
+
+for i in range(extra_num):
+    plt.imshow(X_train[num_train + i, :, :, :].reshape(32, 32, 3))
+    plt.show()
+
+
+print('dataset')
+plt.imshow(dataset)
+plt.show()
+
+dataset = dataset.reshape((extra_num + 1, 32, 32, 3))
+print(len(dataset))
+print(dataset.shape)
+
+for img in dataset:
+    plt.imshow(img)
+    plt.show()
+    
+
+
+exit(0)
+
 
 cls = 16
 fig = plt.figure(figsize=(26,19))

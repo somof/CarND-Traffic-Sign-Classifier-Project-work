@@ -102,12 +102,12 @@ logits = LeNet(x)
 #         loss_operation = tf.reduce_mean(cross_entropy)
 
 
-print(logits)
-# with tf.name_scope(scope_conv1):
-with tf.name_scope('conv1'):
-    conv1 = tf.get_variable('conv1/conv1')
-    print(conv1_w)
-exit(0)
+# print(logits)
+# # with tf.name_scope(scope_conv1):
+# with tf.name_scope('conv1'):
+#     conv1 = tf.get_variable('conv1/conv1')
+#     print(conv1_w)
+# exit(0)
 
 
 imagefiles = ('inputimages/c04_speedlimit70.jpg', 
@@ -148,6 +148,17 @@ with tf.Session() as sess:
     sess.run(tf.global_variables_initializer())
     saver.restore(sess, tf.train.latest_checkpoint(netdir))
 
+    # check inseide saver
+
+
+    print(dir())
+    print(locals())
+
+
+
+
+
+
     for no, ans, file in zip(range(5), answer, imagefiles):
         # load images
         img = Image.open(file).resize((32, 32), Image.LANCZOS)
@@ -162,8 +173,10 @@ with tf.Session() as sess:
             img[:, :, c] = img[:, :, c] / (stdv * 2.0)
 
 
-        outputFeatureMap([img], conv1)
+        sess.run(outputFeatureMap([img], conv1))
+        # outputFeatureMap([img], conv1)
 
+    exit(0)
 
 exit(0)
 

@@ -13,8 +13,8 @@ endif
 all: vis
 
 vis:
-	#$(PYTHONC) Visualize_Variables.py
-	$(PYTHONC) Visualize_Dataset_extra.py
+	$(PYTHONC) Visualize_Variables.py
+	#$(PYTHONC) Visualize_Dataset_extra.py
 	#$(PYTHONC) Visualize_Dataset_distribution_labels.py
 	#$(PYTHONC) Visualize_Dataset_Images.py
 

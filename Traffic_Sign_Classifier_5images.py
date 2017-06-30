@@ -212,8 +212,9 @@ with tf.Session() as sess:
         # cls = sess.run(tf.argmax(logits, 1), feed_dict={x: [img]})
         values, indices = sess.run(top_k_op, feed_dict={x: [img]})
 
-        print('    No.{0}: {1}'.format(no, file))
+        # print('    No.{0}: {1}'.format(no, file))
+        print('    No.{0}:'.format(no))
         print('    answer:              {0:2d}: {1}'.format(ans, sign_name[ans]))
         for no, i, v in zip(range(7), indices[0], values[0]):
-            print('      Top{0}:{1:6.2f}% class {2:2d}: {3}'.format(no, v * 100, i, sign_name[i]))
+            print('      Top{0}:{1:6.2f}% class {2:2d}: {3}'.format(no + 1, v * 100, i, sign_name[i]))
         print('    ')

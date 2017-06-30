@@ -425,53 +425,53 @@ No.2 image was completely confused with class 3 "Speed limit (60km/h)" and the s
 No.5 image was rightly infered but all the second to fourth probability showed Speed Limit sign board.  
 It means the class 17 potentially has charactoristics similar to Speed Limit signs.
 
-    No.0: inputimages/c04_speedlimit70.jpg
+    No.0:
     answer:               4: Speed limit (70km/h)
-      Top0:100.00% class  4: Speed limit (70km/h)
-      Top1:  0.00% class  0: Speed limit (20km/h)
-      Top2:  0.00% class  1: Speed limit (30km/h)
-      Top3:  0.00% class  2: Speed limit (50km/h)
-      Top4:  0.00% class  3: Speed limit (60km/h)
+      Top1:100.00% class  4: Speed limit (70km/h)
+      Top2:  0.00% class  0: Speed limit (20km/h)
+      Top3:  0.00% class  1: Speed limit (30km/h)
+      Top4:  0.00% class  2: Speed limit (50km/h)
+      Top5:  0.00% class  3: Speed limit (60km/h)
     
-    No.1: inputimages/c13_yield_2.jpg
+    No.1:
     answer:              13: Yield
-      Top0:100.00% class 13: Yield
-      Top1:  0.00% class 38: Keep right
-      Top2:  0.00% class  0: Speed limit (20km/h)
-      Top3:  0.00% class  1: Speed limit (30km/h)
-      Top4:  0.00% class  2: Speed limit (50km/h)
+      Top1:100.00% class 13: Yield
+      Top2:  0.00% class 38: Keep right
+      Top3:  0.00% class  0: Speed limit (20km/h)
+      Top4:  0.00% class  1: Speed limit (30km/h)
+      Top5:  0.00% class  2: Speed limit (50km/h)
     
-    No.2: inputimages/c17_no_entry_2.jpg
+    No.2:
     answer:              17: No entry
-      Top0: 99.99% class  3: Speed limit (60km/h)
-      Top1:  0.01% class 17: No entry
-      Top2:  0.00% class  9: No passing
-      Top3:  0.00% class 14: Stop
-      Top4:  0.00% class 32: End of all speed and passing limits
+      Top1: 99.99% class  3: Speed limit (60km/h)
+      Top2:  0.01% class 17: No entry
+      Top3:  0.00% class  9: No passing
+      Top4:  0.00% class 14: Stop
+      Top5:  0.00% class 32: End of all speed and passing limits
     
-    No.3: inputimages/c33_turn_right.jpg
+    No.3:
     answer:              33: Turn right ahead
-      Top0:100.00% class 33: Turn right ahead
-      Top1:  0.00% class 25: Road work
+      Top1:100.00% class 33: Turn right ahead
+      Top2:  0.00% class 25: Road work
+      Top3:  0.00% class  0: Speed limit (20km/h)
+      Top4:  0.00% class  1: Speed limit (30km/h)
+      Top5:  0.00% class  2: Speed limit (50km/h)
+    
+    No.4:
+    answer:              40: Roundabout mandatory
+      Top1: 99.97% class 40: Roundabout mandatory
+      Top2:  0.02% class 11: Right-of-way at the next intersection
+      Top3:  0.00% class 18: General caution
+      Top4:  0.00% class 16: Vehicles over 3.5 metric tons prohibited
+      Top5:  0.00% class 37: Go straight or left
+    
+    No.5:
+    answer:              17: No entry
+      Top1:100.00% class 17: No entry
       Top2:  0.00% class  0: Speed limit (20km/h)
       Top3:  0.00% class  1: Speed limit (30km/h)
       Top4:  0.00% class  2: Speed limit (50km/h)
-    
-    No.4: inputimages/c40_roundabout.jpg
-    answer:              40: Roundabout mandatory
-      Top0: 99.97% class 40: Roundabout mandatory
-      Top1:  0.02% class 11: Right-of-way at the next intersection
-      Top2:  0.00% class 18: General caution
-      Top3:  0.00% class 16: Vehicles over 3.5 metric tons prohibited
-      Top4:  0.00% class 37: Go straight or left
-    
-    No.5: inputimages/c17_no_entry.jpg
-    answer:              17: No entry
-      Top0:100.00% class 17: No entry
-      Top1:  0.00% class  0: Speed limit (20km/h)
-      Top2:  0.00% class  1: Speed limit (30km/h)
-      Top3:  0.00% class  2: Speed limit (50km/h)
-      Top4:  0.00% class  3: Speed limit (60km/h)
+      Top5:  0.00% class  3: Speed limit (60km/h)
 
 
 #5. Augmenting trainig images.

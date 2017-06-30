@@ -476,45 +476,34 @@ It means the class 17 potentially has charactoristics similar to Speed Limit sig
 
 #5. Augmenting trainig images.
 
-As described above, the original training dataset has shortages in points of view about quality and quantity for some classes.
-
-#5.1 Augmenting for class 16
-
-At first, I tried augmenting for class 16 that has the most serious trouble in its dataset.
-
-
-
-ここに、失敗した画像の一覧を置く
-
-#5.2 Augmenting dataset for other class
-
-
-
-The difference between the original data set and the augmented data set is the following ... 
-
-
-OPTIONAL: 
-As described in the "Stand Out Suggestions" part of the rubric, 
-if you generated additional data for training, 
-describe why you decided to generate additional data, 
-how you generated the data, 
-and provide example images of the additional data. 
-Then describe the characteristics of the augmented training set like number of images in the set,
-number of images for each class, etc.
-
-
 ##5.1 plans to augment the training data
 
-As I got 4 points of view about the trainig data issue as follows.
+As described above, the original training dataset has shortages in the view points of quality and quantity for some classes.
 
+Here is a summary of subjective issues on the training dataset.
 
  1. low chroma at class 6, 32, 41, 42
  2. un-necessary background texture at class 16, 19, 20, 24, 30
  3. dark brightness at class 3, 5, 6, 7, 10, 20 (Normalization may solve it)
  4. trainig data shortage at class 20, 21, 40 ...
 
-I take augmenting plans to resolve them as below.
+Here is a summary of factors on mis-infered validation dataset.
 
+ 1. class 16 has a lot of failures particularly on low chroma images.
+ 2. class 21 has failures on low resolution images
+ 3. class 40 has failures on low brightness images
+ 4. class 20 has failures on small sign board images
+ 5. class 24 has failures on dark and low-contrast images
+ 6. class 27 has failures on high contrast background images
+
+And I can take augmenting plans to resolve them as below.
+
+ 1. add low chroma images into class 16 training data
+ 2. add noisy image into class 21 training data
+ 3. add dark images into class 40 and 24 training data
+ 4. add shrink images into class 20 training data
+
+<!--
 | method                 | porpose                           | target class         |
 |:-----------------------|:----------------------------------|:---------------------|
 | enhance color			 | low-chroma expansion				 | 6, 32, 41, 42		|
@@ -525,14 +514,68 @@ I take augmenting plans to resolve them as below.
 | add bright images		 | dark brightness					 | 3, 5, 6, 7, 10, 20	|
 | add various images	 | trainig data shortage			 | 20, 21, 40 ...		|
 | ノイズを加える
+-->
+
+#5.2 Augmenting for class 16
+
+At first, I tried augmenting to class 16 that has the most serious trouble in its dataset.  
+
+About Class 16, the most of the mis-inference were occured on low-chroma images, and the training data didn't have such images.  
+Therefore augmenting low chroma images would be effective to improve the accuracy of the class.
+
+Following code is a specific method to augment the dataset.  
+The code first duplicates a correspond image and make its chroma(saturation) low by a multiplication with 0.4.
+It also modifies hue and brightness(intensity) to imitate the mis-infered images.
+
+    for ans, org in zip(y_train, X_train):
+    
+        if 16 == ans:
+            img = np.zeros((32, 32, 3)).astype(np.float32)
+            img = org.astype(np.float32) / 255.0
+            Vnoise = np.random.randn(32, 32) * 0.01
+            hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+    
+            hsv[:, :, 0] = hsv[:, :, 0] + 30
+            hsv[:, :, 1] = hsv[:, :, 1] * 0.4
+            hsv[:, :, 1] = hsv[:, :, 1].clip(.05, 0.95)
+            hsv[:, :, 2] = hsv[:, :, 2] + Vnoise + 0.1
+            hsv[:, :, 2] = hsv[:, :, 2].clip(.05, 0.95)
+    
+            img = cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
+    
+            X_train = np.append(X_train, img)
+            y_train = np.append(y_train, ans)
+            extra_num += 1
+    
+Following pictures are two pairs of an original image and an augmented image that the code created from class 16 training dataset.
+
+<img width=320 src="examples/class16_augment_sample01.png"/>
+<img width=320 src="examples/class16_augment_sample02.png"/>
+
+The number of the augmented dataset is 360 and the training dataset number is increased from 34799 to 35159.  
+The increase rate is 1.035%.
+
+Following graph shows how the augmentation improves the validation accuracy with the line "aug c16".  
+The training hyperparameters are completely same as "large model" including random seed.
+
+The 1.035% augmentation makes an affect averaging around 0.25% on the whole validation accuracy within 500 epochs.
+
+<img width=480 src="./examples/large_mode_aurgmentation.png"/>
+
+TODO 図をいれかえる
 
 
+#5.3 Augmenting dataset for other classes
 
-##5.2 augmented training dataset
+I got the effect of the augmentation for class 16.  
+Then I augmented the dataset for class 21, 40 and 24 in similar ways.
 
+About class 21, noisy validation data were mis-infered, so augmenting noisy image into the training dataset would be effective.  
+About class 40 and 24, dark and low-contrast images were mis-infered, so augmenting such images would be effective.
 
-
-## augment class16
+Following code is a specific method to augment the dataset.  
+The code first duplicates a correspond image and make its chroma(saturation) low by a multiplication with 0.4.
+It also modifies hue and brightness(intensity) to imitate the mis-infered images.
 
     extra_num = 0
     for ans, org in zip(y_train, X_train):
@@ -593,24 +636,48 @@ I take augmenting plans to resolve them as below.
     print("Number of training examples    =", n_train)
 
 
+Following pictures are three pairs of an original image and an augmented image that the code created from the class training dataset.
 
-##5.2 training result
+<img width=320 src="examples/class21_augment_sample01.png"/>
+<img width=320 src="examples/class24_augment_sample01.png"/>
+<img width=320 src="examples/class40_augment_sample01.png"/>
 
-あとで差し替え
+The number of the augmented dataset is 1170 and the training dataset number is increased from 34799 to 35969.  
+The increase rate is 3.362%.
+
+The 3.362% augmentation makes an affect averaging around 0.5% on the whole validation accuracy within 500 epochs.
+
+Following graph shows how the augmentation improves the validation accuracy.  
+The training hyperparameters are completely same as "large model" including random seed.
 
 <img width=480 src="./examples/large_mode_aurgmentation.png"/>
 
-###5.3 an accuracy after epoch 1000
+
+ここから修正
+
+TODO ここに、失敗した画像のヒストグラムを置く
+
+Following images
+
+TODO ここに、失敗した画像の一覧を置く
 
 
+
+###5.4 an accuracy after epoch 1000
+
+TODO: あとで差し替え 10000 epochに
+
+<img width=480 src="./examples/large_mode_aurgmentation.png"/>
 
 
 
 
 #6. Visualize the network's feature maps
-#6 Visualizing the Neural Network
 
-Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
+6 Visualizing the Neural Network
+
+Discuss the visual output of your trained network's feature maps.
+What characteristics did the neural network use to make classifications?
 
 
 ## conv1
@@ -618,19 +685,20 @@ Discuss the visual output of your trained network's feature maps. What character
 <img width=320 src="fig/ImageNo01_class13_conv1.png"/>
 <img width=320 src="fig/ImageNo02_class17_conv1.png"/>
 <img width=320 src="fig/ImageNo08_class17_conv1.png"/>
-<img width=320 src="fig/ImageNo03_class33_conv1.png"/>
-<img width=320 src="fig/ImageNo05_class03_conv1.png"/>
+<!-- <img width=320 src="fig/ImageNo03_class33_conv1.png"/> -->
+<img width=320 src="fig/ImageNo04_class40_conv1.png"/>
 
 ## conv2
 <img width=320 src="fig/ImageNo00_class04_conv2.png"/>
 <img width=320 src="fig/ImageNo01_class13_conv2.png"/>
 <img width=320 src="fig/ImageNo02_class17_conv2.png"/>
 <img width=320 src="fig/ImageNo08_class17_conv2.png"/>
-<img width=320 src="fig/ImageNo03_class33_conv2.png"/>
+<!-- <img width=320 src="fig/ImageNo03_class33_conv2.png"/> -->
 <img width=320 src="fig/ImageNo04_class40_conv2.png"/>
 
 EOF
 
+<!--
 # TODO
 * [X] Load the data set (see below for links to the project data set)
 * [x] Explore, summarize and visualize the data set
@@ -650,3 +718,4 @@ EOF
 * [x] Model Certainty - Softmax Probabilities: The top five softmax probabilities of the predictions on the captured images are outputted.
 * [x] Model Certainty - Softmax Probabilities: discusses how certain or uncertain the model is of its predictions.
 * [ ] Notebookを提出する際に、HTML版のファイル名を report.html にすること
+-->

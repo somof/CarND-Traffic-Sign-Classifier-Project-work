@@ -68,6 +68,17 @@ for ans, org in zip(y_train, X_train):
         Vnoise = np.random.randn(32, 32) * 0.01
         hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
 
+        fig = plt.figure()  # (figsize=(26,19))
+        fig.suptitle('class 16: augment sample', fontsize=24)
+        plt.subplots_adjust(left=0.005, right=0.995, top=0.95, bottom=0.005, hspace=0.2, wspace=0.1)
+
+        ax = plt.subplot(1, 2, 1)
+        plt.title("original", fontsize=12)
+        plt.axis("off")
+        plt.tick_params(labelbottom="off")
+        plt.tick_params(labelleft="off")
+        plt.imshow(img)
+
         # print('org min / max = ', np.min(org), np.max(org))
         # print('img min / max = ', np.min(img), np.max(img))
         # print('noise min / max = ', np.min(Vnoise), np.max(Vnoise))
@@ -83,26 +94,42 @@ for ans, org in zip(y_train, X_train):
 
         img = cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
 
-        # plt.imshow(img)
-        # plt.show()
+        ax = plt.subplot(1, 2, 2)
+        plt.title("augmented", fontsize=12)
+        plt.axis("off")
+        plt.tick_params(labelbottom="off")
+        plt.tick_params(labelleft="off")
+        plt.imshow(img)
+        plt.show()
 
         X_train = np.append(X_train, img)
         y_train = np.append(y_train, ans)
         extra_num += 1
 
-    elif False and 21 == ans:
+    elif 21 == ans:
     
         img = np.zeros((32, 32, 3)).astype(np.float32)
         img = org.astype(np.float32) / 255.0
         Vnoise = np.random.randn(32, 32) * 0.08
         hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
 
-        print('org min / max = ', np.min(org), np.max(org))
-        print('img min / max = ', np.min(img), np.max(img))
-        print('noise min / max = ', np.min(Vnoise), np.max(Vnoise))
-        print('  H min / max = ', np.min(hsv[:, :, 0]), np.max(hsv[:, :, 0]))
-        print('  S min / max = ', np.min(hsv[:, :, 1]), np.max(hsv[:, :, 1]))
-        print('  V min / max = ', np.min(hsv[:, :, 2]), np.max(hsv[:, :, 2]))
+        fig = plt.figure()  # (figsize=(26,19))
+        fig.suptitle('class 21: augment sample', fontsize=24)
+        plt.subplots_adjust(left=0.005, right=0.995, top=0.95, bottom=0.005, hspace=0.2, wspace=0.1)
+
+        ax = plt.subplot(1, 2, 1)
+        plt.title("original", fontsize=12)
+        plt.axis("off")
+        plt.tick_params(labelbottom="off")
+        plt.tick_params(labelleft="off")
+        plt.imshow(img)
+
+        # print('org min / max = ', np.min(org), np.max(org))
+        # print('img min / max = ', np.min(img), np.max(img))
+        # print('noise min / max = ', np.min(Vnoise), np.max(Vnoise))
+        # print('  H min / max = ', np.min(hsv[:, :, 0]), np.max(hsv[:, :, 0]))
+        # print('  S min / max = ', np.min(hsv[:, :, 1]), np.max(hsv[:, :, 1]))
+        # print('  V min / max = ', np.min(hsv[:, :, 2]), np.max(hsv[:, :, 2]))
 
         # hsv[:, :, 0] = hsv[:, :, 0] + 30
         # hsv[:, :, 1] = hsv[:, :, 1] * 0.4
@@ -112,6 +139,11 @@ for ans, org in zip(y_train, X_train):
 
         img = cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
 
+        ax = plt.subplot(1, 2, 2)
+        plt.title("augmented", fontsize=12)
+        plt.axis("off")
+        plt.tick_params(labelbottom="off")
+        plt.tick_params(labelleft="off")
         plt.imshow(img)
         plt.show()
 
@@ -119,19 +151,30 @@ for ans, org in zip(y_train, X_train):
         y_train = np.append(y_train, ans)
         extra_num += 1
 
-    elif 40 == ans:
+    elif False and (40 == ans or 24 == ans):
     
         img = np.zeros((32, 32, 3)).astype(np.float32)
         img = org.astype(np.float32) / 255.0
         Vnoise = np.random.randn(32, 32) * 0.08
         hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
 
-        print('org min / max = ', np.min(org), np.max(org))
-        print('img min / max = ', np.min(img), np.max(img))
-        print('noise min / max = ', np.min(Vnoise), np.max(Vnoise))
-        print('  H min / max = ', np.min(hsv[:, :, 0]), np.max(hsv[:, :, 0]))
-        print('  S min / max = ', np.min(hsv[:, :, 1]), np.max(hsv[:, :, 1]))
-        print('  V min / max = ', np.min(hsv[:, :, 2]), np.max(hsv[:, :, 2]))
+        fig = plt.figure()  # (figsize=(26,19))
+        fig.suptitle('class {}: augment sample'.format(ans), fontsize=24)
+        plt.subplots_adjust(left=0.005, right=0.995, top=0.95, bottom=0.005, hspace=0.2, wspace=0.1)
+
+        ax = plt.subplot(1, 2, 1)
+        plt.title("original", fontsize=12)
+        plt.axis("off")
+        plt.tick_params(labelbottom="off")
+        plt.tick_params(labelleft="off")
+        plt.imshow(img)
+
+        # print('org min / max = ', np.min(org), np.max(org))
+        # print('img min / max = ', np.min(img), np.max(img))
+        # print('noise min / max = ', np.min(Vnoise), np.max(Vnoise))
+        # print('  H min / max = ', np.min(hsv[:, :, 0]), np.max(hsv[:, :, 0]))
+        # print('  S min / max = ', np.min(hsv[:, :, 1]), np.max(hsv[:, :, 1]))
+        # print('  V min / max = ', np.min(hsv[:, :, 2]), np.max(hsv[:, :, 2]))
 
         # hsv[:, :, 0] = hsv[:, :, 0] + 30
         # hsv[:, :, 1] = hsv[:, :, 1] * 0.4
@@ -141,6 +184,11 @@ for ans, org in zip(y_train, X_train):
 
         img = cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
 
+        ax = plt.subplot(1, 2, 2)
+        plt.title("augmented", fontsize=12)
+        plt.axis("off")
+        plt.tick_params(labelbottom="off")
+        plt.tick_params(labelleft="off")
         plt.imshow(img)
         plt.show()
 

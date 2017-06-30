@@ -168,7 +168,7 @@ def outputFeatureMap_1(image_input, tf_activation, no, ans, net, activation_min=
             plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmin=activation_min, cmap="gray")
         else:
             plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", cmap="gray")
-    plt.savefig('fig/ImageNo{0:02d}_class{1:02d}_net:{2}.png'.format(no, ans, net), fontsize=18)
+    plt.savefig('fig/ImageNo{0:02d}_class{1:02d}_{2}.png'.format(no, ans, net), fontsize=18)
 
 def outputFeatureMap_2(image_input, tf_activation, no, ans, net, activation_min=-1, activation_max=-1 ,plt_num=1):
     # Here make sure to preprocess your image_input in a way your network expects with size, normalization, ect if needed
@@ -194,7 +194,7 @@ def outputFeatureMap_2(image_input, tf_activation, no, ans, net, activation_min=
             plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmin=activation_min, cmap="gray")
         else:
             plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", cmap="gray")
-    plt.savefig('fig/ImageNo{0:02d}_class{1:02d}_net:{2}.png'.format(no, ans, net), fontsize=18)
+    plt.savefig('fig/ImageNo{0:02d}_class{1:02d}_{2}.png'.format(no, ans, net), fontsize=18)
 
 
 with tf.Session() as sess:

@@ -476,6 +476,20 @@ It means the class 17 potentially has charactoristics similar to Speed Limit sig
 
 #5. Augmenting trainig images.
 
+As described above, the original training dataset has shortages in points of view about quality and quantity for some classes.
+
+#5.1 Augmenting for class 16
+
+At first, I tried augmenting for class 16 that has the most serious trouble in its dataset.
+
+
+
+ここに、失敗した画像の一覧を置く
+
+#5.2 Augmenting dataset for other class
+
+
+
 The difference between the original data set and the augmented data set is the following ... 
 
 
@@ -577,108 +591,45 @@ I take augmenting plans to resolve them as below.
     X_train = X_train.reshape(n_train + extra_num, 32, 32, 3)
     n_train = len(X_train)
     print("Number of training examples    =", n_train)
-    
 
-
-
-
-- トレーニング画像セットの強化
-    - 回転、移動、拡大、反転、色混同
-- precision and recallなどで、解析してから、改善する
-
-
-画像の水増し方法をTensorFlowのコードから学ぶ
-http://qiita.com/Hironsan/items/e20d0c01c95cb2e08b94
-
-  - random_crop
-  - random_flip_left_right
-  - random_brightness
-  - random_contrast
-  - per_image_whitening
-
-
-  
-  - Image processing for training the network. Note the many random
-  - distortions applied to the image.
-  
-  - Randomly crop a [height, width] section of the image.
-  distorted_image = tf.random_crop(reshaped_image, [height, width, 3])
-  
-  - Randomly flip the image horizontally.
-  distorted_image = tf.image.random_flip_left_right(distorted_image)
-  
-  - Because these operations are not commutative, consider randomizing
-  - the order their operation.
-  distorted_image = tf.image.random_brightness(distorted_image, max_delta=63)
-  distorted_image = tf.image.random_contrast(distorted_image, lower=0.2, upper=1.8)
-  
-  - Subtract off the mean and divide by the variance of the pixels.
-  float_image = tf.image.per_image_whitening(distorted_image)
 
 
 ##5.2 training result
 
 あとで差し替え
+
 <img width=480 src="./examples/large_mode_aurgmentation.png"/>
 
-
-
-epoch 1000
-
+###5.3 an accuracy after epoch 1000
 
 
 
 
 
-
-
-
-
-
-## (Optional) Visualizing the Neural Network (See Step 4 of the Ipython notebook for more details)
-###1. Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
 
 #6. Visualize the network's feature maps
+#6 Visualizing the Neural Network
 
-# image_input: the test image being fed into the network to produce the feature maps
-# tf_activation: should be a tf variable name used during your training procedure that represents the calculated state of a specific weight layer
-# activation_min/max: can be used to view the activation contrast in more detail, by default matplot sets min and max to the actual min and max values of the output
-# plt_num: used to plot out multiple different weight feature map sets on the same block, just extend the plt number for each new feature map entry
-
-def outputFeatureMap(image_input, tf_activation, activation_min=-1, activation_max=-1 ,plt_num=1):
-    # Here make sure to preprocess your image_input in a way your network expects
-    # with size, normalization, ect if needed
-    # image_input =
-    # Note: x should be the same name as your network's tensorflow data placeholder variable
-    # If you get an error tf_activation is not defined it may be having trouble accessing the variable from inside a function
-    activation = tf_activation.eval(session=sess,feed_dict={x : image_input})
-    featuremaps = activation.shape[3]
-    plt.figure(plt_num, figsize=(15,15))
-    for featuremap in range(featuremaps):
-        plt.subplot(6,8, featuremap+1) # sets the number of feature maps to show on each row and column
-        plt.title('FeatureMap ' + str(featuremap)) # displays the feature map number
-        if activation_min != -1 & activation_max != -1:
-            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmin =activation_min, vmax=activation_max, cmap="gray")
-        elif activation_max != -1:
-            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmax=activation_max, cmap="gray")
-        elif activation_min !=-1:
-            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", vmin=activation_min, cmap="gray")
-        else:
-            plt.imshow(activation[0,:,:, featuremap], interpolation="nearest", cmap="gray")
+Discuss the visual output of your trained network's feature maps. What characteristics did the neural network use to make classifications?
 
 
-I managed to use outputFeatureMap() to see the output of any operation in the graph.
-Step 1 is to direct TF to assign the name you want to the operation, 
-e.g.: conv_layer = tf.nn.conv2d(input=input_layer, filter=filter_weights, strides=[1, 1, 1, 1], padding='VALID', name='convolution2') 
-Then let's say you have restored a session reading the checkpoint from disk,
- and you have the image of interest in X (already pre-processed); you can do: with tf.Session() as sess: # Restore the train
+## conv1
+<img width=320 src="fig/ImageNo00_class04_conv1.png"/>
+<img width=320 src="fig/ImageNo01_class13_conv1.png"/>
+<img width=320 src="fig/ImageNo02_class17_conv1.png"/>
+<img width=320 src="fig/ImageNo08_class17_conv1.png"/>
+<img width=320 src="fig/ImageNo03_class33_conv1.png"/>
+<img width=320 src="fig/ImageNo05_class03_conv1.png"/>
 
+## conv2
+<img width=320 src="fig/ImageNo00_class04_conv2.png"/>
+<img width=320 src="fig/ImageNo01_class13_conv2.png"/>
+<img width=320 src="fig/ImageNo02_class17_conv2.png"/>
+<img width=320 src="fig/ImageNo08_class17_conv2.png"/>
+<img width=320 src="fig/ImageNo03_class33_conv2.png"/>
+<img width=320 src="fig/ImageNo04_class40_conv2.png"/>
 
-
-
-
-
-
+EOF
 
 # TODO
 * [X] Load the data set (see below for links to the project data set)
@@ -688,7 +639,7 @@ Then let's say you have restored a session reading the checkpoint from disk,
 * [x] Preprocessing: and why these techniques were chosen.
 * [x] Model Architecture: the type of model used, the number of layers, the size of each layer. 
 * [ ] Model Architecture: Visualizations emphasizing particular qualities of the architecture
-* [ ] Model Training: how the model was trained by discussing, what optimizer was used/batch size/number of epochs/values for hyperparameters.
+* [x] Model Training: how the model was trained by discussing, what optimizer was used/batch size/number of epochs/values for hyperparameters.
 * [x] Solution Approach: the approach to finding a solution. 
 * [x] Solution Approach: Accuracy on the validation set is 0.93 or greater.
 * [x] Acquiring New Images: five new German Traffic signs found on the web, and the images are visualized. 
@@ -699,7 +650,3 @@ Then let's say you have restored a session reading the checkpoint from disk,
 * [x] Model Certainty - Softmax Probabilities: The top five softmax probabilities of the predictions on the captured images are outputted.
 * [x] Model Certainty - Softmax Probabilities: discusses how certain or uncertain the model is of its predictions.
 * [ ] Notebookを提出する際に、HTML版のファイル名を report.html にすること
-
----
-
-更に

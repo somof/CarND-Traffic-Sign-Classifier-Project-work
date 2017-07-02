@@ -209,7 +209,7 @@ I take **take RGB-type1** as the input format to study hereafter, though the fea
 All the 7 input format types, include RGB format, will satisfy the 93% accuracy goal of the project.  
 So I decided to challenge something like that can solove the low-chroma and the background texture issues above.
 
-The RGB input may be useful to make sure what modification affects to the issues of the training dataset.
+The RGB input may be useful to make sure what modification affects to the training issues.
 
 
 
@@ -676,27 +676,67 @@ TODO: あとで差し替え 10000 epochに
 
 6 Visualizing the Neural Network
 
+Using a outputFeatureMap function, I got the visualizations of the featuremaps inside "large model" architecture.
+
+##6.1 featuremaps at conv1
+
+Following pictures show featuremaps at conv1 of "large model" when the 5 images was given as input.
+
+Most conv1's featumaps seem like high pass filters that enhances the edges of the textures of traffic signs.
+
+Some of them activate background textures, 
+
+
+Color 
+blue surface 
+red surface not
+
+
 Discuss the visual output of your trained network's feature maps.
 What characteristics did the neural network use to make classifications?
 
 
-## conv1
 <img width=320 src="fig/ImageNo00_class04_conv1.png"/>
 <img width=320 src="fig/ImageNo01_class13_conv1.png"/>
 <img width=320 src="fig/ImageNo02_class17_conv1.png"/>
-<img width=320 src="fig/ImageNo08_class17_conv1.png"/>
-<!-- <img width=320 src="fig/ImageNo03_class33_conv1.png"/> -->
+<!-- <img width=320 src="fig/ImageNo08_class17_conv1.png"/> -->
+<img width=320 src="fig/ImageNo03_class33_conv1.png"/>
 <img width=320 src="fig/ImageNo04_class40_conv1.png"/>
 
-## conv2
+##6.2 featuremaps at conv2
 <img width=320 src="fig/ImageNo00_class04_conv2.png"/>
 <img width=320 src="fig/ImageNo01_class13_conv2.png"/>
 <img width=320 src="fig/ImageNo02_class17_conv2.png"/>
-<img width=320 src="fig/ImageNo08_class17_conv2.png"/>
-<!-- <img width=320 src="fig/ImageNo03_class33_conv2.png"/> -->
+<!-- <img width=320 src="fig/ImageNo08_class17_conv2.png"/> -->
+<img width=320 src="fig/ImageNo03_class33_conv2.png"/>
 <img width=320 src="fig/ImageNo04_class40_conv2.png"/>
 
+
 EOF
+
+
+<!--
+This Section is not required to complete but acts as an additional excersise for understaning the output of a neural network's weights.
+While neural networks can be a great learning device they are often referred to as a black box.
+We can understand what the weights of a neural network look like better by plotting their feature maps.
+After successfully training your neural network you can see what it's feature maps look like by plotting the output of the network's weight layers in response to a test stimuli image.
+From these plotted feature maps, it's possible to see what characteristics of an image the network finds interesting.
+For a sign, maybe the inner network feature maps react with high activation to the sign's boundary outline or to the contrast in the sign's painted symbol.
+
+Provided for you below is the function code that allows you to get the visualization output of any tensorflow weight layer you want.
+The inputs to the function should be a stimuli image, one used during training or a new one you provided, and then the tensorflow variable name that represents the layer's state during the training process, for instance if you wanted to see what the 
+[LeNet lab's](
+https://classroom.udacity.com/nanodegrees/nd013/parts/fbf77062-5703-404e-b60c-95b78b2f3f9e/modules/6df7ae49-c61c-4bb2-a23e-6527e69209ec/lessons/601ae704-1035-4287-8b11-e2c2716217ad/concepts/d4aca031-508f-4e0b-b493-e7b706120f81
+) feature maps looked like for it's second convolutional layer you could enter conv2 as the tf_activation variable.
+
+For an example of what feature map outputs look like, check out NVIDIA's results in their paper 
+[End-to-End Deep Learning for Self-Driving Cars](
+https://devblogs.nvidia.com/parallelforall/deep-learning-self-driving-cars/
+ in the section Visualization of internal CNN State.
+NVIDIA was able to show that their network's inner weights had high activations to road boundary lines by comparing feature maps from an image with a clear path to one without.
+Try experimenting with a similar test to show that your trained network's weights are looking for interesting features, whether it's looking at differences in feature maps from images with or without a sign, or even what feature maps look like in a trained network vs a completely untrained one on the same sign image.
+-->
+
 
 <!--
 # TODO

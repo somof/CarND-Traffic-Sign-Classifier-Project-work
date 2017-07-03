@@ -10,12 +10,13 @@
 
 - [Code](https://github.com/somof/CarND-Traffic-Sign-Classifier-Project-work/blob/master/Traffic_Sign_Classifier.ipynb)
 - [Writeup](https://github.com/somof/CarND-Traffic-Sign-Classifier-Project-work/blob/master/writeup.md)
+- [Writeup(html)](https://github.com/somof/CarND-Traffic-Sign-Classifier-Project-work/blob/master/report.html)
 
 
 [//]: # (Image References)
 
-<!-- [image1]: ./examples/visualization.jpg "Visualization" -->
-
+<!-- 
+[image1]: ./examples/visualization.jpg "Visualization"
 [image2]: ./examples/grayscale.jpg "Grayscaling"
 [image3]: ./examples/random_noise.jpg "Random Noise"
 [image4]: ./examples/placeholder.png "Traffic Sign 1"
@@ -23,6 +24,7 @@
 [image6]: ./examples/placeholder.png "Traffic Sign 3"
 [image7]: ./examples/placeholder.png "Traffic Sign 4"
 [image8]: ./examples/placeholder.png "Traffic Sign 5"
+-->
 
 ---
 
@@ -676,25 +678,18 @@ TODO: あとで差し替え 10000 epochに
 
 6 Visualizing the Neural Network
 
-Using a outputFeatureMap function, I got the visualizations of the featuremaps inside "large model" architecture.
+Using a outputFeatureMap function provided by Udacity, I got the inside of "large model" architecture visualized.
 
 ##6.1 featuremaps at conv1
 
 Following pictures show featuremaps at conv1 of "large model" when the 5 images was given as input.
 
-Most conv1's featumaps seem like high pass filters that enhances the edges of the textures of traffic signs.
+Most conv1's featuremap seem like high pass filters that enhances the edges of the traffic signs.  
+Some featuremaps activate background textures, it may be caused by unsatisfactory training data about background.
 
-Some of them activate background textures, 
-
-
-Color 
-blue surface 
-red surface not
-
-
-Discuss the visual output of your trained network's feature maps.
-What characteristics did the neural network use to make classifications?
-
+As I had not expected, I can not find featuremaps which apparently activate hue or color information in traffic sign.  
+The informaton whether the sign is red or blue is very important for human, but not for the CNN model.
+To improve training on color image, I seem to need additinal work on the project.
 
 <img width=320 src="fig/ImageNo00_class04_conv1.png"/>
 <img width=320 src="fig/ImageNo01_class13_conv1.png"/>
@@ -704,6 +699,12 @@ What characteristics did the neural network use to make classifications?
 <img width=320 src="fig/ImageNo04_class40_conv1.png"/>
 
 ##6.2 featuremaps at conv2
+
+The second featuremaps would lost most of the pixel position information on my expectation.  
+But a few of conv2 kept the sign board shape.
+
+That may suggest enlarging conv1 and additional third CNN layer would be effective to improve the accuracy.
+
 <img width=320 src="fig/ImageNo00_class04_conv2.png"/>
 <img width=320 src="fig/ImageNo01_class13_conv2.png"/>
 <img width=320 src="fig/ImageNo02_class17_conv2.png"/>
@@ -711,6 +712,22 @@ What characteristics did the neural network use to make classifications?
 <img width=320 src="fig/ImageNo03_class33_conv2.png"/>
 <img width=320 src="fig/ImageNo04_class40_conv2.png"/>
 
+
+#7 Conclusions
+
+At first I got over 97% accuracy via following methods.
+ 1. enlarge the LeNet at lesson8
+ 2. apply two dropouts
+ 3. select hyperparameters in order to prevent overfitting
+ 4. repeat training at least 300 epochs
+
+Second, I had challengs as follow.
+ 1. batch normalization
+ 2. color image input
+
+Unexpectedly, both of the challenges were not contribute improving the accuracy, but the experience of CNN.
+
+Visualization
 
 EOF
 

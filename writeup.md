@@ -58,15 +58,15 @@ Some classes, like 6, 20, 10 and 8, have very dark images that may mean low cont
 
 
 The following is each class's standard deviation(stdev) of its images's pixel mean value.   
-Some classs, like 6, 21, 27, 21 and others, have very low deviation compared to other classes that also can cause unfair training.
+Some classes, like 6, 21, 27, 21 and others, have very low deviation compared to other classes that also can cause unfair training.
 
 <img width=640 src="./fig/pixel_stdv_vs_label.png"/>
 
 
 As explained above, the training dataset may have some issue to train like:  
- 1. sample number shortage in some lables  
+ 1. sample number shortage in some classes  
  2. low contrast(dark) images  
- 3. low variance in some classess  
+ 3. low variance in some classes  
 
 
 
@@ -165,7 +165,7 @@ The normalization types can control the distribution spread as below.
 Following images are averaged class images of each normalization type.  
 The average images express a part of the effect of the normalization.
 Relatively to the average images without normalization, the dark brightness issue is declined by type 1 and 2 normalization method.
-But the low chroma and background texture issues still remain in the normlaized images.
+But the low chroma and background texture issues still remain in the normalized images.
 
 <img width=640 src="./fig/mean_images_in_X_train_type0_normalization.png"/>
 
@@ -194,7 +194,7 @@ Normalization is executed by a follwing equation.
 
     normalized_image = (org_image - mean) / (2.0 * stdev)
 
-Following figures are accuracy curves and the last accuracies for the 3 dataset.  
+Following figures are accuracy curves and the peak accuracies for each 3 dataset.  
 After 200 epochs, every types obtained 93% accuracy of the validation dataset and seem to have possibility to get more accuracy as below .  
 Gray-scale inputs got more validation accuracy, but less test data accuracy than RGB input.
 
@@ -209,7 +209,7 @@ Gray-scale inputs got more validation accuracy, but less test data accuracy than
 I take **take RGB-type1** as the input format to study hereafter, though the feasibility study shows that **gray scale gets better validation accuracy than RGB input**.
 
 All the 7 input format types, include RGB format, will satisfy the 93% accuracy goal of the project.  
-So I decided to challenge something like that can solove the low-chroma and the background texture issues above.
+So I decided to challenge something like that can solve the low-chroma and the background texture issues above.
 
 The RGB input may be useful to make sure what modification affects to the training issues.
 
@@ -239,7 +239,7 @@ Compare to the numbers of the training data, classes that have many failure don'
 
 ####3.6.1 class 16
 
-All of the failure images have very low-chroma images, and the training dataset for the class dosesn't have such images.
+All of the failure images have very low-chroma images, and the training dataset for the class doesn't have such images.
 
 <img width=250 src="./fig/class16_images_valid_failed.png"/>
 <img width=320 src="./fig/class16_images_valid_infered.png"/><br>
@@ -256,7 +256,7 @@ But the rest of the failure, I can not specify its factor to cause the mis-infer
 
 ####3.6.3 class 40
 
-Almost of all the failure images have very dark brightness like that I can not recognaize without something like image enhancements.  
+Almost of all the failure images have very dark brightness like that I can not recognize without something like image enhancements.  
 
 <img width=250 src="./fig/class40_images_valid_failed.png"/>
 <img width=320 src="./fig/class40_images_valid_infered.png"/><br>
@@ -273,7 +273,7 @@ All of the failure images have small traffic sign in its scope.
 ####3.6.5 class 24
 
 All of the failure images have very dark and low-contrast.
-But I can not specify the difference to the images successful infered.
+But I can not specify the difference to the images successful inferred.
 
 <img width=250 src="./fig/class24_images_valid_failed.png"/>
 <img width=320 src="./fig/class24_images_valid_infered.png"/><br>
@@ -293,7 +293,7 @@ The normalization method may not work well on such images.
 
 ###3.7 7x7 CNN trial
 
-I tried to enlargep the filter tap size of the first convolutional networks, because the quick looks above showed that "middle model" may not be enough to express the charactoristics of the each classes.
+I tried to enlarge the filter tap size of the first convolutional networks, because the quick looks above showed that "middle model" may not be enough to express the characteristics of the each classes.
 
 Following figure shows 4 model architecture's accuracy curve for each epoch.  
 "5x5" or "7x7" means CNN's tap size, and "0bn" or "1bn" means usage of batch normalization. ("0bn" is No batch normalization model)
@@ -305,7 +305,7 @@ No-batch-normalization models reached near their peak accuracy about at epoch 50
 Batch-normalization models had a low accuracy level, at least, before epoch 1000, though they have possibility of more high accuracy at over 1000 epochs.
 
 It might be better for batch normalization models to take more high training-rate than no-batch-normalization models.  
-Here, to compare under eauql conditions, all the 4 models use 0.0002 as the training-rate.
+Here, to compare under equal conditions, all the 4 models use 0.0002 as the training-rate.
 
 
 
@@ -317,8 +317,8 @@ Here, to compare under eauql conditions, all the 4 models use 0.0002 as the trai
 As the feasibility study, I chose the final model as below.
 I call the final model architecture "large model".
 
-The unit numbers were set adequate value, watching varying histgram on the Tensorboard. (It's a fantastic tool!)  
-CNN's filter size 64 / 84 and FC's unit size 240 are moderate values that can get smooth histgrams of their weights.
+The unit numbers were set adequate value, watching varying histogram on the Tensorboard. (It's a fantastic tool!)  
+CNN's filter size 64 / 84 and FC's unit size 240 are moderate values that can get smooth histograms of their weights.
 
 The final model has two dropout to prevent overfitting.
 
@@ -386,26 +386,26 @@ I newly got 5 traffic sign images from the web, and made some analysis for the i
 
 #5.1 5 new images
 
-At first, I got 12 new images searched by "german traffic sign" keywords with licence free opton,  
+At first, I got 12 new images searched by "german traffic sign" keywords with license free option,  
 then selected 5 images in the point of view as follows.
 
 |No |input image                                              | image size       | view point                                |
 |:-:|:-------------------------------------------------------:|:-----------------|:------------------------------------------|
 | 0 | <img width=200 src="inputimages/c04_speedlimit70.jpg"/> | 105 x 106, 96dpi | newly background textures 
 | 1 | <img width=200 src="inputimages/c13_yield_2.jpg"/>      | 299 x 168, 72dpi | a slant sign board
-| 2 | <img width=200 src="inputimages/c17_no_entry_2.jpg"/>   | 188 x 141, 72dpi | extra texures on the sign board
+| 2 | <img width=200 src="inputimages/c17_no_entry_2.jpg"/>   | 188 x 141, 72dpi | extra textures on the sign board
 | 3 | <img width=200 src="inputimages/c33_turn_right.jpg"/>   | 369 x 349, 96dpi | no background texture, but uniformly blue
-| 4 | <img width=200 src="inputimages/c40_roundabout.jpg"/>   | 259 x 194, 72dpi | extra texures on the sign board
+| 4 | <img width=200 src="inputimages/c40_roundabout.jpg"/>   | 259 x 194, 72dpi | extra textures on the sign board
 
 
 
 #5.2 a summary of the inference to new images
 
 Following table is the inference result for the 5 images via "large model".  
-In spite of unkindness in the images, 4 images were correctly infered and the second probability level were very low.  
+In spite of unkindness in the images, 4 images were correctly inferred and the second probability level were very low.  
 No.2 image, having a scissors illustration, became error.
 
-No.5 is an example image that is correctly infered as class "17: No entry" for comparison to No.2 image.
+No.5 is an example image that is correctly inferred as class "17: No entry" for comparison to No.2 image.
 
 |No | score |input image                                              | answer | inference                 |
 |:-:|:-----:|:-------------------------------------------------------:|:------:|:--------------------------|
@@ -420,11 +420,11 @@ No.5 is an example image that is correctly infered as class "17: No entry" for c
 #5.3 the probability of the softmax
 
 Following text shows the probabilities of the softmax value for each input images.  
-Other than No.2 image, "large model" exactly infered its answer.
+Other than No.2 image, "large model" exactly inferred its answer.
 
 No.2 image was completely confused with class 3 "Speed limit (60km/h)" and the second probability was only 0.01% though the second inference correctly showed class 17.  
 
-No.5 image was rightly infered but all the second to fourth probability showed Speed Limit sign board.  
+No.5 image was rightly inferred but all the second to fourth probability showed Speed Limit sign board.  
 It means the class 17 potentially has charactoristics similar to Speed Limit signs.
 
     No.0:
@@ -476,7 +476,7 @@ It means the class 17 potentially has charactoristics similar to Speed Limit sig
       Top5:  0.00% class  3: Speed limit (60km/h)
 
 
-#5. Augmenting trainig images.
+#5. Augmenting training images.
 
 ##5.1 plans to augment the training data
 
@@ -487,9 +487,9 @@ Here is a summary of subjective issues on the training dataset.
  1. low chroma at class 6, 32, 41, 42
  2. un-necessary background texture at class 16, 19, 20, 24, 30
  3. dark brightness at class 3, 5, 6, 7, 10, 20 (Normalization may solve it)
- 4. trainig data shortage at class 20, 21, 40 ...
+ 4. training data shortage at class 20, 21, 40 ...
 
-Here is a summary of factors on mis-infered validation dataset.
+Here is a summary of factors on mis-inferred validation dataset.
 
  1. class 16 has a lot of failures particularly on low chroma images.
  2. class 21 has failures on low resolution images
@@ -506,7 +506,7 @@ And I can take augmenting plans to resolve them as below.
  4. add shrink images into class 20 training data
 
 <!--
-| method                 | porpose                           | target class         |
+| method                 | purpose                           | target class         |
 |:-----------------------|:----------------------------------|:---------------------|
 | enhance color			 | low-chroma expansion				 | 6, 32, 41, 42		|
 | add vivid images		 | low-chroma expansion				 | 6, 32, 41, 42		|
@@ -514,7 +514,7 @@ And I can take augmenting plans to resolve them as below.
 | random position shift	 | back ground texture elimination	 | 16, 19, 20, 24, 30	|
 | enhance brightness	 | dark brightness					 | 3, 5, 6, 7, 10, 20	|
 | add bright images		 | dark brightness					 | 3, 5, 6, 7, 10, 20	|
-| add various images	 | trainig data shortage			 | 20, 21, 40 ...		|
+| add various images	 | training data shortage			 | 20, 21, 40 ...		|
 | ノイズを加える
 -->
 
@@ -522,12 +522,12 @@ And I can take augmenting plans to resolve them as below.
 
 At first, I tried augmenting to class 16 that has the most serious trouble in its dataset.  
 
-About Class 16, the most of the mis-inference were occured on low-chroma images, and the training data didn't have such images.  
+About Class 16, the most of the mis-inference were occurred on low-chroma images, and the training data didn't have such images.  
 Therefore augmenting low chroma images would be effective to improve the accuracy of the class.
 
 Following code is a specific method to augment the dataset.  
 The code first duplicates a correspond image and make its chroma(saturation) low by a multiplication with 0.4.
-It also modifies hue and brightness(intensity) to imitate the mis-infered images.
+It also modifies hue and brightness(intensity) to imitate the mis-inferred images.
 
     for ans, org in zip(y_train, X_train):
     
@@ -564,7 +564,6 @@ The 1.035% augmentation makes an affect averaging around 0.25% on the whole vali
 
 <img width=480 src="./examples/large_mode_aurgmentation_0.png"/>
 
-TODO 図をいれかえる
 
 
 #5.3 Augmenting dataset for other classes
@@ -572,12 +571,12 @@ TODO 図をいれかえる
 I got the effect of the augmentation for class 16.  
 Then I augmented the dataset for class 21, 40 and 24 in similar ways.
 
-About class 21, noisy validation data were mis-infered, so augmenting noisy image into the training dataset would be effective.  
-About class 40 and 24, dark and low-contrast images were mis-infered, so augmenting such images would be effective.
+About class 21, noisy validation data were mis-inferred, so augmenting noisy image into the training dataset would be effective.  
+About class 40 and 24, dark and low-contrast images were mis-inferred, so augmenting such images would be effective.
 
 Following code is a specific method to augment the dataset.  
 The code first duplicates a correspond image and make its chroma(saturation) low by a multiplication with 0.4.
-It also modifies hue and brightness(intensity) to imitate the mis-infered images.
+It also modifies hue and brightness(intensity) to imitate the mis-inferred images.
 
     extra_num = 0
     for ans, org in zip(y_train, X_train):
@@ -654,10 +653,10 @@ The training hyperparameters are completely same as "large model" including rand
 
 <img width=480 src="./examples/large_mode_aurgmentation_1.png"/>
 
-Following graph is a histgram that shows the frequency of the mis-infered validation data.  
+Following graph is a histogram that shows the frequency of the mis-inferred validation data with the augmented training dataset.  
 Class 16 and 21 were quite improved in the inference, but class 24 and 40 were not.
 
-It shows the Augmenting method for class 24 and 40 was unsuitable for it.
+It shows the augmenting method for class 24 and 40 was unsuitable for it.
 
 <img width=640 src="./fig/histgram_failed_samples_aug.png"/>
 
@@ -682,8 +681,8 @@ Most conv1's featuremap seem like high pass filters that enhances the edges of t
 Some featuremaps activate background textures, it may be caused by unsatisfactory training data about background.
 
 As I had not expected, I can not find featuremaps which apparently activate hue or color information in traffic sign.  
-The informaton whether the sign is red or blue is very important for human, but not for the CNN model.
-To improve training on color image, I seem to need additinal work on the project.
+The information whether the sign is red or blue is very important for human, but not for the CNN model.
+To improve training on color image, I seem to need additional work on the project.
 
 <img width=320 src="fig/ImageNo00_class04_conv1.png"/>
 <img width=320 src="fig/ImageNo01_class13_conv1.png"/>

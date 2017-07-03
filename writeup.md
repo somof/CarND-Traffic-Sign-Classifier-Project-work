@@ -562,7 +562,7 @@ The training hyperparameters are completely same as "large model" including rand
 
 The 1.035% augmentation makes an affect averaging around 0.25% on the whole validation accuracy within 500 epochs.
 
-<img width=480 src="./examples/large_mode_aurgmentation.png"/>
+<img width=480 src="./examples/large_mode_aurgmentation_0.png"/>
 
 TODO 図をいれかえる
 
@@ -652,31 +652,25 @@ The 3.362% augmentation makes an affect averaging around 0.5% on the whole valid
 Following graph shows how the augmentation improves the validation accuracy.  
 The training hyperparameters are completely same as "large model" including random seed.
 
-<img width=480 src="./examples/large_mode_aurgmentation.png"/>
+<img width=480 src="./examples/large_mode_aurgmentation_1.png"/>
 
+Following graph is a histgram that shows the frequency of the mis-infered validation data.  
+Class 16 and 21 were quite improved in the inference, but class 24 and 40 were not.
 
-ここから修正
+It shows the Augmenting method for class 24 and 40 was unsuitable for it.
 
-TODO ここに、失敗した画像のヒストグラムを置く
+<img width=640 src="./fig/histgram_failed_samples_aug.png"/>
 
-Following images
+###5.4 an accuracy after epoch 10000
 
-TODO ここに、失敗した画像の一覧を置く
+After 10000 epochs, the validation accuracy was stabilized within 0.975 to 0.98 (40 epochs average), and the peak accuracy was 0.98481%,
+while the final model without the augmentation had 0.98209% peak accuracy.
 
-
-
-###5.4 an accuracy after epoch 1000
-
-TODO: あとで差し替え 10000 epochに
-
-<img width=480 src="./examples/large_mode_aurgmentation.png"/>
-
+<img width=480 src="./examples/large_mode_aurgmentation_2.png"/>
 
 
 
 #6. Visualize the network's feature maps
-
-6 Visualizing the Neural Network
 
 Using a outputFeatureMap function provided by Udacity, I got the inside of "large model" architecture visualized.
 
@@ -715,19 +709,23 @@ That may suggest enlarging conv1 and additional third CNN layer would be effecti
 
 #7 Conclusions
 
-At first I got over 97% accuracy via following methods.
+I got over 98% accuracy and satisfied the requirement of the project via following methods.
+
  1. enlarge the LeNet at lesson8
  2. apply two dropouts
  3. select hyperparameters in order to prevent overfitting
  4. repeat training at least 300 epochs
 
-Second, I had challengs as follow.
+I also had trials for the final model as follow.  
+Both of the challenges were not contribute improving the peak accuracy.
+
  1. batch normalization
  2. color image input
 
-Unexpectedly, both of the challenges were not contribute improving the accuracy, but the experience of CNN.
+Augmenting training data that revises the defects in the dataset was quite effective to improve the accuracy.
 
-Visualization
+I had lastly the visualizations inside the CNN, I can have some considerations about my CNN model.
+
 
 EOF
 

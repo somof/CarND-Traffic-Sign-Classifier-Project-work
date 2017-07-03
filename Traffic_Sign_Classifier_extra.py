@@ -477,7 +477,7 @@ with tf.Session() as sess:
                 print('{:.5f},'.format(evaluate(X_test, y_test)), end='')
                 print('{:.5f},'.format(evaluate(X_train, y_train)), end='')
             last_validation_accuracy = validation_accuracy
-            saver.save(sess, './lenet')
+            saver.save(sess, netdir)
             print(' ** Model saved **', end='')
 
         print(flush=True)

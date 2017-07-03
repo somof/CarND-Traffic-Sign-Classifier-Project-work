@@ -198,6 +198,10 @@ last_validation_accuracy = 0.98163
 netdir = 'lenet-large-rep'
 last_validation_accuracy = 0.97324
 
+netdir = 'lenet-large-extra'
+netdir = 'epoch200000'
+
+
 # normalize each image
 # Mono  EPOCH 431 Validation Accuracy = 0.97574
 # Color EPOCH 414 Validation Accuracy = 0.97234
@@ -382,15 +386,20 @@ with tf.Session() as sess:
 
     infer_failed_hist = np.histogram(infer_failed, bins=42, range=(0, 42))
     print(infer_failed_hist)
+    # original
     # array([14,  5,  7,  4,  3, 11,  3,  3,  9,  3,
     #         0,  2,  0,  1,  3,  1, 26,  5,  3,  0,
     #        19, 20,  7,  8, 18, 17,  2, 11,  0,  8,
     #         2,  3,  0,  5,  2,  0,  0,  6,  2,  0,
     #         7,  8]),
-    #     array([  0.,   1.,   2.,   3.,   4.,   5.,   6.,   7.,   8.,   9.,  10.,
-    #     11.,  12.,  13.,  14.,  15.,  16.,  17.,  18.,  19.,  20.,  21.,
-    #     22.,  23.,  24.,  25.,  26.,  27.,  28.,  29.,  30.,  31.,  32.,
-    #     33.,  34.,  35.,  36.,  37.,  38.,  39.,  40.,  41.,  42.]))
+    # augmentation
+    # (array([ 1,  4,  3,  3,  0,  1,  2,  1,  1,  0,
+    #          0,  0,  0,  0,  0,  0,  7,  0,  5,  0,
+    #          8, 10,  0,  3,  5,  2,  0,  0,  0,  2,
+    #          0,  0,  0,  0,  1,  0,  0,  0,  0,  0,
+    #         10,  1,  0]
+    
+
     # exit(0)
 
 
@@ -428,6 +437,7 @@ with tf.Session() as sess:
     plt.title('Histgram of Failed samples and training data')
     names=['0:Speed limit (20km/h)', '1:Speed limit (30km/h)', '2:Speed limit (50km/h)', '3:Speed limit (60km/h)', '4:Speed limit (70km/h)', '5:Speed limit (80km/h)', '6:End of speed limit (80km/h)', '7:Speed limit (100km/h)', '8:Speed limit (120km/h)', '9:No passing', '10:No passing for vehicles over 3.5 metric tons', '11:Right-of-way at the next intersection', '12:Priority road', '13:Yield', '14:Stop', '15:No vehicles', '16:Vehicles over 3.5 metric tons prohibited', '17:No entry', '18:General caution', '19:Dangerous curve to the left', '20:Dangerous curve to the right', '21:Double curve', '22:Bumpy road', '23:Slippery road', '24:Road narrows on the right', '25:Road work', '26:Traffic signals', '27:Pedestrians', '28:Children crossing', '29:Bicycles crossing', '30:Beware of ice/snow', '31:Wild animals crossing', '32:End of all speed and passing limits', '33:Turn right ahead', '34:Turn left ahead', '35:Ahead only', '36:Go straight or right', '37:Go straight or left', '38:Keep right', '39:Keep left', '40:Roundabout mandatory', '41:End of no passing', '42:End of no passing by vehicles over 3.5 metric tons']
     labels=['inference failed data']
+    # plt.plot(org_hist, '+')
     plt.hist(infer_failed,
              range=(0, 43),
              rwidth=20,
@@ -436,9 +446,12 @@ with tf.Session() as sess:
              label=labels
              )
     plt.xticks(range(0,43), names, rotation=-90, fontsize="small")
+    plt.ylim(0, 23)
     plt.legend(loc="best")
-    plt.savefig('fig/histgram_failed_samples.png')
+    plt.savefig('fig/histgram_failed_samples_aug.png')
+    # plt.savefig('fig/histgram_failed_samples.png')
     # plt.show()
+    exit(0)
 
     fig = plt.figure(figsize=(12,8))
     plt.subplots_adjust(left=0.1, right=0.99, top=0.95, bottom=0.45, hspace=0.0, wspace=0.0)
@@ -454,8 +467,11 @@ with tf.Session() as sess:
              )
     plt.xticks(range(0,43), names, rotation=-90, fontsize="small")
     plt.legend(loc="best")
-    plt.savefig('fig/histgram_failed_samples_and_trainingdata.png')
+    plt.savefig('fig/histgram_failed_samples_and_trainingdata_aug.png')
+    # plt.savefig('fig/histgram_failed_samples_and_trainingdata.png')
     # plt.show()
+
+    exit(0)
 
 
     images = X_valid_org

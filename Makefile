@@ -38,5 +38,5 @@ train7:
 data:
 	#$(PYTHONC) Visualize_Dataset_Mean_Images.py
 	#$(PYTHONC) Visualize_Dataset_Images_normalized.py
-	#$(PYTHONC) Visualize_Dataset_Inferenced.py
-	$(PYTHONC) Visualize_Dataset_Images.py
+	$(PYTHONC) Visualize_Dataset_Inferenced.py
+	#$(PYTHONC) Visualize_Dataset_Images.py
